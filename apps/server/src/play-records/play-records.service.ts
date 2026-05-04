@@ -66,22 +66,22 @@ export class PlayRecordsService {
     this.db.db
       .insert(videos)
       .values({
-        sourceId: dto.sourceId,
-        sourceVideoId: dto.sourceVideoId,
-        title: dto.title,
-        sourceName: dto.sourceName,
-        cover: dto.cover ?? '',
-        year: dto.year ?? '',
-        totalEpisodes: dto.totalEpisodes ?? 0,
+        sourceId: dto.video.sourceId,
+        sourceVideoId: dto.video.sourceVideoId,
+        title: dto.video.title,
+        sourceName: dto.video.sourceName,
+        cover: dto.video.cover ?? '',
+        year: dto.video.year ?? '',
+        totalEpisodes: dto.video.totalEpisodes ?? 0,
       })
       .onConflictDoUpdate({
         target: [videos.sourceId, videos.sourceVideoId],
         set: {
-          title: dto.title,
-          sourceName: dto.sourceName,
-          cover: dto.cover ?? '',
-          year: dto.year ?? '',
-          totalEpisodes: dto.totalEpisodes ?? 0,
+          title: dto.video.title,
+          sourceName: dto.video.sourceName,
+          cover: dto.video.cover ?? '',
+          year: dto.video.year ?? '',
+          totalEpisodes: dto.video.totalEpisodes ?? 0,
         },
       })
       .run();
@@ -89,7 +89,7 @@ export class PlayRecordsService {
     const video = this.db.db
       .select({ id: videos.id })
       .from(videos)
-      .where(and(eq(videos.sourceId, dto.sourceId), eq(videos.sourceVideoId, dto.sourceVideoId)))
+      .where(and(eq(videos.sourceId, dto.video.sourceId), eq(videos.sourceVideoId, dto.video.sourceVideoId)))
       .get();
     if (!video) return;
     // 插入/更新播放记录

@@ -17,20 +17,28 @@ export const videos = sqliteTable(
 );
 
 // 收藏表 - 只存收藏行为相关
-export const favorites = sqliteTable('favorites', {
-  id: integer('id').primaryKey(), // 自增主键
-  videoId: integer('video_id')
-    .notNull()
-    .references(() => videos.id), // 关联视频
-  updatedAt: integer('updated_at').notNull(), // 更新时间戳
-});
+export const favorites = sqliteTable(
+  'favorites',
+  {
+    id: integer('id').primaryKey(), // 自增主键
+    videoId: integer('video_id')
+      .notNull()
+      .references(() => videos.id), // 关联视频
+    updatedAt: integer('updated_at').notNull(), // 更新时间戳
+  },
+  (t) => [uniqueIndex('favorites_video_idx').on(t.videoId)],
+);
 
 // 播放记录表 - 只存播放相关
-export const playRecords = sqliteTable('play_records', {
-  id: integer('id').primaryKey(), // 自增主键
-  videoId: integer('video_id')
-    .notNull()
-    .references(() => videos.id), // 关联视频
-  episodeIndex: integer('episode_index'), // 当前播放集数
-  updatedAt: integer('updated_at').notNull(), // 更新时间戳
-});
+export const playRecords = sqliteTable(
+  'play_records',
+  {
+    id: integer('id').primaryKey(), // 自增主键
+    videoId: integer('video_id')
+      .notNull()
+      .references(() => videos.id), // 关联视频
+    episodeIndex: integer('episode_index'), // 当前播放集数
+    updatedAt: integer('updated_at').notNull(), // 更新时间戳
+  },
+  (t) => [uniqueIndex('play_records_video_idx').on(t.videoId)],
+);

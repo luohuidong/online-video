@@ -64,12 +64,18 @@ export class FavoritesService {
       .get();
     if (!video) return;
 
-    // 插入收藏记录
+    // 插入收藏记录（已存在则更新）
     return this.db.db
       .insert(favorites)
       .values({
         videoId: video.id,
         updatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: [favorites.videoId],
+        set: {
+          updatedAt: now,
+        },
       })
       .run();
   }

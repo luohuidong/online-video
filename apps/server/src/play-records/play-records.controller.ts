@@ -41,19 +41,13 @@ export class PlayRecordsController {
     return this.playRecordsService.getOne(source, videoId);
   }
 
-  @Put(':source/:videoId')
+  @Put()
   @ApiOperation({ summary: '新增/更新播放记录（upsert）' })
-  @ApiParam({ name: 'source', description: '视频源标识' })
-  @ApiParam({ name: 'videoId', description: '视频在平台上的 ID' })
   @ApiBody({ type: UpsertPlayRecordDto })
   @ApiOkResponse(OkResponse)
   @ApiBadRequestResponse({ description: '请求体校验失败' })
-  upsert(
-    @Param('source') source: string,
-    @Param('videoId') videoId: string,
-    @Body() body: unknown,
-  ) {
-    const result = UpsertPlayRecordSchema.safeParse({ ...body as object, source, videoId });
+  upsert(@Body() body: unknown) {
+    const result = UpsertPlayRecordSchema.safeParse(body);
     if (!result.success) throw new BadRequestException(result.error.flatten());
     this.playRecordsService.upsert(result.data);
     return { ok: true };

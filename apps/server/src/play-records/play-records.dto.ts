@@ -2,17 +2,19 @@ import { z } from 'zod';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export const UpsertPlayRecordSchema = z.object({
-  sourceId: z.string().min(1),
-  sourceVideoId: z.string().min(1),
-  title: z.string().min(1),
-  sourceName: z.string().min(1),
-  cover: z.string().optional().default(''),
-  year: z.string().optional().default(''),
+  video: z.object({
+    sourceId: z.string().min(1),
+    sourceVideoId: z.string().min(1),
+    title: z.string().min(1),
+    sourceName: z.string().min(1),
+    cover: z.string().optional().default(''),
+    year: z.string().optional().default(''),
+    totalEpisodes: z.number().int().nonnegative().optional().default(0),
+  }),
   episodeIndex: z.number().int().nonnegative().optional().default(0),
-  totalEpisodes: z.number().int().nonnegative().optional().default(0),
 });
 
-/** 包含 source/videoId（由路径参数合并），供 service 内部使用 */
+/** 供 service 内部使用 */
 export type UpsertPlayRecordData = z.infer<typeof UpsertPlayRecordSchema>;
 
 export class UpsertPlayRecordDto {
