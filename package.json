@@ -1,4 +1,13 @@
 {
   "name": "online-video-workspace",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev:server": "pnpm --filter server dev",
+    "dev:web": "pnpm --filter web dev",
+    "build:server": "pnpm --filter server build",
+    "build:web": "pnpm --filter web build"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  }
 }
