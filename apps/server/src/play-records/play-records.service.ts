@@ -56,7 +56,7 @@ export class PlayRecordsService {
       })
       .from(playRecords)
       .innerJoin(videos, eq(playRecords.videoId, videos.id))
-      .where(eq(playRecords.id, video.id))
+      .where(eq(playRecords.videoId, video.id))
       .get() ?? null;
   }
 
