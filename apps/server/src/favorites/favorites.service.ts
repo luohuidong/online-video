@@ -32,26 +32,27 @@ export class FavoritesService {
 
   add(dto: AddFavoriteDto) {
     const now = Date.now();
+    const { sourceId, sourceName, sourceVideoId, title, cover, year, totalEpisodes } = dto.video;
     // 先插入/更新视频信息，获取视频 id
     this.db.db
       .insert(videos)
       .values({
-        sourceId: dto.sourceId,
-        sourceName: dto.sourceName,
-        sourceVideoId: dto.sourceVideoId,
-        title: dto.title,
-        cover: dto.cover ?? '',
-        year: dto.year ?? '',
-        totalEpisodes: dto.totalEpisodes ?? 0,
+        sourceId,
+        sourceName,
+        sourceVideoId,
+        title,
+        cover: cover ?? '',
+        year: year ?? '',
+        totalEpisodes: totalEpisodes ?? 0,
       })
       .onConflictDoUpdate({
         target: [videos.sourceId, videos.sourceVideoId],
         set: {
-          title: dto.title,
-          sourceName: dto.sourceName,
-          cover: dto.cover ?? '',
-          year: dto.year ?? '',
-          totalEpisodes: dto.totalEpisodes ?? 0,
+          title,
+          sourceName,
+          cover: cover ?? '',
+          year: year ?? '',
+          totalEpisodes: totalEpisodes ?? 0,
         },
       })
       .run();
@@ -60,7 +61,7 @@ export class FavoritesService {
     const video = this.db.db
       .select({ id: videos.id })
       .from(videos)
-      .where(and(eq(videos.sourceId, dto.sourceId), eq(videos.sourceVideoId, dto.sourceVideoId)))
+      .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
       .get();
     if (!video) return;
 

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export const AddFavoriteSchema = z.object({
+const VideoInfoSchema = z.object({
   sourceId: z.string().min(1),
   sourceVideoId: z.string().min(1),
   title: z.string().min(1),
@@ -11,27 +11,21 @@ export const AddFavoriteSchema = z.object({
   totalEpisodes: z.number().int().nonnegative().optional().default(0),
 });
 
+export const AddFavoriteSchema = z.object({
+  video: VideoInfoSchema,
+});
+
 export class AddFavoriteDto {
-  @ApiProperty({ description: '视频源标识' })
-  sourceId!: string;
-
-  @ApiProperty({ description: '视频在平台上的 ID' })
-  sourceVideoId!: string;
-
-  @ApiProperty({ description: '视频标题' })
-  title!: string;
-
-  @ApiProperty({ description: '视频源名称' })
-  sourceName!: string;
-
-  @ApiPropertyOptional({ description: '封面图片 URL', default: '' })
-  cover?: string;
-
-  @ApiPropertyOptional({ description: '年份', default: '' })
-  year?: string;
-
-  @ApiPropertyOptional({ description: '总集数', default: 0 })
-  totalEpisodes?: number;
+  @ApiProperty({ description: '视频信息' })
+  video!: {
+    sourceId: string;
+    sourceVideoId: string;
+    title: string;
+    sourceName: string;
+    cover?: string;
+    year?: string;
+    totalEpisodes?: number;
+  };
 }
 
 export class VideoInfoDto {
