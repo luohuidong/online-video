@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { desc, eq, and } from 'drizzle-orm';
-import { DatabaseService } from '../database/database.service';
+import { DrizzleService } from '../database/database.service';
 import { playRecords, videos } from '../database/schema';
 import { UpsertPlayRecordData } from './play-records.dto';
 
 @Injectable()
 export class PlayRecordsService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(private readonly drizzle: DrizzleService) {}
 
   getAll() {
-    return this.db.db
+    return this.drizzle.db
       .select({
         id: playRecords.id,
         episodeIndex: playRecords.episodeIndex,
@@ -32,38 +32,40 @@ export class PlayRecordsService {
   }
 
   getOne(sourceId: string, sourceVideoId: string) {
-    const video = this.db.db
+    const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
       .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
       .get();
     if (!video) return null;
-    return this.db.db
-      .select({
-        id: playRecords.id,
-        episodeIndex: playRecords.episodeIndex,
-        updatedAt: playRecords.updatedAt,
-        video: {
-          id: playRecords.videoId,
-          title: videos.title,
-          sourceId: videos.sourceId,
-          sourceVideoId: videos.sourceVideoId,
-          sourceName: videos.sourceName,
-          cover: videos.cover,
-          year: videos.year,
-          totalEpisodes: videos.totalEpisodes,
-        },
-      })
-      .from(playRecords)
-      .innerJoin(videos, eq(playRecords.videoId, videos.id))
-      .where(eq(playRecords.videoId, video.id))
-      .get() ?? null;
+    return (
+      this.drizzle.db
+        .select({
+          id: playRecords.id,
+          episodeIndex: playRecords.episodeIndex,
+          updatedAt: playRecords.updatedAt,
+          video: {
+            id: playRecords.videoId,
+            title: videos.title,
+            sourceId: videos.sourceId,
+            sourceVideoId: videos.sourceVideoId,
+            sourceName: videos.sourceName,
+            cover: videos.cover,
+            year: videos.year,
+            totalEpisodes: videos.totalEpisodes,
+          },
+        })
+        .from(playRecords)
+        .innerJoin(videos, eq(playRecords.videoId, videos.id))
+        .where(eq(playRecords.videoId, video.id))
+        .get() ?? null
+    );
   }
 
   upsert(dto: UpsertPlayRecordData) {
     const now = Date.now();
     // 先插入/更新视频信息
-    this.db.db
+    this.drizzle.db
       .insert(videos)
       .values({
         sourceId: dto.video.sourceId,
@@ -86,14 +88,19 @@ export class PlayRecordsService {
       })
       .run();
     // 获取视频的内置 id
-    const video = this.db.db
+    const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
-      .where(and(eq(videos.sourceId, dto.video.sourceId), eq(videos.sourceVideoId, dto.video.sourceVideoId)))
+      .where(
+        and(
+          eq(videos.sourceId, dto.video.sourceId),
+          eq(videos.sourceVideoId, dto.video.sourceVideoId),
+        ),
+      )
       .get();
     if (!video) return;
     // 插入/更新播放记录
-    return this.db.db
+    return this.drizzle.db
       .insert(playRecords)
       .values({
         videoId: video.id,
@@ -111,19 +118,16 @@ export class PlayRecordsService {
   }
 
   remove(sourceId: string, sourceVideoId: string) {
-    const video = this.db.db
+    const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
       .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
       .get();
     if (!video) return;
-    return this.db.db
-      .delete(playRecords)
-      .where(eq(playRecords.id, video.id))
-      .run();
+    return this.drizzle.db.delete(playRecords).where(eq(playRecords.id, video.id)).run();
   }
 
   clearAll() {
-    return this.db.db.delete(playRecords).run();
+    return this.drizzle.db.delete(playRecords).run();
   }
 }

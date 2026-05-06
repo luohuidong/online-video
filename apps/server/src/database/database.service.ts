@@ -5,8 +5,8 @@ import * as schema from './schema';
 import config from '../../drizzle.config';
 
 @Injectable()
-export class DatabaseService implements OnModuleInit {
-  private readonly logger = new Logger(DatabaseService.name);
+export class DrizzleService implements OnModuleInit {
+  private readonly logger = new Logger(DrizzleService.name);
   db!: BetterSQLite3Database<typeof schema>;
 
   async onModuleInit() {

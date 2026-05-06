@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { desc, eq, and } from 'drizzle-orm';
-import { DatabaseService } from '../database/database.service';
+import { DrizzleService } from '../database/database.service';
 import { favorites, videos } from '../database/schema';
 import { AddFavoriteDto } from './favorites.dto';
 
 @Injectable()
 export class FavoritesService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(private readonly drizzle: DrizzleService) {}
 
   getAll() {
-    return this.db.db
+    return this.drizzle.db
       .select({
         id: favorites.id,
         updatedAt: favorites.updatedAt,
@@ -34,7 +34,7 @@ export class FavoritesService {
     const now = Date.now();
     const { sourceId, sourceName, sourceVideoId, title, cover, year, totalEpisodes } = dto.video;
     // 先插入/更新视频信息，获取视频 id
-    this.db.db
+    this.drizzle.db
       .insert(videos)
       .values({
         sourceId,
@@ -58,7 +58,7 @@ export class FavoritesService {
       .run();
 
     // 通过 sourceId + videoId 查找视频的内置 id
-    const video = this.db.db
+    const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
       .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
@@ -66,7 +66,7 @@ export class FavoritesService {
     if (!video) return;
 
     // 插入收藏记录（已存在则更新）
-    return this.db.db
+    return this.drizzle.db
       .insert(favorites)
       .values({
         videoId: video.id,
@@ -82,10 +82,10 @@ export class FavoritesService {
   }
 
   remove(id: number) {
-    return this.db.db.delete(favorites).where(eq(favorites.id, id)).run();
+    return this.drizzle.db.delete(favorites).where(eq(favorites.id, id)).run();
   }
 
   clearAll() {
-    return this.db.db.delete(favorites).run();
+    return this.drizzle.db.delete(favorites).run();
   }
 }
