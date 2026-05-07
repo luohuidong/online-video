@@ -3,8 +3,6 @@ services:
     build:
       context: .
       target: server
-    ports:
-      - '3000:3000'
     volumes:
       # SQLite data persistence
       - online-video-data:/app/.data
@@ -17,7 +15,7 @@ services:
       context: .
       target: web
     ports:
-      - '80:80'
+      - '8000:80'
     depends_on:
       - server
     restart: unless-stopped
