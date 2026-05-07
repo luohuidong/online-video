@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import { getPlayRecords, deletePlayRecord, clearPlayRecords } from '@/api/playRecords';
 import { Trash2 } from 'lucide-react';
 import VideoCard from '@/components/VideoCard';
