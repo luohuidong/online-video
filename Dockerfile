@@ -14,6 +14,8 @@ RUN pnpm run build:server
 RUN pnpm run build:web
 # Deploy server with all deps (dev included so drizzle-kit is available at runtime)
 RUN pnpm deploy --filter=server /prod/server
+# pnpm deploy does not copy build artifacts, copy dist manually
+RUN cp -r /app/apps/server/dist /prod/server/dist
 
 # ── Server image ──────────────────────────────────────────────────────────────
 FROM base AS server
@@ -21,7 +23,7 @@ COPY --from=build /prod/server /app
 WORKDIR /app
 EXPOSE 3000
 # Run schema migrate on every start (idempotent), then launch the app
-CMD ["sh", "-c", "node_modules/.bin/drizzle-kit migrate && node dist/main"]
+CMD ["sh", "-c", "node_modules/.bin/drizzle-kit migrate && node dist/src/main"]
 
 # ── Web image (nginx serving the SPA) ────────────────────────────────────────
 FROM nginx:stable-alpine AS web
