@@ -1,5 +1,8 @@
 packages:
   - apps/*
+syncInjectedDepsAfterScripts:
+  - build
+injectWorkspacePackages: true
 
 ignoredBuiltDependencies:
   - '@scarf/scarf'
