@@ -10,9 +10,7 @@ export class AppConfigService implements OnModuleInit {
   private config!: AppConfig;
 
   onModuleInit() {
-    const configPath = process.env.CONFIG_PATH
-      ? path.resolve(process.env.CONFIG_PATH)
-      : path.resolve(process.cwd(), 'config.yml');
+    const configPath = path.resolve(process.cwd(), 'config.yml');
 
     this.logger.log(`Loading config from: ${configPath}`);
 
