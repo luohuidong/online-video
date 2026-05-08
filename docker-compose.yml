@@ -6,6 +6,8 @@ services:
     volumes:
       # SQLite data persistence
       - online-video-data:/app/.data
+      # Image cache
+      - online-video-cache:/app/.cache
       # Mount config file (edit config.yml to configure sources)
       - ./config.yml:/app/config.yml:ro
     restart: unless-stopped
@@ -22,3 +24,4 @@ services:
 
 volumes:
   online-video-data:
+  online-video-cache:

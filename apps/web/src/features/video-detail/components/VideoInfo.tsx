@@ -1,6 +1,6 @@
 import type { SearchResult } from '@/shared/types';
 import { FavoriteButton } from './FavoriteButton';
-import { getVideoEpisodeCount } from '@/shared/utils/video';
+import { getVideoEpisodeCount, proxyImageUrl } from '@/shared/utils/video';
 
 interface VideoInfoProps {
   video: SearchResult;
@@ -21,7 +21,7 @@ export function VideoInfo({
     <div className="flex gap-4 flex-1">
       {video.poster && (
         <img
-          src={video.poster}
+          src={proxyImageUrl(video.poster)}
           alt={video.title}
           className="w-28 h-40 object-cover rounded-lg shrink-0"
         />

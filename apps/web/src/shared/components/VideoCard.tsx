@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { proxyImageUrl } from '@/shared/utils/video';
 
 interface VideoCardProps {
   id: string;
@@ -23,7 +24,7 @@ export default function VideoCard({ id, sourceId, title, poster, year: _year, ba
       <div className="relative aspect-[2/3] bg-gray-100 dark:bg-gray-800 overflow-hidden">
         {poster ? (
           <img
-            src={poster}
+            src={proxyImageUrl(poster)}
             alt={title}
             className="w-full h-full object-cover"
           />
