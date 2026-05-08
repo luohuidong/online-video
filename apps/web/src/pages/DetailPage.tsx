@@ -95,7 +95,6 @@ export default function DetailPage() {
     }).then(() => {
       queryClient.invalidateQueries({ queryKey: ['playRecord', source, id] });
     });
-    window.open(ep[1], '_blank');
   };
 
   const lastWatchedIdx = currentPlayRecord?.episodeIndex ?? -1;
