@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { SearchResult } from '@/shared/types';
+import type { SearchResult, Favorite } from '@/shared/types';
 import { getFavorites, addFavorite, removeFavorite } from '@/features/favorites/api/favoritesApi';
-import type { Favorite } from '@/shared/types';
+import { getVideoEpisodeCount } from '@/shared/utils/video';
 
 interface UseFavoriteOptions {
   source: string;
@@ -16,11 +16,7 @@ interface UseFavoriteResult {
   isPending: boolean;
 }
 
-export function useFavorite({
-  source,
-  id,
-  video,
-}: UseFavoriteOptions): UseFavoriteResult {
+export function useFavorite({ source, id, video }: UseFavoriteOptions): UseFavoriteResult {
   const queryClient = useQueryClient();
 
   const { data: favorites } = useQuery({
@@ -37,14 +33,13 @@ export function useFavorite({
     mutationFn: () =>
       addFavorite({
         video: {
-          id: 0,
           sourceId: source,
           sourceVideoId: id,
           title: video?.title ?? '',
           sourceName: video?.sourceName ?? '',
           cover: video?.poster ?? null,
           year: video?.year ?? null,
-          totalEpisodes: null,
+          totalEpisodes: video ? getVideoEpisodeCount(video.videoPlayGroups) : null,
         },
       }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),

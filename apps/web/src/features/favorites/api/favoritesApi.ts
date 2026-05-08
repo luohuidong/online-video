@@ -5,7 +5,7 @@ export function getFavorites(): Promise<Favorite[]> {
   return apiFetch<Favorite[]>('/favorites');
 }
 
-export function addFavorite(favorite: Omit<Favorite, 'id' | 'updatedAt'>): Promise<Favorite> {
+export function addFavorite(favorite: { video: Omit<Favorite['video'], 'id'> }): Promise<Favorite> {
   return apiFetch<Favorite>('/favorites', {
     method: 'POST',
     body: JSON.stringify(favorite),
