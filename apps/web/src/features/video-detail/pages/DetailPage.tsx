@@ -63,11 +63,6 @@ export default function DetailPage() {
   const currentPlayGroup = videoPlayGroups[activeLine] ?? [];
 
   const handleEpisodeClick = (idx: number) => {
-    const ep = currentPlayGroup[idx];
-    if (!ep) return;
-
-    window.open(ep[1], '_blank', 'noopener,noreferrer');
-
     upsertMutation.mutate(idx);
   };
 

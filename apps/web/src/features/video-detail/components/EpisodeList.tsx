@@ -23,8 +23,11 @@ export function EpisodeList({
         const ep = currentPlayGroup[idx];
 
         return (
-          <button
+          <a
             key={idx}
+            href={ep[1]}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => onEpisodeClick(idx)}
             className="relative px-3 py-1 rounded text-sm transition-colors text-center bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
           >
@@ -34,7 +37,7 @@ export function EpisodeList({
               </span>
             )}
             {ep[0] || `第${idx + 1}集`}
-          </button>
+          </a>
         );
       })}
     </div>
