@@ -1,5 +1,5 @@
-import type { Favorite } from '@/types';
-import { apiFetch } from './client';
+import type { Favorite } from '@/shared/types';
+import { apiFetch } from '@/shared/api/client';
 
 export function getFavorites(): Promise<Favorite[]> {
   return apiFetch<Favorite[]>('/favorites');

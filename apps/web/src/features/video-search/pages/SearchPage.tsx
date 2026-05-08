@@ -1,20 +1,14 @@
 import { useSearchParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { searchVideos } from '@/api/videos';
-import { getVideoEpisodeCount } from '@/utils/video';
-import VideoCard from '@/components/VideoCard';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import ErrorMessage from '@/components/ErrorMessage';
+import { useSearch } from '../hooks/useSearch';
+import SearchResults from '../components/SearchResults';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import ErrorMessage from '@/shared/components/ErrorMessage';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['search', query],
-    queryFn: () => searchVideos(query),
-    enabled: query.length > 0,
-  });
+  const { data, isLoading, isError, error, refetch } = useSearch(query);
 
   if (!query) {
     return (
@@ -53,22 +47,7 @@ export default function SearchPage() {
         </div>
       )}
 
-      {data && data.length > 0 && (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
-          {data.map((video) => (
-            <VideoCard
-              key={`${video.sourceId}-${video.sourceVideoId}`}
-              id={video.sourceVideoId}
-              sourceId={video.sourceId}
-              title={video.title}
-              poster={video.poster}
-              year={video.year}
-              totalEpisodes={getVideoEpisodeCount(video.videoPlayGroups)}
-              sourceName={video.sourceName}
-            />
-          ))}
-        </div>
-      )}
+      {data && data.length > 0 && <SearchResults videos={data} />}
     </div>
   );
 }

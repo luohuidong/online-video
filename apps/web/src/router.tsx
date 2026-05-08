@@ -1,9 +1,9 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import Layout from '@/components/Layout';
-import HomePage from '@/pages/HomePage';
-import DetailPage from '@/pages/DetailPage';
-import SearchPage from '@/pages/SearchPage';
-import PlayRecordsPage from '@/pages/PlayRecordsPage';
+import Layout from '@/layout';
+import HomePage from '@/features/favorites/pages/HomePage';
+import DetailPage from '@/features/video-detail/pages/DetailPage';
+import SearchPage from '@/features/video-search/pages/SearchPage';
+import PlayRecordsPage from '@/features/play-records/pages/PlayRecordsPage';
 
 function Root() {
   return (
