@@ -7,9 +7,7 @@ interface UseEpisodeSortResult {
 
 export function useEpisodeSort(source: string, id: string): UseEpisodeSortResult {
   const sortKey = `episode-sort:${source}:${id}`;
-  const [sortDesc, setSortDesc] = useState(
-    () => localStorage.getItem(sortKey) === 'desc',
-  );
+  const [sortDesc, setSortDesc] = useState(() => localStorage.getItem(sortKey) !== 'asc');
 
   const toggleSort = useCallback(() => {
     setSortDesc((prev) => {
