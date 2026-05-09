@@ -1,4 +1,3 @@
-import 'plyr/dist/plyr.css';
 import { useHlsPlayer } from '../hooks/useHlsPlayer';
 
 interface HlsPlayerProps {
@@ -6,13 +5,7 @@ interface HlsPlayerProps {
 }
 
 export function HlsPlayer({ url }: HlsPlayerProps) {
-  const videoRef = useHlsPlayer(url);
+  const containerRef = useHlsPlayer(url);
 
-  return (
-    <video
-      ref={videoRef}
-      className="w-full h-full object-contain"
-      playsInline
-    />
-  );
+  return <div ref={containerRef} className="w-full h-full" />;
 }

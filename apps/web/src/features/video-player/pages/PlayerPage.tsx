@@ -14,7 +14,7 @@ export default function PlayerPage() {
   }
 
   return (
-    <div className="flex items-center justify-center w-screen h-screen bg-black">
+    <div className="w-screen h-screen bg-black">
       <HlsPlayer url={url} />
     </div>
   );

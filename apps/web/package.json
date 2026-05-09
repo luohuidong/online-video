@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.8",
+    "artplayer": "^5.4.0",
     "hls.js": "^1.6.16",
     "lucide-react": "^1.14.0",
-    "plyr": "^3.8.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2",
