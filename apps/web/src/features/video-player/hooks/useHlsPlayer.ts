@@ -17,6 +17,8 @@ function playM3u8(video: HTMLVideoElement, url: string, art: Artplayer) {
   }
 }
 
+Artplayer.PLAYBACK_RATE = [0.5, 1, 1.5, 2, 3];
+
 export function useHlsPlayer(url: string) {
   const containerRef = useRef<HTMLDivElement>(null);
 
