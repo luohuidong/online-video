@@ -1,3 +1,5 @@
+import { getEpisodeHref } from '@/shared/utils/video';
+
 interface EpisodeListProps {
   currentPlayGroup: [string, string][];
   sortDesc: boolean;
@@ -22,10 +24,12 @@ export function EpisodeList({
         const isLastWatched = idx === lastWatchedIdx && lastWatchedIdx >= 0;
         const ep = currentPlayGroup[idx];
 
+        const href = getEpisodeHref(ep[1]);
+
         return (
           <a
             key={idx}
-            href={ep[1]}
+            href={href}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => onEpisodeClick(idx)}

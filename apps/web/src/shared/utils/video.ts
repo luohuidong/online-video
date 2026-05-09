@@ -6,3 +6,10 @@ export function proxyImageUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;
   return `/api/image-proxy?url=${encodeURIComponent(url)}`;
 }
+
+export function getEpisodeHref(episodeUrl: string): string {
+  if (episodeUrl.includes('.m3u8')) {
+    return `/play?url=${encodeURIComponent(episodeUrl)}`;
+  }
+  return episodeUrl;
+}

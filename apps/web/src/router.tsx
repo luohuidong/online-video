@@ -4,6 +4,7 @@ import HomePage from '@/features/favorites/pages/HomePage';
 import DetailPage from '@/features/video-detail/pages/DetailPage';
 import SearchPage from '@/features/video-search/pages/SearchPage';
 import PlayRecordsPage from '@/features/play-records/pages/PlayRecordsPage';
+import PlayerPage from '@/features/video-player/pages/PlayerPage';
 
 function Root() {
   return (
@@ -24,4 +25,5 @@ export const router = createBrowserRouter([
       { path: 'play-records', element: <PlayRecordsPage /> },
     ],
   },
+  { path: 'play', element: <PlayerPage /> },
 ]);
