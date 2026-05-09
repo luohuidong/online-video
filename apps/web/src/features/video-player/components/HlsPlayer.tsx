@@ -11,7 +11,7 @@ export function HlsPlayer({ url }: HlsPlayerProps) {
   return (
     <video
       ref={videoRef}
-      className="w-full h-full"
+      className="w-full h-full object-contain"
       playsInline
     />
   );
