@@ -14,6 +14,8 @@ export function useHlsPlayer(url: string) {
     const player = new Plyr(video, {
       settings: ['speed'],
       speed: { selected: 1, options: [0.5, 1, 1.5, 2, 3] },
+      keyboard: { focused: true, global: true },
+      seekTime: 10,
     });
 
     if (Hls.isSupported()) {
