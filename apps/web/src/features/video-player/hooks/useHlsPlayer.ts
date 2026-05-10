@@ -8,16 +8,34 @@ interface Selector {
   default?: boolean;
 }
 
-const PLAYBACK_RATES: Selector[] = [
+const PLAYBACK_RATE_KEY = 'player:playbackRate';
+
+const PLAYBACK_RATE_OPTIONS: Omit<Selector, 'default'>[] = [
   { html: '3.0x', value: 3.0 },
   { html: '2.0x', value: 2.0 },
   { html: '1.75x', value: 1.75 },
   { html: '1.5x', value: 1.5 },
   { html: '1.25x', value: 1.25 },
-  { html: '1.0x', value: 1.0, default: true },
+  { html: '1.0x', value: 1.0 },
   { html: '0.75x', value: 0.75 },
   { html: '0.5x', value: 0.5 },
 ];
+
+function getSavedPlaybackRate(): number {
+  const saved = localStorage.getItem(PLAYBACK_RATE_KEY);
+  if (saved !== null) {
+    const rate = parseFloat(saved);
+    if (PLAYBACK_RATE_OPTIONS.some((o) => o.value === rate)) return rate;
+  }
+  return 1.0;
+}
+
+function buildPlaybackRateSelectors(savedRate: number): Selector[] {
+  return PLAYBACK_RATE_OPTIONS.map((o) => ({
+    ...o,
+    default: o.value === savedRate,
+  }));
+}
 
 export function useHlsPlayer(url: string) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,6 +44,8 @@ export function useHlsPlayer(url: string) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container || !url) return;
+
+    const savedRate = getSavedPlaybackRate();
 
     const art = new Artplayer({
       container,
@@ -50,14 +70,22 @@ export function useHlsPlayer(url: string) {
         {
           name: 'playbackRate',
           position: 'right',
-          html: '1.0x',
-          selector: PLAYBACK_RATES,
+          html: `${savedRate}x`,
+          selector: buildPlaybackRateSelectors(savedRate),
           onSelect(item) {
-            art.playbackRate = item.value as number;
+            const rate = item.value as number;
+            art.playbackRate = rate;
+            localStorage.setItem(PLAYBACK_RATE_KEY, String(rate));
             return item.html;
           },
         },
       ],
+    });
+
+    art.on('ready', () => {
+      if (savedRate !== 1.0) {
+        art.playbackRate = savedRate;
+      }
     });
 
     // 退出全屏后触发 resize，修复画面宽高比异常的问题
