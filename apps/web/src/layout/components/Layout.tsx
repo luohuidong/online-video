@@ -80,7 +80,7 @@ export default function Layout({ children }: LayoutProps) {
       </button>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col items-center pt-16">
+      <div className="ml-16 flex-1 flex flex-col items-center pt-16">
         <SearchBar />
 
         <main className="flex-1 w-full max-w-4xl px-4 py-8">
