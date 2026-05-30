@@ -28,3 +28,10 @@ export function extractVideoPlayGroups(playUrl: string): Array<[string, string][
   }
   return videoPlayGroups;
 }
+
+/**
+ * 获取视频总集数，只取第一个播放组的集数（与前端保持一致）。
+ */
+export function getTotalEpisodeCount(videoPlayGroups: Array<[string, string][]>): number {
+  return videoPlayGroups[0]?.length ?? 0;
+}

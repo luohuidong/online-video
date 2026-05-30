@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AppConfigService } from '../config/config.service';
 import { searchSource, getDetailFromSource } from './core/scraper';
+import { getTotalEpisodeCount } from './core/parsers/episodes';
 import { SearchResult } from './core/types';
 import { DrizzleService } from '../database/database.service';
 import { videos } from '../database/schema';
@@ -32,7 +33,11 @@ export class VideosService {
   async batchUpdate(
     sourceGroups: Array<{ sourceId: string; sourceVideoIds: string[] }>,
   ): Promise<Array<{ sourceId: string; sourceVideoId: string; totalEpisodes: number | null }>> {
-    const updates: Array<{ sourceId: string; sourceVideoId: string; totalEpisodes: number | null }> = [];
+    const updates: Array<{
+      sourceId: string;
+      sourceVideoId: string;
+      totalEpisodes: number | null;
+    }> = [];
     const sources = this.configService.getSources();
 
     for (const group of sourceGroups) {
@@ -42,8 +47,12 @@ export class VideosService {
       const details = await getDetailFromSource(source, group.sourceVideoIds);
 
       for (const detail of details) {
-        const totalEpisodes = detail.videoPlayGroups.reduce((sum, g) => sum + g.length, 0) || null;
-        updates.push({ sourceId: group.sourceId, sourceVideoId: detail.sourceVideoId, totalEpisodes });
+        const totalEpisodes = getTotalEpisodeCount(detail.videoPlayGroups);
+        updates.push({
+          sourceId: group.sourceId,
+          sourceVideoId: detail.sourceVideoId,
+          totalEpisodes,
+        });
       }
     }
 
