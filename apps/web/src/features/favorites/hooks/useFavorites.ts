@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getFavorites, removeFavorite, clearFavorites } from '../api/favoritesApi';
+import { getFavorites, removeFavorite, clearFavorites, batchUpdateVideos } from '../api/favoritesApi';
 import type { Favorite } from '@/shared/types';
 
 interface UseFavoritesResult {
@@ -10,6 +10,7 @@ interface UseFavoritesResult {
   refetch: () => void;
   removeMutation: ReturnType<typeof useMutation<unknown, Error, number>>;
   clearMutation: ReturnType<typeof useMutation<unknown, Error, void>>;
+  batchUpdateMutation: ReturnType<typeof useMutation<unknown, Error, void>>;
 }
 
 export function useFavorites(): UseFavoritesResult {
@@ -30,6 +31,26 @@ export function useFavorites(): UseFavoritesResult {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
   });
 
+  const batchUpdateMutation = useMutation({
+    mutationFn: () => {
+      const currentFavorites = queryClient.getQueryData<Favorite[]>(['favorites']);
+      if (!currentFavorites?.length) return Promise.resolve();
+      // 按 sourceId 分组
+      const groupMap = new Map<string, string[]>();
+      for (const fav of currentFavorites) {
+        const { sourceId, sourceVideoId } = fav.video;
+        if (!groupMap.has(sourceId)) groupMap.set(sourceId, []);
+        groupMap.get(sourceId)!.push(sourceVideoId);
+      }
+      const sourceGroups = Array.from(groupMap.entries()).map(([sourceId, sourceVideoIds]) => ({
+        sourceId,
+        sourceVideoIds,
+      }));
+      return batchUpdateVideos(sourceGroups);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
+  });
+
   return {
     favorites: data,
     isLoading,
@@ -38,5 +59,6 @@ export function useFavorites(): UseFavoritesResult {
     refetch,
     removeMutation,
     clearMutation,
+    batchUpdateMutation,
   };
 }

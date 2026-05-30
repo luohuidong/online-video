@@ -1,8 +1,10 @@
 import {
   Controller,
   Get,
+  Post,
   Param,
   Query,
+  Body,
   BadRequestException,
   NotFoundException,
   HttpException,
@@ -19,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { VideosService } from './videos.service';
-import { SearchResponseDto, SearchResultDto } from './videos.dto';
+import { SearchResponseDto, SearchResultDto, BatchUpdateRequestDto, BatchUpdateResponseDto } from './videos.dto';
 
 @ApiTags('videos')
 @Controller('videos')
@@ -52,6 +54,24 @@ export class VideosController {
       if (msg.startsWith('Source not found:')) throw new NotFoundException(msg);
       throw new HttpException(
         { message: '上游视频源暂时不可用，请稍后重试或切换其他源', error: msg },
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
+  }
+
+  @Post('batch-update')
+  @ApiOperation({ summary: '批量更新收藏夹视频的集数信息' })
+  @ApiOkResponse({ type: BatchUpdateResponseDto, description: '批量更新结果' })
+  @ApiBadRequestResponse({ description: '请求参数无效' })
+  @ApiBadGatewayResponse({ description: '上游视频源暂时不可用' })
+  async batchUpdate(@Body() body: BatchUpdateRequestDto) {
+    try {
+      const results = await this.videosService.batchUpdate(body.sourceGroups);
+      return { results };
+    } catch (err: any) {
+      const msg: string = err.message ?? '批量更新失败';
+      throw new HttpException(
+        { message: '上游视频源暂时不可用，请稍后重试', error: msg },
         HttpStatus.BAD_GATEWAY,
       );
     }

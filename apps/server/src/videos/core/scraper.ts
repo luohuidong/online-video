@@ -43,30 +43,32 @@ export async function searchSource(
 }
 
 /**
- * 从指定数据源获取视频详情（包含完整剧集列表）。
+ * 从指定数据源批量获取视频详情（包含完整剧集列表）。
+ * 支持同时查询多个视频，第三方 API 用逗号分隔 ids 即可。
  */
 export async function getDetailFromSource(
   source: SourceConfig,
-  sourceVideoId: string,
-): Promise<SearchResult> {
+  sourceVideoIds: string[],
+): Promise<SearchResult[]> {
+  if (!sourceVideoIds.length) return [];
+
   const data = await fetchJsonOrThrow<ApiListResponse>(
-    `${source.api}?ac=videolist&ids=${sourceVideoId}`,
+    `${source.api}?ac=videolist&ids=${sourceVideoIds.join(',')}`,
   );
-  if (!data?.list?.length) throw new Error('Empty detail response');
+  if (!data?.list?.length) return [];
 
-  const item: ApiVideoItem = data.list[0];
-
-  const videoPlayGroups = item.vod_play_url ? extractVideoPlayGroups(item.vod_play_url) : [];
-
-  return {
-    sourceVideoId,
-    title: item.vod_name,
-    poster: item.vod_pic,
-    videoPlayGroups,
-    sourceId: source.sourceId,
-    sourceName: source.sourceName,
-    year: item.vod_year?.match(/\d{4}/)?.[0] ?? 'unknown',
-    desc: item.vod_content?.trim(),
-    typeName: item.type_name,
-  };
+  return data.list.map((item: ApiVideoItem) => {
+    const videoPlayGroups = item.vod_play_url ? extractVideoPlayGroups(item.vod_play_url) : [];
+    return {
+      sourceVideoId: String(item.vod_id),
+      title: item.vod_name,
+      poster: item.vod_pic,
+      videoPlayGroups,
+      sourceId: source.sourceId,
+      sourceName: source.sourceName,
+      year: item.vod_year?.match(/\d{4}/)?.[0] ?? 'unknown',
+      desc: item.vod_content?.trim(),
+      typeName: item.type_name,
+    };
+  });
 }
