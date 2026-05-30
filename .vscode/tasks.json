@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start All",
+      "type": "shell",
+      "problemMatcher": [],
+      "isBackground": true,
+      "dependsOrder": "parallel",
+      "dependsOn": ["Web Client", "Server"]
+    },
+    {
+      "label": "Web Client",
+      "type": "shell",
+      "command": "pnpm dev:web",
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "Server",
+      "type": "shell",
+      "command": "pnpm dev:server",
+      "problemMatcher": [],
+      "isBackground": true
+    }
+  ]
+}
