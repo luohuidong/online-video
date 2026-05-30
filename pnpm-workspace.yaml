@@ -4,12 +4,8 @@ syncInjectedDepsAfterScripts:
   - build
 injectWorkspacePackages: true
 
-ignoredBuiltDependencies:
-  - '@scarf/scarf'
-  - es5-ext
-
-onlyBuiltDependencies:
-  - '@nestjs/core'
-  - better-sqlite3
-  - core-js
-  - esbuild
+allowBuilds:
+  '@nestjs/core': false
+  '@scarf/scarf': false
+  better-sqlite3: true
+  esbuild: true

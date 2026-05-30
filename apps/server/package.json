@@ -11,27 +11,27 @@
     "drizzle:push": "drizzle-kit push"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.19",
-    "@nestjs/core": "^11.1.19",
-    "@nestjs/platform-express": "^11.1.19",
-    "@nestjs/swagger": "^11.4.2",
-    "better-sqlite3": "^12.0.0",
+    "@nestjs/common": "^11.1.24",
+    "@nestjs/core": "^11.1.24",
+    "@nestjs/platform-express": "^11.1.24",
+    "@nestjs/swagger": "^11.4.4",
+    "better-sqlite3": "^12.10.0",
     "drizzle-orm": "^0.45.2",
-    "js-yaml": "^4.1.0",
-    "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.0",
-    "zod": "^4.4.2"
+    "js-yaml": "^4.1.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.21",
     "@nestjs/schematics": "^11.1.0",
-    "@nestjs/testing": "^11.1.19",
-    "@types/better-sqlite3": "^7.6.0",
-    "@types/express": "^4.17.0",
-    "@types/js-yaml": "^4.0.0",
-    "@types/node": "^25.6.0",
+    "@nestjs/testing": "^11.1.24",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^4.17.25",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.9.1",
     "drizzle-kit": "^0.31.10",
-    "ts-node": "^10.9.0",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3"
   }
