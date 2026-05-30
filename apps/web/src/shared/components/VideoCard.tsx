@@ -21,7 +21,7 @@ export default function VideoCard({ id, sourceId, title, poster, year: _year, ba
       to={`/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(id)}`}
       className="group flex flex-col transition-transform duration-200 hover:-translate-y-0.5"
     >
-      <div className="relative aspect-[2/3] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      <div className="relative aspect-2/3 bg-gray-100 dark:bg-gray-800 overflow-hidden">
         {poster ? (
           <img
             src={proxyImageUrl(poster)}
