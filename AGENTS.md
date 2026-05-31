@@ -1,3 +1,5 @@
+# AGENTS.md
+
 ## Project Overview
 
 Monorepo with two apps: a NestJS API server (SQLite + Drizzle ORM) and a React frontend (Vite + Tailwind CSS 4). Integrates with 苹果CMS V10 (Mac CMS) video provider API.
