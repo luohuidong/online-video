@@ -19,7 +19,7 @@ export async function timedFetch(url: string, ms: number): Promise<globalThis.Re
 }
 
 /** 静默版 JSON 请求——任何错误都返回 null，用于搜索（允许部分源失败）。 */
-export async function fetchJson<T = unknown>(url: string, ms = 30000): Promise<T | null> {
+export async function fetchJson<T = unknown>(url: string, ms = 10000): Promise<T | null> {
   try {
     const res = await timedFetch(url, ms);
     if (!res.ok) return null;

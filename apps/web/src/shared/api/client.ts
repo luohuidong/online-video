@@ -12,10 +12,18 @@ export class ApiError extends Error {
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${path}`;
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
-    ...init,
-  });
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  let res: globalThis.Response;
+  try {
+    res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json', ...init?.headers },
+      signal: ctrl.signal,
+      ...init,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!res.ok) {
     let message = res.statusText;
