@@ -26,6 +26,8 @@ export default function VideoCard({ id, sourceId, title, poster, year: _year, ba
           <img
             src={proxyImageUrl(poster)}
             alt={title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         ) : (
