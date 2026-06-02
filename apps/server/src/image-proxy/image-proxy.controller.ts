@@ -44,7 +44,7 @@ export class ImageProxyController {
     try {
       upstreamRes = await fetch(url, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
-        signal: AbortSignal.timeout(10000),
+        signal: AbortSignal.timeout(20000),
       });
     } catch {
       res.status(502).send('Failed to fetch upstream image');
