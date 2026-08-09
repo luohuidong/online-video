@@ -10,10 +10,14 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+export async function apiFetch<T>(
+  path: string,
+  options?: { init?: RequestInit; timeoutMs?: number },
+): Promise<T> {
+  const { init, timeoutMs = 30000 } = options ?? {};
   const url = `${BASE_URL}${path}`;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 30000);
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   let res: globalThis.Response;
   try {
     res = await fetch(url, {

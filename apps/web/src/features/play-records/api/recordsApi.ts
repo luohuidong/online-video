@@ -8,12 +8,12 @@ export function getPlayRecords(): Promise<PlayRecord[]> {
 export function deletePlayRecord(sourceId: string, sourceVideoId: string): Promise<void> {
   return apiFetch<void>(
     `/play-records/${encodeURIComponent(sourceId)}/${encodeURIComponent(sourceVideoId)}`,
-    { method: 'DELETE' },
+    { init: { method: 'DELETE' } },
   );
 }
 
 export function clearPlayRecords(): Promise<void> {
-  return apiFetch<void>('/play-records', { method: 'DELETE' });
+  return apiFetch<void>('/play-records', { init: { method: 'DELETE' } });
 }
 
 export function getPlayRecord(sourceId: string, sourceVideoId: string): Promise<PlayRecord | null> {

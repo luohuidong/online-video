@@ -7,5 +7,6 @@ export function getVideoDetail(
 ): Promise<SearchResult> {
   return apiFetch<SearchResult>(
     `/videos/${encodeURIComponent(source)}/${encodeURIComponent(id)}`,
+    { timeoutMs: 90000 },
   );
 }

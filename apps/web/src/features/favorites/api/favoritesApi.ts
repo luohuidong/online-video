@@ -7,24 +7,29 @@ export function getFavorites(): Promise<Favorite[]> {
 
 export function addFavorite(favorite: { video: Omit<Favorite['video'], 'id'> }): Promise<Favorite> {
   return apiFetch<Favorite>('/favorites', {
-    method: 'POST',
-    body: JSON.stringify(favorite),
+    init: {
+      method: 'POST',
+      body: JSON.stringify(favorite),
+    },
   });
 }
 
 export function removeFavorite(id: number): Promise<void> {
-  return apiFetch<void>(`/favorites/${id}`, { method: 'DELETE' });
+  return apiFetch<void>(`/favorites/${id}`, { init: { method: 'DELETE' } });
 }
 
 export function clearFavorites(): Promise<void> {
-  return apiFetch<void>('/favorites', { method: 'DELETE' });
+  return apiFetch<void>('/favorites', { init: { method: 'DELETE' } });
 }
 
 export function batchUpdateVideos(
   sourceGroups: Array<{ sourceId: string; sourceVideoIds: string[] }>,
 ): Promise<void> {
   return apiFetch<void>('/videos/batch-update', {
-    method: 'POST',
-    body: JSON.stringify({ sourceGroups }),
+    init: {
+      method: 'POST',
+      body: JSON.stringify({ sourceGroups }),
+    },
+    timeoutMs: 90000,
   });
 }

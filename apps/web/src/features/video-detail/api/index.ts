@@ -14,8 +14,10 @@ export function upsertPlayRecord(
   record: Omit<PlayRecord, 'id' | 'updatedAt'>,
 ): Promise<{ ok: boolean }> {
   return apiFetch<{ ok: boolean }>('/play-records', {
-    method: 'PUT',
-    body: JSON.stringify(record),
+    init: {
+      method: 'PUT',
+      body: JSON.stringify(record),
+    },
   });
 }
 
