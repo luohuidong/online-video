@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Home, History } from 'lucide-react';
+import { Home, History, Search } from 'lucide-react';
 import { Nav } from './Nav';
 import { SearchBar } from './SearchBar';
 import { useTheme } from '@/features/theme/hooks/useTheme';
@@ -10,6 +10,7 @@ interface LayoutProps {
 
 const navItems = [
   { path: '/', label: '首页', icon: Home },
+  { path: '/search', label: '搜索', icon: Search },
   { path: '/play-records', label: '记录', icon: History },
 ];
 
