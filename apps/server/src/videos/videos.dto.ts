@@ -4,13 +4,14 @@ export class SearchResultDto {
   @ApiProperty({ description: '视频在数据源中的 ID' })
   sourceVideoId!: string;
 
+  @ApiProperty({ description: '视频标题' })
   title!: string;
 
   @ApiProperty({ description: '海报图片 URL' })
   poster!: string;
 
-  @ApiProperty({ type: [String], description: '剧集播放组' })
-  videoPlayGroups!: string[];
+  @ApiProperty({ description: '剧集播放组' })
+  videoPlayGroups!: Array<[string, string][]>;
 
   @ApiProperty({ description: '视频源标识' })
   sourceId!: string;
@@ -28,9 +29,17 @@ export class SearchResultDto {
   typeName?: string;
 }
 
+export class SearchGroupDto {
+  @ApiProperty({ description: '数据源名称（来自 config.yml 的 sourceName）' })
+  name!: string;
+
+  @ApiProperty({ type: [SearchResultDto], description: '该数据源下的搜索结果' })
+  items!: SearchResultDto[];
+}
+
 export class SearchResponseDto {
-  @ApiProperty({ type: [SearchResultDto], description: '搜索结果列表（聚合多个视频源）' })
-  results!: SearchResultDto[];
+  @ApiProperty({ type: [SearchGroupDto], description: '按数据源分组的搜索结果' })
+  groups!: SearchGroupDto[];
 }
 
 class BatchUpdateSourceGroupDto {

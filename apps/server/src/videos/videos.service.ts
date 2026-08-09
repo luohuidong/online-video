@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AppConfigService } from '../config/config.service';
 import { searchSource, getDetailFromSource } from './core/scraper';
 import { getTotalEpisodeCount } from './core/parsers/episodes';
-import { SearchResult } from './core/types';
+import { SearchGroup, SearchResult } from './core/types';
 import { DrizzleService } from '../database/database.service';
 import { videos } from '../database/schema';
 import { eq } from 'drizzle-orm';
@@ -14,11 +14,16 @@ export class VideosService {
     private readonly drizzle: DrizzleService,
   ) {}
 
-  async search(query: string): Promise<SearchResult[]> {
+  async search(query: string): Promise<SearchGroup[]> {
     const sources = this.configService.getSources();
     const maxPages = 5;
-    const results = await Promise.all(sources.map((src) => searchSource(src, query, maxPages)));
-    return results.flat();
+    const perSource = await Promise.all(sources.map((src) => searchSource(src, query, maxPages)));
+
+    // 按 config.yml 中的源顺序分组，跳过空集合
+    return sources
+      .map((src, i) => ({ source: src, items: perSource[i] }))
+      .filter((g) => g.items.length > 0)
+      .map((g) => ({ name: g.source.sourceName, items: g.items }));
   }
 
   async getDetail(sourceId: string, sourceVideoId: string): Promise<SearchResult> {

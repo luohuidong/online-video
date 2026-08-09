@@ -35,8 +35,8 @@ export class VideosController {
   @ApiBadRequestResponse({ description: '搜索关键词不能为空' })
   async search(@Query('q') q: string) {
     if (!q?.trim()) throw new BadRequestException('搜索关键词不能为空');
-    const results = await this.videosService.search(q.trim());
-    return { results };
+    const groups = await this.videosService.search(q.trim());
+    return { groups };
   }
 
   @Get(':source/:id')

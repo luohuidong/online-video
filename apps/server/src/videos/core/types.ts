@@ -20,6 +20,14 @@ export interface SearchResult {
   typeName?: string;
 }
 
+/** 按数据源分组的搜索结果 */
+export interface SearchGroup {
+  /** 数据源显示名称（来自 config.yml 的 sourceName） */
+  name: string;
+  /** 该数据源下的搜索结果 */
+  items: SearchResult[];
+}
+
 /** 数据源返回的原始视频条目 */
 export interface ApiVideoItem {
   /** 视频唯一标识 */
