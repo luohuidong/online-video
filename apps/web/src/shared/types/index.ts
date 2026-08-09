@@ -7,6 +7,12 @@ export interface SearchResult {
   sourceName: string;
   year: string;
   desc?: string;
+  typeName?: string;
+}
+
+export interface SearchGroup {
+  name: string;
+  items: SearchResult[];
 }
 
 export interface Favorite {
