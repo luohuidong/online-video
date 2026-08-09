@@ -1,6 +1,7 @@
 import { getEpisodeHref } from '@/shared/utils/video';
 
 interface EpisodeListProps {
+  title: string;
   currentPlayGroup: [string, string][];
   sortDesc: boolean;
   lastWatchedIdx: number;
@@ -8,6 +9,7 @@ interface EpisodeListProps {
 }
 
 export function EpisodeList({
+  title,
   currentPlayGroup,
   sortDesc,
   lastWatchedIdx,
@@ -23,8 +25,9 @@ export function EpisodeList({
         const idx = sortDesc ? currentPlayGroup.length - 1 - i : i;
         const isLastWatched = idx === lastWatchedIdx && lastWatchedIdx >= 0;
         const ep = currentPlayGroup[idx];
+        const episodeLabel = ep[0];
 
-        const href = getEpisodeHref(ep[1]);
+        const href = getEpisodeHref(ep[1], title, episodeLabel);
 
         return (
           <a
@@ -40,7 +43,7 @@ export function EpisodeList({
                 上次
               </span>
             )}
-            {ep[0] || `第${idx + 1}集`}
+            {episodeLabel}
           </a>
         );
       })}

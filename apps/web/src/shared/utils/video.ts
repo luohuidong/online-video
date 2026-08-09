@@ -7,9 +7,18 @@ export function proxyImageUrl(url: string | undefined): string | undefined {
   return `/api/image-proxy?url=${encodeURIComponent(url)}`;
 }
 
-export function getEpisodeHref(episodeUrl: string): string {
-  if (episodeUrl.includes('.m3u8')) {
-    return `/play?url=${encodeURIComponent(episodeUrl)}`;
+export function getEpisodeHref(
+  episodeUrl: string,
+  title: string,
+  episodeLabel: string,
+): string {
+  if (!episodeUrl.includes('.m3u8')) {
+    return episodeUrl;
   }
-  return episodeUrl;
+  const params = new URLSearchParams({
+    url: episodeUrl,
+    title,
+    episode: episodeLabel,
+  });
+  return `/play?${params.toString()}`;
 }

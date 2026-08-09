@@ -105,6 +105,7 @@ export default function DetailPage() {
             />
           </div>
           <EpisodeList
+            title={video.title}
             currentPlayGroup={currentPlayGroup}
             sortDesc={sortDesc}
             lastWatchedIdx={lastWatchedIdx}
