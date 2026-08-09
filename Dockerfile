@@ -10,8 +10,8 @@ COPY apps/web/package.json ./apps/web/package.json
 RUN pnpm install --frozen-lockfile
 COPY . /app
 
-RUN pnpm run build:server
-RUN pnpm run build:web
+RUN pnpm --filter server build
+RUN pnpm --filter web build
 # Deploy server with all deps (dev included so drizzle-kit is available at runtime)
 RUN pnpm deploy --filter=server /prod/server
 # pnpm deploy does not copy build artifacts, copy dist manually
