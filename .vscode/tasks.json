@@ -2,24 +2,28 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start All",
+      "label": "dev",
       "type": "shell",
       "problemMatcher": [],
-      "isBackground": true,
-      "dependsOrder": "parallel",
-      "dependsOn": ["Web Client", "Server"]
+      "dependsOn": ["dev:server", "dev:web"]
     },
     {
-      "label": "Web Client",
+      "label": "dev:web",
       "type": "shell",
-      "command": "pnpm dev:web",
+      "command": "pnpm dev",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/web"
+      },
       "problemMatcher": [],
       "isBackground": true
     },
     {
-      "label": "Server",
+      "label": "dev:server",
       "type": "shell",
-      "command": "pnpm dev:server",
+      "command": "pnpm dev",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/server"
+      },
       "problemMatcher": [],
       "isBackground": true
     }
