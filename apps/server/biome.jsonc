@@ -21,6 +21,9 @@
     "rules": {
       "suspicious": {
         "noConsole": "off"
+      },
+      "style": {
+        "useImportType": "off"
       }
     }
   }
