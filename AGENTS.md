@@ -13,6 +13,16 @@ pnpm dev:web        # Start web dev server (Vite)
 pnpm build:server   # Build server (NestJS build)
 pnpm build:web      # Build web (tsc -b && vite build)
 
+# Code quality (Biome, run from repo root)
+pnpm format         # Format check (biome format)
+pnpm format:write   # Apply formatting (biome format --write)
+pnpm lint           # Lint check (biome lint)
+pnpm lint:write     # Lint + apply safe fixes (biome lint --write)
+pnpm check          # Format + lint + organize imports check (biome check)
+pnpm check:write    # Apply format + lint + organize imports (biome check --write)
+pnpm ci             # CI-friendly check, no --write
+```
+
 # Server app (cd apps/server)
 pnpm dev            # Dev with auto-reload
 pnpm build          # Production build

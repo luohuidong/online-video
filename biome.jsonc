@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["package.json"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "linter": {
+    "rules": {
+      "a11y": {
+        // Many SVGs in this codebase are decorative icons / branding and have
+        // no meaningful <title>. The rule is too noisy to be useful here.
+        "noSvgWithoutTitle": "off"
+      },
+      "suspicious": {
+        // Tailwind v4 baseline. Covers @tailwind / @apply / @layer — the only
+        // Tailwind at-rules still in active use across the workspace.
+        "noUnknownAtRules": {
+          "level": "error",
+          "options": {
+            "ignore": ["tailwind", "apply", "layer"]
+          }
+        }
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "css": {
+    "parser": {
+      // Lets the parser accept Tailwind v3-style directives (@tailwind, @apply,
+      // @layer, @variants, ...) without parse errors. Harmless for the
+      // Tailwind v4 app — v4 uses @import "tailwindcss" which is standard CSS.
+      "tailwindDirectives": true
+    }
+  }
+}
