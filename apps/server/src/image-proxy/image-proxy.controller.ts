@@ -1,9 +1,15 @@
-import { Controller, Get, Query, Res, BadRequestException } from '@nestjs/common';
-import type { Response } from 'express';
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import type { Response } from 'express';
 
 const CACHE_DIR = join(process.cwd(), '.cache', 'images');
 
@@ -32,7 +38,9 @@ export class ImageProxyController {
 
     // Serve from cache if exists
     if (existsSync(imgPath)) {
-      const contentType = existsSync(metaPath) ? readFileSync(metaPath, 'utf8') : 'image/jpeg';
+      const contentType = existsSync(metaPath)
+        ? readFileSync(metaPath, 'utf8')
+        : 'image/jpeg';
       res.set('Content-Type', contentType);
       res.set('Cache-Control', 'public, max-age=2592000'); // 30 days
       res.send(readFileSync(imgPath));

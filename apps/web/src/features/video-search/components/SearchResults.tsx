@@ -1,5 +1,5 @@
-import type { SearchGroup } from '@/shared/types';
 import VideoCard from '@/shared/components/VideoCard';
+import type { SearchGroup } from '@/shared/types';
 import { getVideoEpisodeCount } from '@/shared/utils/video';
 
 interface SearchResultsProps {

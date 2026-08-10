@@ -1,8 +1,11 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import Database from 'better-sqlite3';
-import { drizzle, BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
-import * as schema from './schema';
+import {
+  type BetterSQLite3Database,
+  drizzle,
+} from 'drizzle-orm/better-sqlite3';
 import config from '../../drizzle.config';
+import * as schema from './schema';
 
 @Injectable()
 export class DrizzleService implements OnModuleInit {

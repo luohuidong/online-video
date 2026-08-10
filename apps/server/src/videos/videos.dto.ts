@@ -38,7 +38,10 @@ export class SearchGroupDto {
 }
 
 export class SearchResponseDto {
-  @ApiProperty({ type: [SearchGroupDto], description: '按数据源分组的搜索结果' })
+  @ApiProperty({
+    type: [SearchGroupDto],
+    description: '按数据源分组的搜索结果',
+  })
   groups!: SearchGroupDto[];
 }
 
@@ -51,7 +54,10 @@ class BatchUpdateSourceGroupDto {
 }
 
 export class BatchUpdateRequestDto {
-  @ApiProperty({ type: [BatchUpdateSourceGroupDto], description: '按源分组的视频 ID 列表' })
+  @ApiProperty({
+    type: [BatchUpdateSourceGroupDto],
+    description: '按源分组的视频 ID 列表',
+  })
   sourceGroups!: BatchUpdateSourceGroupDto[];
 }
 

@@ -16,6 +16,7 @@ export function PlayGroupSelector({
         return (
           <div key={i} className="relative">
             <button
+              type="button"
               onClick={() => onSelect(i)}
               className={`px-3 py-1 rounded text-sm transition-colors min-w-[80px] text-center cursor-pointer ${
                 i === activeLine

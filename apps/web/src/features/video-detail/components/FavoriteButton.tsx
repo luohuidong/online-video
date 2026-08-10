@@ -11,6 +11,7 @@ export function FavoriteButton({
 }: FavoriteButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={isPending}
       className={`mt-2 px-4 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${

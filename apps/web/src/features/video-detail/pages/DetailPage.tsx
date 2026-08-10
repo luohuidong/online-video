@@ -1,18 +1,16 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { useVideoDetail } from '../hooks/useVideoDetail';
-import { useFavorite } from '../hooks/useFavorite';
-import { useEpisodeSort } from '../hooks/useEpisodeSort';
-import { VideoInfo } from '../components/VideoInfo';
+import { Link, useParams } from 'react-router-dom';
+import ErrorMessage from '@/shared/components/ErrorMessage';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import { getPlayRecord, upsertPlayRecord } from '../api';
+import { EpisodeList } from '../components/EpisodeList';
 import { EpisodeSortToggle } from '../components/EpisodeSortToggle';
 import { PlayGroupSelector } from '../components/PlayGroupSelector';
-import { EpisodeList } from '../components/EpisodeList';
-import { getPlayRecord, upsertPlayRecord } from '../api';
-import LoadingSpinner from '@/shared/components/LoadingSpinner';
-import ErrorMessage from '@/shared/components/ErrorMessage';
+import { VideoInfo } from '../components/VideoInfo';
+import { useEpisodeSort } from '../hooks/useEpisodeSort';
+import { useFavorite } from '../hooks/useFavorite';
+import { useVideoDetail } from '../hooks/useVideoDetail';
 
 export default function DetailPage() {
   const { source = '', id = '' } = useParams<{ source: string; id: string }>();
@@ -23,12 +21,15 @@ export default function DetailPage() {
   const { data: video, isLoading, isError, error } = useVideoDetail(source, id);
   const { sortDesc, toggleSort } = useEpisodeSort(source, id);
 
-  const { isFavorited, toggleFavorite, isPending: favoritePending } =
-    useFavorite({
-      source,
-      id,
-      video,
-    });
+  const {
+    isFavorited,
+    toggleFavorite,
+    isPending: favoritePending,
+  } = useFavorite({
+    source,
+    id,
+    video,
+  });
 
   const { data: currentPlayRecord } = useQuery({
     queryKey: ['playRecord', source, id],
@@ -37,20 +38,22 @@ export default function DetailPage() {
   });
 
   const upsertMutation = useMutation({
-    mutationFn: (episodeIndex: number) =>
-      upsertPlayRecord({
+    mutationFn: (episodeIndex: number) => {
+      if (!video) throw new Error('视频详情尚未加载完成');
+      return upsertPlayRecord({
         video: {
           id: 0,
           sourceId: source,
           sourceVideoId: id,
-          title: video!.title,
-          sourceName: video!.sourceName,
-          cover: video!.poster,
-          year: video!.year,
+          title: video.title,
+          sourceName: video.sourceName,
+          cover: video.poster,
+          year: video.year,
           totalEpisodes: currentPlayGroup.length,
         },
         episodeIndex,
-      }),
+      });
+    },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['playRecord', source, id] }),
   });
@@ -71,7 +74,10 @@ export default function DetailPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-        <Link to="/" className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+        <Link
+          to="/"
+          className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        >
           首页
         </Link>
         <span>/</span>

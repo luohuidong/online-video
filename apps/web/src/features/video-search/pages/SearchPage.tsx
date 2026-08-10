@@ -1,10 +1,10 @@
-import { useSearchParams, Link } from 'react-router-dom';
-import { useSearch } from '../hooks/useSearch';
-import { useActiveGroupIndex } from '../hooks/useActiveGroupIndex';
-import SearchResults from '../components/SearchResults';
-import GroupSidebar from '../components/GroupSidebar';
-import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import { Link, useSearchParams } from 'react-router-dom';
 import ErrorMessage from '@/shared/components/ErrorMessage';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import GroupSidebar from '../components/GroupSidebar';
+import SearchResults from '../components/SearchResults';
+import { useActiveGroupIndex } from '../hooks/useActiveGroupIndex';
+import { useSearch } from '../hooks/useSearch';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -59,7 +59,11 @@ export default function SearchPage() {
 
       {data && totalCount > 0 && (
         <div className="flex gap-6">
-          <GroupSidebar groups={data} activeIndex={activeIndex} onSelect={handleSelect} />
+          <GroupSidebar
+            groups={data}
+            activeIndex={activeIndex}
+            onSelect={handleSelect}
+          />
           <div className="flex-1 min-w-0">
             <SearchResults groups={data} />
           </div>

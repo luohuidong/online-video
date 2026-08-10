@@ -6,7 +6,9 @@
  * @param {string} playUrl - 来自详情接口的 vod_play_url 字段
  * @return 最终返回包含多个播放组的数组；首集 URL 为 .m3u8 的播放组会被稳定地前置到第一位。
  */
-export function extractVideoPlayGroups(playUrl: string): Array<[string, string][]> {
+export function extractVideoPlayGroups(
+  playUrl: string,
+): Array<[string, string][]> {
   const groupStrs = playUrl.split('$$$');
 
   const videoPlayGroups: Array<[string, string][]> = [];
@@ -41,6 +43,8 @@ export function extractVideoPlayGroups(playUrl: string): Array<[string, string][
 /**
  * 获取视频总集数，只取第一个播放组的集数（与前端保持一致）。
  */
-export function getTotalEpisodeCount(videoPlayGroups: Array<[string, string][]>): number {
+export function getTotalEpisodeCount(
+  videoPlayGroups: Array<[string, string][]>,
+): number {
   return videoPlayGroups[0]?.length ?? 0;
 }

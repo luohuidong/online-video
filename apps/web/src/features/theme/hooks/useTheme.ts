@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -45,7 +45,8 @@ export function useTheme() {
     });
   };
 
-  const themeLabel = theme === 'light' ? '亮色模式' : theme === 'dark' ? '暗色模式' : '跟随系统';
+  const themeLabel =
+    theme === 'light' ? '亮色模式' : theme === 'dark' ? '暗色模式' : '跟随系统';
 
   return [isDark, cycleTheme, theme, themeLabel] as const;
 }

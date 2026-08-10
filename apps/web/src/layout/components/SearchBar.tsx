@@ -1,6 +1,6 @@
+import { Search } from 'lucide-react';
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   defaultValue?: string;
@@ -21,11 +21,17 @@ export function SearchBar({ defaultValue = '' }: SearchBarProps) {
   return (
     <form onSubmit={handleSearch} className="w-full max-w-md px-4">
       <div className="relative flex items-center">
-        <Search size={16} className="absolute left-8 text-gray-400" strokeWidth={1.5} />
+        <Search
+          size={16}
+          className="absolute left-8 text-gray-400"
+          strokeWidth={1.5}
+        />
         <input
           type="search"
           value={keyword}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setKeyword(e.target.value)
+          }
           placeholder="搜索影视..."
           className="
             w-full pl-10 pr-4 py-2.5 bg-transparent

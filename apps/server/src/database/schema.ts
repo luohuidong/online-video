@@ -1,4 +1,9 @@
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import {
+  integer,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from 'drizzle-orm/sqlite-core';
 
 // 视频主表 - 存视频的元信息
 export const videos = sqliteTable(
@@ -13,7 +18,9 @@ export const videos = sqliteTable(
     year: text('year'),
     totalEpisodes: integer('total_episodes'),
   },
-  (t) => [uniqueIndex('videos_source_video_idx').on(t.sourceId, t.sourceVideoId)],
+  (t) => [
+    uniqueIndex('videos_source_video_idx').on(t.sourceId, t.sourceVideoId),
+  ],
 );
 
 // 收藏表 - 只存收藏行为相关

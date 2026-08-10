@@ -1,5 +1,5 @@
-import type { PlayRecord } from '@/shared/types';
 import { apiFetch } from '@/shared/api/client';
+import type { PlayRecord } from '@/shared/types';
 
 export function getPlayRecord(
   sourceId: string,

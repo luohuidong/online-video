@@ -6,7 +6,11 @@ interface GroupSidebarProps {
   onSelect: (index: number) => void;
 }
 
-export default function GroupSidebar({ groups, activeIndex, onSelect }: GroupSidebarProps) {
+export default function GroupSidebar({
+  groups,
+  activeIndex,
+  onSelect,
+}: GroupSidebarProps) {
   return (
     <aside className="hidden lg:block w-40 shrink-0">
       <nav className="sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pr-1">
@@ -23,9 +27,10 @@ export default function GroupSidebar({ groups, activeIndex, onSelect }: GroupSid
                   onClick={() => onSelect(index)}
                   className={`
                     w-full text-left px-2 py-1.5 rounded text-sm cursor-pointer transition-colors
-                    ${isActive
-                      ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ${
+                      isActive
+                        ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }
                   `}
                 >

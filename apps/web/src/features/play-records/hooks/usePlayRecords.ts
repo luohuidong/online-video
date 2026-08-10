@@ -1,6 +1,9 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { QueryClient } from '@tanstack/react-query';
-import { getPlayRecords, deletePlayRecord, clearPlayRecords } from '../api/recordsApi';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  clearPlayRecords,
+  deletePlayRecord,
+  getPlayRecords,
+} from '../api/recordsApi';
 
 const queryClient = new QueryClient();
 
@@ -11,14 +14,21 @@ export function usePlayRecords() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ sourceId, sourceVideoId }: { sourceId: string; sourceVideoId: string }) =>
-      deletePlayRecord(sourceId, sourceVideoId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['play-records'] }),
+    mutationFn: ({
+      sourceId,
+      sourceVideoId,
+    }: {
+      sourceId: string;
+      sourceVideoId: string;
+    }) => deletePlayRecord(sourceId, sourceVideoId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['play-records'] }),
   });
 
   const clearMutation = useMutation({
     mutationFn: clearPlayRecords,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['play-records'] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['play-records'] }),
   });
 
   return {

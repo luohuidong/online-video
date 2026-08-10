@@ -1,11 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
-  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -16,10 +16,16 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import {
+  AddFavoriteDto,
+  AddFavoriteSchema,
+  FavoriteRecordDto,
+} from './favorites.dto';
 import { FavoritesService } from './favorites.service';
-import { AddFavoriteDto, AddFavoriteSchema, FavoriteRecordDto } from './favorites.dto';
 
-const OkResponse = { schema: { properties: { ok: { type: 'boolean', example: true } } } };
+const OkResponse = {
+  schema: { properties: { ok: { type: 'boolean', example: true } } },
+};
 
 @ApiTags('favorites')
 @Controller('favorites')

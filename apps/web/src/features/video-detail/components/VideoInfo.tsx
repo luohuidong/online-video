@@ -1,6 +1,6 @@
 import type { SearchResult } from '@/shared/types';
-import { FavoriteButton } from './FavoriteButton';
 import { getVideoEpisodeCount, proxyImageUrl } from '@/shared/utils/video';
+import { FavoriteButton } from './FavoriteButton';
 
 interface VideoInfoProps {
   video: SearchResult;

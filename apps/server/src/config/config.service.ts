@@ -1,8 +1,8 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import fs from 'node:fs';
 import path from 'node:path';
+import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import yaml from 'js-yaml';
-import { AppConfigSchema, AppConfig, Source } from './config.schema';
+import { type AppConfig, AppConfigSchema, type Source } from './config.schema';
 
 @Injectable()
 export class AppConfigService implements OnModuleInit {

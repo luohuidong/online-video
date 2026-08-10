@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { z } from 'zod';
 
 export const UpsertPlayRecordSchema = z.object({
   video: z.object({

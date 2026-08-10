@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { desc, eq, and } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { DrizzleService } from '../database/database.service';
 import { playRecords, videos } from '../database/schema';
-import { UpsertPlayRecordData } from './play-records.dto';
+import type { UpsertPlayRecordData } from './play-records.dto';
 
 @Injectable()
 export class PlayRecordsService {
@@ -35,7 +35,12 @@ export class PlayRecordsService {
     const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
-      .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
+      .where(
+        and(
+          eq(videos.sourceId, sourceId),
+          eq(videos.sourceVideoId, sourceVideoId),
+        ),
+      )
       .get();
     if (!video) return null;
     return (
@@ -121,10 +126,18 @@ export class PlayRecordsService {
     const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
-      .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
+      .where(
+        and(
+          eq(videos.sourceId, sourceId),
+          eq(videos.sourceVideoId, sourceVideoId),
+        ),
+      )
       .get();
     if (!video) return;
-    return this.drizzle.db.delete(playRecords).where(eq(playRecords.id, video.id)).run();
+    return this.drizzle.db
+      .delete(playRecords)
+      .where(eq(playRecords.id, video.id))
+      .run();
   }
 
   clearAll() {

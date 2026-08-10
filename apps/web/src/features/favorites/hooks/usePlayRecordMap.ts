@@ -10,7 +10,10 @@ export function usePlayRecordMap(): Map<string, number> {
   const playRecordMap = new Map<string, number>();
   playRecords?.forEach((r) => {
     if (r.episodeIndex != null) {
-      playRecordMap.set(`${r.video.sourceId}:${r.video.sourceVideoId}`, r.episodeIndex);
+      playRecordMap.set(
+        `${r.video.sourceId}:${r.video.sourceVideoId}`,
+        r.episodeIndex,
+      );
     }
   });
 

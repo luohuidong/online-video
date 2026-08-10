@@ -1,4 +1,6 @@
-export function getVideoEpisodeCount(videoPlayGroups: [string, string][][]): number {
+export function getVideoEpisodeCount(
+  videoPlayGroups: [string, string][][],
+): number {
   return videoPlayGroups[0]?.length ?? 0;
 }
 

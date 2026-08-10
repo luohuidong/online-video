@@ -1,6 +1,6 @@
-import type { Config } from 'drizzle-kit';
-import path from 'node:path';
 import fs from 'node:fs';
+import path from 'node:path';
+import type { Config } from 'drizzle-kit';
 
 const dbPath = path.resolve(process.cwd(), '.data', 'data.db');
 

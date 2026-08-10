@@ -1,14 +1,28 @@
 import { Trash2 } from 'lucide-react';
-import { usePlayRecords } from '../hooks/usePlayRecords';
-import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import ErrorMessage from '@/shared/components/ErrorMessage';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import RecordList from '../components/RecordList';
+import { usePlayRecords } from '../hooks/usePlayRecords';
 
 export default function PlayRecordsPage() {
-  const { records, isLoading, isError, error, refetch, deleteMutation, clearMutation } = usePlayRecords();
+  const {
+    records,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    deleteMutation,
+    clearMutation,
+  } = usePlayRecords();
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
-  if (isError) return <ErrorMessage message={(error as Error).message} onRetry={() => refetch()} />;
+  if (isError)
+    return (
+      <ErrorMessage
+        message={(error as Error).message}
+        onRetry={() => refetch()}
+      />
+    );
 
   return (
     <div>
@@ -16,11 +30,14 @@ export default function PlayRecordsPage() {
         <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
           播放记录
           {records && records.length > 0 && (
-            <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">{records.length} 条</span>
+            <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">
+              {records.length} 条
+            </span>
           )}
         </h1>
         {records && records.length > 0 && (
           <button
+            type="button"
             onClick={() => {
               if (confirm('确认清空所有播放记录？')) clearMutation.mutate();
             }}
@@ -32,19 +49,19 @@ export default function PlayRecordsPage() {
         )}
       </div>
 
-      {records && records.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-500 gap-3">
-          <p>还没有播放记录</p>
-        </div>
-      ) : (
+      {records && records.length > 0 ? (
         <RecordList
-          records={records!}
+          records={records}
           onRemove={(sourceId, sourceVideoId) => {
             if (confirm('确认删除该播放记录？')) {
               deleteMutation.mutate({ sourceId, sourceVideoId });
             }
           }}
         />
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-500 gap-3">
+          <p>还没有播放记录</p>
+        </div>
       )}
     </div>
   );

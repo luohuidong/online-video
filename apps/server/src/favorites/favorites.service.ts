@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { desc, eq, and } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { DrizzleService } from '../database/database.service';
 import { favorites, videos } from '../database/schema';
-import { AddFavoriteDto } from './favorites.dto';
+import type { AddFavoriteDto } from './favorites.dto';
 
 @Injectable()
 export class FavoritesService {
@@ -32,7 +32,15 @@ export class FavoritesService {
 
   add(dto: AddFavoriteDto) {
     const now = Date.now();
-    const { sourceId, sourceName, sourceVideoId, title, cover, year, totalEpisodes } = dto.video;
+    const {
+      sourceId,
+      sourceName,
+      sourceVideoId,
+      title,
+      cover,
+      year,
+      totalEpisodes,
+    } = dto.video;
     // 先插入/更新视频信息，获取视频 id
     this.drizzle.db
       .insert(videos)
@@ -61,7 +69,12 @@ export class FavoritesService {
     const video = this.drizzle.db
       .select({ id: videos.id })
       .from(videos)
-      .where(and(eq(videos.sourceId, sourceId), eq(videos.sourceVideoId, sourceVideoId)))
+      .where(
+        and(
+          eq(videos.sourceId, sourceId),
+          eq(videos.sourceVideoId, sourceVideoId),
+        ),
+      )
       .get();
     if (!video) return;
 

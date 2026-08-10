@@ -1,7 +1,12 @@
-import { SourceConfig, SearchResult, ApiVideoItem, ApiListResponse } from './types';
-import { fetchJson, fetchJsonOrThrow } from './utils/fetch';
 import { extractVideoPlayGroups } from './parsers/episodes';
 import { mapItem } from './parsers/mapper';
+import type {
+  ApiListResponse,
+  ApiVideoItem,
+  SearchResult,
+  SourceConfig,
+} from './types';
+import { fetchJson, fetchJsonOrThrow } from './utils/fetch';
 
 /**
  * 在单个视频源上执行关键词搜索，支持分页抓取。
@@ -25,7 +30,9 @@ export async function searchSource(
   if (extraPages > 0) {
     const pages = await Promise.all(
       Array.from({ length: extraPages }, (_, i) =>
-        fetchJson<ApiListResponse>(`${source.api}?ac=videolist&wd=${encoded}&pg=${i + 2}`),
+        fetchJson<ApiListResponse>(
+          `${source.api}?ac=videolist&wd=${encoded}&pg=${i + 2}`,
+        ),
       ),
     );
     for (const page of pages) {
@@ -58,7 +65,9 @@ export async function getDetailFromSource(
   if (!data?.list?.length) return [];
 
   return data.list.map((item: ApiVideoItem) => {
-    const videoPlayGroups = item.vod_play_url ? extractVideoPlayGroups(item.vod_play_url) : [];
+    const videoPlayGroups = item.vod_play_url
+      ? extractVideoPlayGroups(item.vod_play_url)
+      : [];
     return {
       sourceVideoId: String(item.vod_id),
       title: item.vod_name,

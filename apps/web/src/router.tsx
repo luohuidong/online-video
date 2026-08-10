@@ -1,10 +1,10 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import Layout from '@/layout';
 import HomePage from '@/features/favorites/pages/HomePage';
-import DetailPage from '@/features/video-detail/pages/DetailPage';
-import SearchPage from '@/features/video-search/pages/SearchPage';
 import PlayRecordsPage from '@/features/play-records/pages/PlayRecordsPage';
+import DetailPage from '@/features/video-detail/pages/DetailPage';
 import PlayerPage from '@/features/video-player/pages/PlayerPage';
+import SearchPage from '@/features/video-search/pages/SearchPage';
+import Layout from '@/layout';
 
 function Root() {
   return (

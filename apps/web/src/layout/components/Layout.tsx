@@ -1,8 +1,8 @@
+import { History, Home, Search } from 'lucide-react';
 import { useState } from 'react';
-import { Home, History, Search } from 'lucide-react';
+import { useTheme } from '@/features/theme/hooks/useTheme';
 import { Nav } from './Nav';
 import { SearchBar } from './SearchBar';
-import { useTheme } from '@/features/theme/hooks/useTheme';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +28,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Theme Toggle */}
       <button
+        type="button"
         onClick={toggleTheme}
         className="fixed left-4 top-4 z-50 group flex items-center"
         onMouseEnter={() => setHoveredPath('theme')}
@@ -43,13 +44,27 @@ export default function Layout({ children }: LayoutProps) {
           `}
         >
           {theme === 'system' ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
               <line x1="8" y1="21" x2="16" y2="21"></line>
               <line x1="12" y1="17" x2="12" y2="21"></line>
             </svg>
           ) : theme === 'dark' ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
               <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -61,7 +76,14 @@ export default function Layout({ children }: LayoutProps) {
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
           ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           )}
@@ -84,9 +106,7 @@ export default function Layout({ children }: LayoutProps) {
       <div className="ml-16 flex-1 flex flex-col items-center pt-16">
         <SearchBar />
 
-        <main className="flex-1 w-full max-w-4xl px-4 py-8">
-          {children}
-        </main>
+        <main className="flex-1 w-full max-w-4xl px-4 py-8">{children}</main>
       </div>
     </div>
   );

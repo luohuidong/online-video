@@ -1,5 +1,5 @@
-import type { Favorite } from '@/shared/types';
 import VideoCard from '@/shared/components/VideoCard';
+import type { Favorite } from '@/shared/types';
 
 interface FavoriteListProps {
   favorites: Favorite[];
@@ -7,11 +7,17 @@ interface FavoriteListProps {
   onRemove: (id: number) => void;
 }
 
-export default function FavoriteList({ favorites, playRecordMap, onRemove }: FavoriteListProps) {
+export default function FavoriteList({
+  favorites,
+  playRecordMap,
+  onRemove,
+}: FavoriteListProps) {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
       {favorites.map((fav) => {
-        const epIdx = playRecordMap.get(`${fav.video.sourceId}:${fav.video.sourceVideoId}`);
+        const epIdx = playRecordMap.get(
+          `${fav.video.sourceId}:${fav.video.sourceVideoId}`,
+        );
         const watchProgress =
           epIdx != null
             ? fav.video.totalEpisodes == null

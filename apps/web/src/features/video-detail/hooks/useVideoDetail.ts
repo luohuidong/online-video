@@ -1,5 +1,5 @@
-import type { SearchResult } from '@/shared/types';
 import { useQuery } from '@tanstack/react-query';
+import type { SearchResult } from '@/shared/types';
 import { getVideoDetail } from '../api/detailApi';
 
 export type VideoDetail = SearchResult;

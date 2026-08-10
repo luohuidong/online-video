@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import type { NextFunction, Request, Response } from 'express';
+import { AppModule } from './app.module';
 import { AccessLogMiddleware } from './middleware/access-log.middleware';
-import type { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +18,9 @@ async function bootstrap() {
   app.enableCors();
 
   const accessLog = new AccessLogMiddleware();
-  app.use((req: Request, res: Response, next: NextFunction) => accessLog.use(req, res, next));
+  app.use((req: Request, res: Response, next: NextFunction) =>
+    accessLog.use(req, res, next),
+  );
 
   await app.listen(3000);
   console.log('Server running on http://localhost:3000');

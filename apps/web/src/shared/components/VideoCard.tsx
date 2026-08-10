@@ -15,7 +15,19 @@ interface VideoCardProps {
   removeTitle?: string;
 }
 
-export default function VideoCard({ id, sourceId, title, poster, year: _year, badge, totalEpisodes, watchProgress, sourceName, onRemove, removeTitle = '删除' }: VideoCardProps) {
+export default function VideoCard({
+  id,
+  sourceId,
+  title,
+  poster,
+  year: _year,
+  badge,
+  totalEpisodes,
+  watchProgress,
+  sourceName,
+  onRemove,
+  removeTitle = '删除',
+}: VideoCardProps) {
   const card = (
     <Link
       to={`/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(id)}`}
@@ -67,6 +79,7 @@ export default function VideoCard({ id, sourceId, title, poster, year: _year, ba
     <div className="group relative">
       {card}
       <button
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();

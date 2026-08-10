@@ -1,13 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 interface UseEpisodeSortResult {
   sortDesc: boolean;
   toggleSort: () => void;
 }
 
-export function useEpisodeSort(source: string, id: string): UseEpisodeSortResult {
+export function useEpisodeSort(
+  source: string,
+  id: string,
+): UseEpisodeSortResult {
   const sortKey = `episode-sort:${source}:${id}`;
-  const [sortDesc, setSortDesc] = useState(() => localStorage.getItem(sortKey) !== 'asc');
+  const [sortDesc, setSortDesc] = useState(
+    () => localStorage.getItem(sortKey) !== 'asc',
+  );
 
   const toggleSort = useCallback(() => {
     setSortDesc((prev) => {

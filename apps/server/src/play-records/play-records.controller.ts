@@ -1,11 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
   Put,
-  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -15,10 +15,16 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import {
+  PlayRecordDto,
+  UpsertPlayRecordDto,
+  UpsertPlayRecordSchema,
+} from './play-records.dto';
 import { PlayRecordsService } from './play-records.service';
-import { PlayRecordDto, UpsertPlayRecordDto, UpsertPlayRecordSchema } from './play-records.dto';
 
-const OkResponse = { schema: { properties: { ok: { type: 'boolean', example: true } } } };
+const OkResponse = {
+  schema: { properties: { ok: { type: 'boolean', example: true } } },
+};
 
 @ApiTags('play-records')
 @Controller('play-records')

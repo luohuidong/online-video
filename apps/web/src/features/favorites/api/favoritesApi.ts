@@ -1,11 +1,13 @@
-import type { Favorite } from '@/shared/types';
 import { apiFetch } from '@/shared/api/client';
+import type { Favorite } from '@/shared/types';
 
 export function getFavorites(): Promise<Favorite[]> {
   return apiFetch<Favorite[]>('/favorites');
 }
 
-export function addFavorite(favorite: { video: Omit<Favorite['video'], 'id'> }): Promise<Favorite> {
+export function addFavorite(favorite: {
+  video: Omit<Favorite['video'], 'id'>;
+}): Promise<Favorite> {
   return apiFetch<Favorite>('/favorites', {
     init: {
       method: 'POST',

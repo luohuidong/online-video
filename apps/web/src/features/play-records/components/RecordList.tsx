@@ -1,5 +1,5 @@
-import type { PlayRecord } from '@/shared/types';
 import VideoCard from '@/shared/components/VideoCard';
+import type { PlayRecord } from '@/shared/types';
 
 interface RecordListProps {
   records: PlayRecord[];
@@ -24,9 +24,11 @@ export default function RecordList({ records, onRemove }: RecordListProps) {
               ? undefined
               : record.video.totalEpisodes === 1
                 ? undefined
-                : `第${record.episodeIndex! + 1}/${record.video.totalEpisodes}集`
+                : `第${(record.episodeIndex ?? 0) + 1}/${record.video.totalEpisodes}集`
           }
-          onRemove={() => onRemove(record.video.sourceId, record.video.sourceVideoId)}
+          onRemove={() =>
+            onRemove(record.video.sourceId, record.video.sourceVideoId)
+          }
           removeTitle="删除记录"
         />
       ))}

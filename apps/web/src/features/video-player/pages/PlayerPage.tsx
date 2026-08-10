@@ -13,9 +13,7 @@ export default function PlayerPage() {
   useEffect(() => {
     const previousTitle = document.title;
     const formatted =
-      title && episode
-        ? `${title}-${episode}`
-        : title || DEFAULT_TITLE;
+      title && episode ? `${title}-${episode}` : title || DEFAULT_TITLE;
     document.title = formatted;
     return () => {
       document.title = previousTitle;

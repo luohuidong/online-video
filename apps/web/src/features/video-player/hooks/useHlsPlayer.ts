@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
+import { useEffect, useRef } from 'react';
 
 interface Selector {
   html: string;

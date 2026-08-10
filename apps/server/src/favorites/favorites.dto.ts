@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { z } from 'zod';
 
 const VideoInfoSchema = z.object({
   sourceId: z.string().min(1),

@@ -1,16 +1,28 @@
-import { Trash2, RefreshCw } from 'lucide-react';
+import { RefreshCw, Trash2 } from 'lucide-react';
+import ErrorMessage from '@/shared/components/ErrorMessage';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import FavoriteList from '../components/FavoriteList';
 import { useFavorites } from '../hooks/useFavorites';
 import { usePlayRecordMap } from '../hooks/usePlayRecordMap';
-import FavoriteList from '../components/FavoriteList';
-import LoadingSpinner from '@/shared/components/LoadingSpinner';
-import ErrorMessage from '@/shared/components/ErrorMessage';
 
 export default function HomePage() {
-  const { favorites, isLoading, isError, error, refetch, removeMutation, clearMutation, batchUpdateMutation } = useFavorites();
+  const {
+    favorites,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    removeMutation,
+    clearMutation,
+    batchUpdateMutation,
+  } = useFavorites();
   const playRecordMap = usePlayRecordMap();
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
-  if (isError) return <ErrorMessage message={error?.message ?? '加载失败'} onRetry={refetch} />;
+  if (isError)
+    return (
+      <ErrorMessage message={error?.message ?? '加载失败'} onRetry={refetch} />
+    );
 
   return (
     <div>
@@ -26,14 +38,19 @@ export default function HomePage() {
         {favorites && favorites.length > 0 && (
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => batchUpdateMutation.mutate()}
               disabled={batchUpdateMutation.isPending}
               className="p-1.5 text-gray-400 hover:text-gray-600 hover:cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="更新最新集数"
             >
-              <RefreshCw size={18} className={batchUpdateMutation.isPending ? 'animate-spin' : ''} />
+              <RefreshCw
+                size={18}
+                className={batchUpdateMutation.isPending ? 'animate-spin' : ''}
+              />
             </button>
             <button
+              type="button"
               onClick={() => {
                 if (confirm('确认清空所有收藏？')) clearMutation.mutate();
               }}
@@ -51,7 +68,13 @@ export default function HomePage() {
           <p>还没有收藏任何内容</p>
         </div>
       ) : (
-        favorites && <FavoriteList favorites={favorites} playRecordMap={playRecordMap} onRemove={(id) => removeMutation.mutate(id)} />
+        favorites && (
+          <FavoriteList
+            favorites={favorites}
+            playRecordMap={playRecordMap}
+            onRemove={(id) => removeMutation.mutate(id)}
+          />
+        )
       )}
     </div>
   );

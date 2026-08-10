@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
+import { AppConfigModule } from '../config/config.module';
 import { VideosController } from './videos.controller';
 import { VideosService } from './videos.service';
-import { AppConfigModule } from '../config/config.module';
 
 @Module({
   imports: [AppConfigModule],

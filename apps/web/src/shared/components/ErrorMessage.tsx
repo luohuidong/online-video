@@ -25,6 +25,7 @@ export default function ErrorMessage({
       <p className="text-sm">{message}</p>
       {onRetry && (
         <button
+          type="button"
           onClick={onRetry}
           className="px-4 py-1.5 text-sm bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors"
         >

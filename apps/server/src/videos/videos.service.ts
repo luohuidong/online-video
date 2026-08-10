@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { eq } from 'drizzle-orm';
 import { AppConfigService } from '../config/config.service';
-import { searchSource, getDetailFromSource } from './core/scraper';
-import { getTotalEpisodeCount } from './core/parsers/episodes';
-import { SearchGroup, SearchResult } from './core/types';
 import { DrizzleService } from '../database/database.service';
 import { videos } from '../database/schema';
-import { eq } from 'drizzle-orm';
+import { getTotalEpisodeCount } from './core/parsers/episodes';
+import { getDetailFromSource, searchSource } from './core/scraper';
+import type { SearchGroup, SearchResult } from './core/types';
 
 @Injectable()
 export class VideosService {
@@ -17,7 +17,9 @@ export class VideosService {
   async search(query: string): Promise<SearchGroup[]> {
     const sources = this.configService.getSources();
     const maxPages = 5;
-    const perSource = await Promise.all(sources.map((src) => searchSource(src, query, maxPages)));
+    const perSource = await Promise.all(
+      sources.map((src) => searchSource(src, query, maxPages)),
+    );
 
     // 按 config.yml 中的源顺序分组，跳过空集合
     return sources
@@ -26,7 +28,10 @@ export class VideosService {
       .map((g) => ({ name: g.source.sourceName, items: g.items }));
   }
 
-  async getDetail(sourceId: string, sourceVideoId: string): Promise<SearchResult> {
+  async getDetail(
+    sourceId: string,
+    sourceVideoId: string,
+  ): Promise<SearchResult> {
     const sources = this.configService.getSources();
     const source = sources.find((s) => s.sourceId === sourceId);
     if (!source) throw new Error(`Source not found: ${sourceId}`);
@@ -37,7 +42,13 @@ export class VideosService {
 
   async batchUpdate(
     sourceGroups: Array<{ sourceId: string; sourceVideoIds: string[] }>,
-  ): Promise<Array<{ sourceId: string; sourceVideoId: string; totalEpisodes: number | null }>> {
+  ): Promise<
+    Array<{
+      sourceId: string;
+      sourceVideoId: string;
+      totalEpisodes: number | null;
+    }>
+  > {
     const updates: Array<{
       sourceId: string;
       sourceVideoId: string;

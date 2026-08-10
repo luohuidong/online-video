@@ -1,5 +1,5 @@
-import type { SearchResult } from '@/shared/types';
 import { apiFetch } from '@/shared/api/client';
+import type { SearchResult } from '@/shared/types';
 
 export function getVideoDetail(
   source: string,
@@ -7,6 +7,8 @@ export function getVideoDetail(
 ): Promise<SearchResult> {
   return apiFetch<SearchResult>(
     `/videos/${encodeURIComponent(source)}/${encodeURIComponent(id)}`,
-    { timeoutMs: 90000 },
+    {
+      timeoutMs: 90000,
+    },
   );
 }

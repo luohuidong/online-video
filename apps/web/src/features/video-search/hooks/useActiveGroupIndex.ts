@@ -22,7 +22,9 @@ export function useActiveGroupIndex(groupCount: number, query: string): number {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          const idx = Number((entry.target as HTMLElement).id.replace('group-', ''));
+          const idx = Number(
+            (entry.target as HTMLElement).id.replace('group-', ''),
+          );
           if (entry.isIntersecting) visible.add(idx);
           else visible.delete(idx);
         }
