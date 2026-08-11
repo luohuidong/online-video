@@ -1,15 +1,20 @@
+# root
+.claude
+.vscode
 node_modules
+docs/
 .git
 .gitignore
-
-# build outputs
-apps/web/dist
-apps/server/dist
-
-# runtime data
-apps/server/.data
-*.db
-
-# docs
-docs/
+.worktreeinclude
 *.md
+
+# server app
+apps/server/.cache
+apps/server/.data
+apps/server/dist
+apps/server/node_modules
+
+# web app 
+apps/web/dist
+apps/web/node_modules
+apps/web/*.tsbuildinfo
