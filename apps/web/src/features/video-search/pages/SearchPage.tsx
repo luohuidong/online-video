@@ -2,6 +2,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import GroupSidebar from '../components/GroupSidebar';
+import { SearchBar } from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
 import { useActiveGroupIndex } from '../hooks/useActiveGroupIndex';
 import { useSearch } from '../hooks/useSearch';
@@ -13,23 +14,30 @@ export default function SearchPage() {
   const { data, isLoading, isError, error, refetch } = useSearch(query);
   const activeIndex = useActiveGroupIndex(data?.length ?? 0, query);
 
+  const handleSelect = (index: number) => {
+    const el = document.getElementById(`group-${index}`);
+    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+  };
+
   if (!query) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-500">
-        <p>请输入关键词进行搜索</p>
+      <div className="flex flex-col items-center gap-6">
+        <SearchBar />
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-500">
+          <p>请输入关键词进行搜索</p>
+        </div>
       </div>
     );
   }
 
   const totalCount = data?.reduce((acc, g) => acc + g.items.length, 0) ?? 0;
 
-  const handleSelect = (index: number) => {
-    const el = document.getElementById(`group-${index}`);
-    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
-  };
-
   return (
     <div>
+      <div className="flex justify-center mb-6">
+        <SearchBar defaultValue={query} />
+      </div>
+
       <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
         搜索「{query}」
         {data && (

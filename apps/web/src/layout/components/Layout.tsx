@@ -2,7 +2,6 @@ import { History, Home, Search } from 'lucide-react';
 import { useState } from 'react';
 import { useTheme } from '@/features/theme/hooks/useTheme';
 import { Nav } from './Nav';
-import { SearchBar } from './SearchBar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -104,8 +103,6 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main Content Area */}
       <div className="ml-16 flex-1 flex flex-col items-center pt-16">
-        <SearchBar />
-
         <main className="flex-1 w-full max-w-4xl px-4 py-8">{children}</main>
       </div>
     </div>
