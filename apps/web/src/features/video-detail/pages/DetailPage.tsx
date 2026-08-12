@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
@@ -11,6 +11,8 @@ import { VideoInfo } from '../components/VideoInfo';
 import { useEpisodeSort } from '../hooks/useEpisodeSort';
 import { useFavorite } from '../hooks/useFavorite';
 import { useVideoDetail } from '../hooks/useVideoDetail';
+
+const DEFAULT_TITLE = '在线视频';
 
 export default function DetailPage() {
   const { source = '', id = '' } = useParams<{ source: string; id: string }>();
@@ -36,6 +38,14 @@ export default function DetailPage() {
     queryFn: () => getPlayRecord(source, id),
     enabled: Boolean(source && id),
   });
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = video?.title ?? DEFAULT_TITLE;
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [video?.title]);
 
   const upsertMutation = useMutation({
     mutationFn: (episodeIndex: number) => {
