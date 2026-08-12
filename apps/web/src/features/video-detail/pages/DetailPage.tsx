@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import { getPlayRecord, upsertPlayRecord } from '../api';
@@ -16,6 +16,7 @@ const DEFAULT_TITLE = '在线视频';
 
 export default function DetailPage() {
   const { source = '', id = '' } = useParams<{ source: string; id: string }>();
+  const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
 
   const [activeLine, setActiveLine] = useState(0);
@@ -41,11 +42,13 @@ export default function DetailPage() {
 
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = video?.title ?? DEFAULT_TITLE;
+    // 优先使用接口返回的标题；接口未完成时，先用 URL 上的 ?title= 让新标签页
+    // 打开时就能立刻显示视频名，避免出现一瞬间的默认标题。
+    document.title = video?.title ?? searchParams.get('title') ?? DEFAULT_TITLE;
     return () => {
       document.title = previousTitle;
     };
-  }, [video?.title]);
+  }, [video?.title, searchParams]);
 
   const upsertMutation = useMutation({
     mutationFn: (episodeIndex: number) => {

@@ -28,9 +28,15 @@ export default function VideoCard({
   onRemove,
   removeTitle = '删除',
 }: VideoCardProps) {
+  const detailPath = `/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(id)}`;
+  // 通过 ?title= 把视频名带到新标签页，让 document.title 立刻显示视频名
+  const linkTarget = `${detailPath}?title=${encodeURIComponent(title)}`;
+
   const card = (
     <Link
-      to={`/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(id)}`}
+      to={linkTarget}
+      target="_blank"
+      rel="noopener noreferrer"
       className="group flex flex-col transition-transform duration-200 hover:-translate-y-0.5"
     >
       <div className="relative aspect-2/3 bg-gray-100 dark:bg-gray-800 overflow-hidden">
