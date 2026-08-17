@@ -11,6 +11,7 @@ import { VideoInfo } from '../components/VideoInfo';
 import { useEpisodeSort } from '../hooks/useEpisodeSort';
 import { useFavorite } from '../hooks/useFavorite';
 import { useVideoDetail } from '../hooks/useVideoDetail';
+import { isM3u8Group } from '../utils/video';
 
 const DEFAULT_TITLE = '在线视频';
 
@@ -77,6 +78,7 @@ export default function DetailPage() {
 
   const videoPlayGroups = video.videoPlayGroups;
   const currentPlayGroup = videoPlayGroups[activeLine] ?? [];
+  const isCurrentGroupM3u8 = isM3u8Group(currentPlayGroup);
 
   const handleEpisodeClick = (idx: number) => {
     upsertMutation.mutate(idx);
@@ -129,6 +131,7 @@ export default function DetailPage() {
             sortDesc={sortDesc}
             lastWatchedIdx={lastWatchedIdx}
             onEpisodeClick={handleEpisodeClick}
+            isCurrentGroupM3u8={isCurrentGroupM3u8}
           />
         </div>
       )}

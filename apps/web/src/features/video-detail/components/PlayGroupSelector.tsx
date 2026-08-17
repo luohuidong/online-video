@@ -1,3 +1,5 @@
+import { isM3u8Group } from '../utils/video';
+
 interface PlayGroupSelectorProps {
   videoPlayGroups: [string, string][][];
   activeLine: number;
@@ -12,13 +14,13 @@ export function PlayGroupSelector({
   return (
     <div className="flex gap-2 flex-wrap">
       {videoPlayGroups.map((group, i) => {
-        const isM3u8 = group.some(([, url]) => url.includes('.m3u8'));
+        const isM3u8 = isM3u8Group(group);
         return (
           <div key={i} className="relative">
             <button
               type="button"
               onClick={() => onSelect(i)}
-              className={`px-3 py-1 rounded text-sm transition-colors min-w-[80px] text-center cursor-pointer ${
+              className={`px-3 py-1 rounded text-sm transition-colors min-w-20 text-center cursor-pointer ${
                 i === activeLine
                   ? 'bg-gray-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
