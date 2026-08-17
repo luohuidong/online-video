@@ -12,6 +12,8 @@ interface EpisodeContextMenuProps {
   episodeLabel: string;
   videoTitle: string;
   onClose: () => void;
+  /** 复制 FFmpeg 命令成功后触发，用于更新播放记录。 */
+  onCopyFfmpegCommand: () => void;
 }
 
 export function EpisodeContextMenu({
@@ -21,13 +23,19 @@ export function EpisodeContextMenu({
   episodeLabel,
   videoTitle,
   onClose,
+  onCopyFfmpegCommand,
 }: EpisodeContextMenuProps) {
   const { menuRef } = useEpisodeContextMenu({ x, y, onClose });
 
-  const copy = async (text: string, successMsg: string) => {
+  const copy = async (
+    text: string,
+    successMsg: string,
+    onSuccess?: () => void,
+  ) => {
     try {
       await copyTextToClipboard(text);
       toast.success(successMsg);
+      onSuccess?.();
     } catch {
       toast.error('复制失败');
     } finally {
@@ -41,6 +49,7 @@ export function EpisodeContextMenu({
     copy(
       buildFfmpegDownloadCommand(episodeUrl, videoTitle, episodeLabel),
       '已复制 FFmpeg 下载命令',
+      onCopyFfmpegCommand,
     );
 
   return (

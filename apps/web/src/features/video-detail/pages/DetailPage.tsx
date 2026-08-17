@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import styles from '@/features/video-detail/pages/DetailPage.module.scss';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
-import { getPlayRecord, upsertPlayRecord } from '../api';
+import { getPlayRecord } from '../api';
 import { EpisodeList } from '../components/EpisodeList';
 import { EpisodeSortToggle } from '../components/EpisodeSortToggle';
 import { PlayGroupSelector } from '../components/PlayGroupSelector';
@@ -19,7 +19,6 @@ const DEFAULT_TITLE = '在线视频';
 export default function DetailPage() {
   const { source = '', id = '' } = useParams<{ source: string; id: string }>();
   const [searchParams] = useSearchParams();
-  const queryClient = useQueryClient();
 
   const [activeLine, setActiveLine] = useState(0);
 
@@ -52,27 +51,6 @@ export default function DetailPage() {
     };
   }, [video?.title, searchParams]);
 
-  const upsertMutation = useMutation({
-    mutationFn: (episodeIndex: number) => {
-      if (!video) throw new Error('视频详情尚未加载完成');
-      return upsertPlayRecord({
-        video: {
-          id: 0,
-          sourceId: source,
-          sourceVideoId: id,
-          title: video.title,
-          sourceName: video.sourceName,
-          cover: video.poster,
-          year: video.year,
-          totalEpisodes: currentPlayGroup.length,
-        },
-        episodeIndex,
-      });
-    },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['playRecord', source, id] }),
-  });
-
   if (isLoading) return <LoadingSpinner className="py-20" />;
   if (isError) return <ErrorMessage message={(error as Error).message} />;
   if (!video) return null;
@@ -80,10 +58,6 @@ export default function DetailPage() {
   const videoPlayGroups = video.videoPlayGroups;
   const currentPlayGroup = videoPlayGroups[activeLine] ?? [];
   const isCurrentGroupM3u8 = isM3u8Group(currentPlayGroup);
-
-  const handleEpisodeClick = (idx: number) => {
-    upsertMutation.mutate(idx);
-  };
 
   const lastWatchedIdx = currentPlayRecord?.episodeIndex ?? -1;
 
@@ -118,11 +92,12 @@ export default function DetailPage() {
             />
           </div>
           <EpisodeList
-            title={video.title}
+            sourceId={source}
+            sourceVideoId={id}
+            video={video}
             currentPlayGroup={currentPlayGroup}
             sortDesc={sortDesc}
             lastWatchedIdx={lastWatchedIdx}
-            onEpisodeClick={handleEpisodeClick}
             isCurrentGroupM3u8={isCurrentGroupM3u8}
           />
         </div>

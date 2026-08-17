@@ -1,5 +1,5 @@
 import { apiFetch } from '@/shared/api/client';
-import type { PlayRecord } from '@/shared/types';
+import type { PlayRecord, UpsertPlayRecordInput } from '@/shared/types';
 
 export function getPlayRecord(
   sourceId: string,
@@ -11,7 +11,7 @@ export function getPlayRecord(
 }
 
 export function upsertPlayRecord(
-  record: Omit<PlayRecord, 'id' | 'updatedAt'>,
+  record: UpsertPlayRecordInput,
 ): Promise<{ ok: boolean }> {
   return apiFetch<{ ok: boolean }>('/play-records', {
     init: {
