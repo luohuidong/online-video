@@ -1,6 +1,7 @@
 import { toast } from '@/shared/toast';
 import { copyTextToClipboard } from '@/shared/utils/video';
 import { buildFfmpegDownloadCommand } from '../../utils/video';
+import styles from './EpisodeContextMenu.module.scss';
 import { EpisodeMenuItem } from './EpisodeMenuItem';
 import { useEpisodeContextMenu } from './useEpisodeContextMenu';
 
@@ -48,7 +49,7 @@ export function EpisodeContextMenu({
       role="menu"
       aria-label={`第 ${episodeLabel} 集操作菜单`}
       style={{ position: 'fixed', left: x, top: y }}
-      className="z-50 min-w-50 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black/5 dark:ring-white/10 py-1 text-sm"
+      className={styles.menu}
     >
       <EpisodeMenuItem
         onClick={handleCopyUrl}
@@ -56,7 +57,7 @@ export function EpisodeContextMenu({
       >
         复制 m3u8 链接
       </EpisodeMenuItem>
-      <hr className="my-1 border-0 h-px bg-gray-200 dark:bg-gray-700" />
+      <hr className={styles.divider} />
       <EpisodeMenuItem
         onClick={handleCopyFfmpegCommand}
         ariaLabel={`复制第 ${episodeLabel} 集的 FFmpeg 下载命令`}

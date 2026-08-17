@@ -1,5 +1,6 @@
 import VideoCard from '@/shared/components/VideoCard';
 import type { PlayRecord } from '@/shared/types';
+import styles from './RecordList.module.scss';
 
 interface RecordListProps {
   records: PlayRecord[];
@@ -8,7 +9,7 @@ interface RecordListProps {
 
 export default function RecordList({ records, onRemove }: RecordListProps) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
+    <div className={styles.grid}>
       {records.map((record) => (
         <VideoCard
           key={`${record.video.sourceId}-${record.video.sourceVideoId}`}

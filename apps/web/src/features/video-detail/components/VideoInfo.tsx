@@ -1,6 +1,7 @@
 import type { SearchResult } from '@/shared/types';
 import { getVideoEpisodeCount, proxyImageUrl } from '@/shared/utils/video';
 import { FavoriteButton } from './FavoriteButton';
+import styles from './VideoInfo.module.scss';
 
 interface VideoInfoProps {
   video: SearchResult;
@@ -18,29 +19,23 @@ export function VideoInfo({
   const episodeCount = getVideoEpisodeCount(video.videoPlayGroups);
 
   return (
-    <div className="flex gap-4 flex-1">
+    <div className={styles.info}>
       {video.poster && (
         <img
           src={proxyImageUrl(video.poster)}
           alt={video.title}
-          className="w-28 h-40 object-cover rounded-lg shrink-0"
+          className={styles.poster}
         />
       )}
-      <div className="flex-1 space-y-2">
-        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-50">
-          {video.title}
-        </h1>
-        <div className="flex flex-wrap gap-2 text-xs text-gray-400 dark:text-gray-500">
+      <div className={styles.body}>
+        <h1 className={styles.title}>{video.title}</h1>
+        <div className={styles.meta}>
           {video.year && <span>{video.year}</span>}
           <span>{video.sourceName}</span>
           <span>{episodeCount} 集</span>
         </div>
-        {video.desc && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-            {video.desc}
-          </p>
-        )}
-        <div className="mt-2">
+        {video.desc && <p className={styles.desc}>{video.desc}</p>}
+        <div className={styles.actions}>
           <FavoriteButton
             isFavorited={isFavorited}
             isPending={isPending}

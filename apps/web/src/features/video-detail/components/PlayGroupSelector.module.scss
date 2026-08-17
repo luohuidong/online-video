@@ -1,0 +1,47 @@
+.list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.item {
+  position: relative;
+}
+
+.button {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  transition: background 200ms;
+  min-width: 5rem;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background: var(--bg-muted);
+  color: var(--fg-muted);
+}
+
+.button:hover {
+  background: var(--bg-muted-hover);
+}
+
+.buttonActive {
+  background: var(--bg-primary);
+  color: white;
+}
+
+.buttonActive:hover {
+  background: var(--bg-primary);
+}
+
+.badge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background: var(--accent-blue);
+  color: white;
+  font-size: 10px;
+  line-height: 1;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}

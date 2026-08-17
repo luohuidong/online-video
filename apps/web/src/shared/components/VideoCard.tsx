@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { proxyImageUrl } from '@/shared/utils/video';
+import styles from './VideoCard.module.scss';
 
 interface VideoCardProps {
   id: string;
@@ -37,52 +38,44 @@ export default function VideoCard({
       to={linkTarget}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex flex-col transition-transform duration-200 hover:-translate-y-0.5"
+      className={styles.cardLink}
     >
-      <div className="relative aspect-2/3 bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      <div className={styles.cover}>
         {poster ? (
           <img
             src={proxyImageUrl(poster)}
             alt={title}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover"
+            className={styles.coverImage}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-600 text-xs">
-            无封面
-          </div>
+          <div className={styles.coverPlaceholder}>无封面</div>
         )}
-        {badge && (
-          <span className="absolute top-1 right-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs px-1.5 py-0.5">
-            {badge}
-          </span>
-        )}
+        {badge && <span className={styles.badgeTopRight}>{badge}</span>}
         {watchProgress ? (
-          <span className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-1.5 py-0.5">
+          <span
+            className={`${styles.badgeBottomRight} ${styles.badgeBottomRightStrong}`}
+          >
             {watchProgress}
           </span>
         ) : !badge && totalEpisodes != null && totalEpisodes > 0 ? (
-          <span className="absolute bottom-1 right-1 bg-black/50 text-white text-xs px-1.5 py-0.5">
+          <span className={styles.badgeBottomRight}>
             {totalEpisodes === 1 ? '电影' : `${totalEpisodes}集`}
           </span>
         ) : null}
         {sourceName && (
-          <span className="absolute top-1 left-1 bg-black/40 text-white text-xs px-1.5 py-0.5">
-            {sourceName}
-          </span>
+          <span className={styles.badgeTopLeft}>{sourceName}</span>
         )}
       </div>
-      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1.5 truncate group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
-        {title}
-      </p>
+      <p className={styles.title}>{title}</p>
     </Link>
   );
 
   if (!onRemove) return card;
 
   return (
-    <div className="group relative">
+    <div className={styles.wrapper}>
       {card}
       <button
         type="button"
@@ -91,7 +84,7 @@ export default function VideoCard({
           e.stopPropagation();
           if (confirm(`确认${removeTitle}？`)) onRemove?.();
         }}
-        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/50 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 hover:cursor-pointer"
+        className={styles.removeButton}
         title={removeTitle}
       >
         ×

@@ -1,0 +1,52 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--fg-faint);
+}
+
+.breadcrumbLink {
+  color: var(--fg-faint);
+  text-decoration: none;
+  transition: color 200ms;
+}
+
+.breadcrumbLink:hover {
+  color: var(--fg-muted);
+}
+
+.breadcrumbSep {
+  color: var(--fg-faint);
+}
+
+.breadcrumbCurrent {
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitleText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.sectionDivider {
+  font-size: 0.875rem;
+  color: var(--fg-subtle);
+}

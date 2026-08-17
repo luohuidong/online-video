@@ -1,6 +1,7 @@
 import { History, Home, Search } from 'lucide-react';
 import { useState } from 'react';
-import { useTheme } from '@/features/theme/hooks/useTheme';
+import { useTheme } from '../hooks/useTheme';
+import styles from './Layout.module.scss';
 import { Nav } from './Nav';
 
 interface LayoutProps {
@@ -18,7 +19,7 @@ export default function Layout({ children }: LayoutProps) {
   const [, toggleTheme, theme, themeLabel] = useTheme();
 
   return (
-    <div className="min-h-screen flex">
+    <div className={styles.shell}>
       <Nav
         items={navItems}
         hoveredPath={hoveredPath}
@@ -29,18 +30,14 @@ export default function Layout({ children }: LayoutProps) {
       <button
         type="button"
         onClick={toggleTheme}
-        className="fixed left-4 top-4 z-50 group flex items-center"
+        className={styles.themeToggle}
         onMouseEnter={() => setHoveredPath('theme')}
         onMouseLeave={() => setHoveredPath(null)}
       >
         <div
-          className={`
-            w-10 h-10 rounded-full flex items-center justify-center
-            transition-all duration-200
-            bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400
-            hover:bg-gray-200 dark:hover:bg-gray-700
-            ${hoveredPath === 'theme' ? 'scale-110' : ''}
-          `}
+          className={`${styles.themeIconButton} ${
+            hoveredPath === 'theme' ? styles.themeIconButtonScaled : ''
+          }`}
         >
           {theme === 'system' ? (
             <svg
@@ -89,21 +86,19 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         <div
-          className={`
-            absolute left-full ml-2 px-2 py-1 rounded whitespace-nowrap
-            text-xs font-medium
-            bg-gray-900 dark:bg-white text-white dark:text-gray-900
-            transition-opacity duration-200
-            ${hoveredPath === 'theme' ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-          `}
+          className={`${styles.themeTooltip} ${
+            hoveredPath === 'theme'
+              ? styles.themeTooltipVisible
+              : styles.themeTooltipHidden
+          }`}
         >
           {themeLabel}
         </div>
       </button>
 
       {/* Main Content Area */}
-      <div className="ml-16 flex-1 flex flex-col items-center pt-16">
-        <main className="flex-1 w-full max-w-4xl px-4 py-8">{children}</main>
+      <div className={styles.contentWrap}>
+        <main className={styles.main}>{children}</main>
       </div>
     </div>
   );

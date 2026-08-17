@@ -1,0 +1,80 @@
+.sidebar {
+  display: none;
+  width: 10rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    display: block;
+  }
+}
+
+.nav {
+  position: sticky;
+  top: 1.5rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.heading {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fg-faint);
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.button {
+  width: 100%;
+  text-align: left;
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 200ms;
+  background: transparent;
+  border: none;
+  color: var(--fg-muted);
+}
+
+.button:hover {
+  background: var(--bg-muted);
+}
+
+.buttonActive {
+  background: var(--bg-action);
+  color: var(--fg-action);
+}
+
+.buttonActive:hover {
+  background: var(--bg-action);
+}
+
+.name {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.count {
+  font-size: 0.75rem;
+}
+
+.countActive {
+  opacity: 0.7;
+}
+
+.countInactive {
+  color: var(--fg-faint);
+}

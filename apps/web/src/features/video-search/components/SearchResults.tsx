@@ -1,6 +1,7 @@
 import VideoCard from '@/shared/components/VideoCard';
 import type { SearchGroup } from '@/shared/types';
 import { getVideoEpisodeCount } from '@/shared/utils/video';
+import styles from './SearchResults.module.scss';
 
 interface SearchResultsProps {
   groups: SearchGroup[];
@@ -8,16 +9,18 @@ interface SearchResultsProps {
 
 export default function SearchResults({ groups }: SearchResultsProps) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className={styles.list}>
       {groups.map((group, index) => (
-        <section key={group.name} id={`group-${index}`} className="scroll-mt-6">
-          <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-3">
+        <section
+          key={group.name}
+          id={`group-${index}`}
+          className={styles.section}
+        >
+          <h2 className={styles.sectionTitle}>
             {group.name}
-            <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">
-              {group.items.length} 条
-            </span>
+            <span className={styles.sectionCount}>{group.items.length} 条</span>
           </h2>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
+          <div className={styles.grid}>
             {group.items.map((video) => (
               <VideoCard
                 key={`${video.sourceId}-${video.sourceVideoId}`}

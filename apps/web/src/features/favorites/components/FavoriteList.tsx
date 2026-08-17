@@ -1,5 +1,6 @@
 import VideoCard from '@/shared/components/VideoCard';
 import type { Favorite } from '@/shared/types';
+import styles from './FavoriteList.module.scss';
 
 interface FavoriteListProps {
   favorites: Favorite[];
@@ -13,7 +14,7 @@ export default function FavoriteList({
   onRemove,
 }: FavoriteListProps) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
+    <div className={styles.grid}>
       {favorites.map((fav) => {
         const epIdx = playRecordMap.get(
           `${fav.video.sourceId}:${fav.video.sourceVideoId}`,

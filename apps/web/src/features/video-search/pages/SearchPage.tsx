@@ -6,6 +6,7 @@ import { SearchBar } from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
 import { useActiveGroupIndex } from '../hooks/useActiveGroupIndex';
 import { useSearch } from '../hooks/useSearch';
+import styles from './SearchPage.module.scss';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -21,9 +22,9 @@ export default function SearchPage() {
 
   if (!query) {
     return (
-      <div className="flex flex-col items-center gap-6">
+      <div className={styles.emptyWrapper}>
         <SearchBar />
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-500">
+        <div className={styles.emptyHint}>
           <p>请输入关键词进行搜索</p>
         </div>
       </div>
@@ -34,17 +35,13 @@ export default function SearchPage() {
 
   return (
     <div>
-      <div className="flex justify-center mb-6">
+      <div className={styles.header}>
         <SearchBar defaultValue={query} />
       </div>
 
-      <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+      <h1 className={styles.title}>
         搜索「{query}」
-        {data && (
-          <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">
-            共 {totalCount} 条结果
-          </span>
-        )}
+        {data && <span className={styles.count}>共 {totalCount} 条结果</span>}
       </h1>
 
       {isLoading && <LoadingSpinner className="py-16" />}
@@ -57,22 +54,22 @@ export default function SearchPage() {
       )}
 
       {data && totalCount === 0 && (
-        <div className="flex flex-col items-center py-20 text-gray-400 dark:text-gray-500 gap-2">
+        <div className={styles.noResults}>
           <p>未找到相关内容</p>
-          <Link to="/" className="text-sm text-gray-500 hover:underline">
+          <Link to="/" className={styles.backLink}>
             返回首页
           </Link>
         </div>
       )}
 
       {data && totalCount > 0 && (
-        <div className="flex gap-6">
+        <div className={styles.resultsLayout}>
           <GroupSidebar
             groups={data}
             activeIndex={activeIndex}
             onSelect={handleSelect}
           />
-          <div className="flex-1 min-w-0">
+          <div className={styles.resultsBody}>
             <SearchResults groups={data} />
           </div>
         </div>

@@ -1,0 +1,28 @@
+.button {
+  margin-top: 0.5rem;
+  padding: 0.375rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 200ms;
+  cursor: pointer;
+  border: none;
+}
+
+.add {
+  background: var(--bg-primary);
+  color: white;
+}
+
+.add:hover {
+  background: var(--bg-primary-hover);
+}
+
+.remove {
+  background: var(--bg-muted);
+  color: var(--fg-muted);
+}
+
+.remove:hover {
+  background: var(--bg-muted-hover);
+}

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { HlsPlayer } from '../components/HlsPlayer';
+import styles from './PlayerPage.module.scss';
 
 const DEFAULT_TITLE = '在线视频';
 
@@ -21,15 +22,11 @@ export default function PlayerPage() {
   }, [title, episode]);
 
   if (!url) {
-    return (
-      <div className="flex items-center justify-center w-screen h-screen bg-black text-gray-400">
-        缺少播放地址
-      </div>
-    );
+    return <div className={styles.missing}>缺少播放地址</div>;
   }
 
   return (
-    <div className="w-screen h-screen bg-black">
+    <div className={styles.player}>
       <HlsPlayer url={url} />
     </div>
   );

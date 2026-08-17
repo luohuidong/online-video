@@ -4,6 +4,7 @@ import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import FavoriteList from '../components/FavoriteList';
 import { useFavorites } from '../hooks/useFavorites';
 import { usePlayRecordMap } from '../hooks/usePlayRecordMap';
+import styles from './HomePage.module.scss';
 
 export default function HomePage() {
   const {
@@ -26,22 +27,20 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+      <div className={styles.header}>
+        <h1 className={styles.title}>
           收藏夹
           {favorites && favorites.length > 0 && (
-            <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">
-              {favorites.length} 部
-            </span>
+            <span className={styles.count}>{favorites.length} 部</span>
           )}
         </h1>
         {favorites && favorites.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className={styles.actions}>
             <button
               type="button"
               onClick={() => batchUpdateMutation.mutate()}
               disabled={batchUpdateMutation.isPending}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className={styles.actionButton}
               title="更新最新集数"
             >
               <RefreshCw
@@ -54,7 +53,7 @@ export default function HomePage() {
               onClick={() => {
                 if (confirm('确认清空所有收藏？')) clearMutation.mutate();
               }}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:cursor-pointer transition-colors"
+              className={styles.actionButton}
               title="清空收藏"
             >
               <Trash2 size={18} />
@@ -64,7 +63,7 @@ export default function HomePage() {
       </div>
 
       {favorites && favorites.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-500 gap-3">
+        <div className={styles.empty}>
           <p>还没有收藏任何内容</p>
         </div>
       ) : (

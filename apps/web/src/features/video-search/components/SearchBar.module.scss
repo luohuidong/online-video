@@ -1,0 +1,38 @@
+.form {
+  width: 100%;
+  max-width: 28rem;
+  padding: 0 1rem;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: 2rem;
+  color: var(--fg-faint);
+}
+
+.input {
+  width: 100%;
+  padding: 0.625rem 1rem 0.625rem 2.5rem;
+  background: transparent;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--fg-strong);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+  transition: border-color 200ms;
+}
+
+.input::placeholder {
+  color: var(--fg-placeholder);
+}
+
+.input:focus {
+  border-bottom-color: var(--fg-subtle);
+}

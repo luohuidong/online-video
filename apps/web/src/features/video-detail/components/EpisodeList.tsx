@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getEpisodeHref, isM3u8Url } from '../utils/video';
 import { EpisodeContextMenu } from './EpisodeContextMenu';
+import styles from './EpisodeList.module.scss';
 
 interface EpisodeListProps {
   title: string;
@@ -38,7 +39,7 @@ export function EpisodeList({
   }, [isCurrentGroupM3u8, currentPlayGroup]);
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-2">
+    <div className={styles.grid}>
       {sortedEpisodes.map((_, i) => {
         const idx = sortDesc ? currentPlayGroup.length - 1 - i : i;
         const isLastWatched = idx === lastWatchedIdx && lastWatchedIdx >= 0;
@@ -65,12 +66,10 @@ export function EpisodeList({
                 episodeLabel,
               });
             }}
-            className="relative px-3 py-1 rounded text-sm transition-colors text-center bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
+            className={styles.item}
           >
             {isLastWatched && (
-              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 text-[10px] font-medium bg-orange-500 text-white rounded">
-                上次
-              </span>
+              <span className={styles.lastWatchedBadge}>上次</span>
             )}
             {episodeLabel}
           </a>

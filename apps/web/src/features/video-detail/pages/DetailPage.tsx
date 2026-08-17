@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import styles from '@/features/video-detail/pages/DetailPage.module.scss';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import { getPlayRecord, upsertPlayRecord } from '../api';
@@ -87,18 +88,13 @@ export default function DetailPage() {
   const lastWatchedIdx = currentPlayRecord?.episodeIndex ?? -1;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-        <Link
-          to="/"
-          className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-        >
+    <div className={styles.page}>
+      <div className={styles.breadcrumb}>
+        <Link to="/" className={styles.breadcrumbLink}>
           首页
         </Link>
-        <span>/</span>
-        <span className="text-gray-700 dark:text-gray-300 truncate">
-          {video.title}
-        </span>
+        <span className={styles.breadcrumbSep}>/</span>
+        <span className={styles.breadcrumbCurrent}>{video.title}</span>
       </div>
 
       <VideoInfo
@@ -110,15 +106,11 @@ export default function DetailPage() {
 
       {videoPlayGroups.length > 0 && (
         <div>
-          <div className="flex items-center gap-2 mb-3">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              选集
-            </h3>
+          <div className={styles.sectionTitle}>
+            <h3 className={styles.sectionTitleText}>选集</h3>
             <EpisodeSortToggle sortDesc={sortDesc} onClick={toggleSort} />
-            <span className="text-sm text-gray-500 dark:text-gray-400">|</span>
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              播放组
-            </h3>
+            <span className={styles.sectionDivider}>|</span>
+            <h3 className={styles.sectionTitleText}>播放组</h3>
             <PlayGroupSelector
               videoPlayGroups={videoPlayGroups}
               activeLine={activeLine}
