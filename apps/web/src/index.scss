@@ -1,13 +1,12 @@
 // 应用入口样式。
+
+// 设计令牌（颜色变量）见 shared/styles/variables.scss。
+// @use 必须置于其它规则之前。
+@use "@/shared/styles/variables";
+
 // 保留 @import "tailwindcss" 以维持 tailwindcss 插件与配置可用，
 // 但本仓库内组件已统一改用 SCSS Modules，不再依赖 Tailwind 工具类。
-
-@import 'tailwindcss';
-
-// 全局样式：body、滚动条、文本选区。
-// 设计令牌（颜色变量）见 shared/styles/variables.scss。
-
-@use '@/shared/styles/variables';
+@import "tailwindcss";
 
 body {
   margin: 0;
@@ -16,8 +15,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
 }
 
 ::selection {
