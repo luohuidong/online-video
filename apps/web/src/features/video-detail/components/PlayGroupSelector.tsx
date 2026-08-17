@@ -1,8 +1,9 @@
+import type { Episode } from '@/shared/types';
 import { isM3u8Group } from '../utils/video';
 import styles from './PlayGroupSelector.module.scss';
 
 interface PlayGroupSelectorProps {
-  videoPlayGroups: [string, string][][];
+  videoPlayGroups: Episode[][];
   activeLine: number;
   onSelect: (idx: number) => void;
 }

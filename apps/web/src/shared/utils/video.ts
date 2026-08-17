@@ -1,5 +1,7 @@
+import type { Episode } from '@/shared/types';
+
 export function getVideoEpisodeCount(
-  videoPlayGroups: [string, string][][],
+  videoPlayGroups: Episode[][],
 ): number {
   return videoPlayGroups[0]?.length ?? 0;
 }

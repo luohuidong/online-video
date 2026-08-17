@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import type { Episode } from './core/types';
 
 export class SearchResultDto {
   @ApiProperty({ description: '视频在数据源中的 ID' })
@@ -11,7 +12,7 @@ export class SearchResultDto {
   poster!: string;
 
   @ApiProperty({ description: '剧集播放组' })
-  videoPlayGroups!: Array<[string, string][]>;
+  videoPlayGroups!: Episode[][];
 
   @ApiProperty({ description: '视频源标识' })
   sourceId!: string;

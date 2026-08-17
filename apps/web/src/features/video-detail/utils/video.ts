@@ -1,3 +1,5 @@
+import type { Episode } from '@/shared/types';
+
 export function getEpisodeHref(
   episodeUrl: string,
   title: string,
@@ -19,9 +21,9 @@ export function isM3u8Url(url: string): boolean {
 }
 
 export function isM3u8Group(
-  group: readonly (readonly [string, string])[] | undefined,
+  group: readonly Episode[] | undefined,
 ): boolean {
-  return !!group?.some(([, url]) => isM3u8Url(url));
+  return !!group?.some((ep) => isM3u8Url(ep.episodeUrl));
 }
 
 export function buildFfmpegDownloadCommand(

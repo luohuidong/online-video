@@ -1,3 +1,13 @@
+/** 单集视频条目 */
+export interface Episode {
+  /** 集名（如 "第1集"） */
+  episodeTitle: string;
+  /** 视频播放地址 */
+  episodeUrl: string;
+  /** 集数在所属播放组中的位置（0 起） */
+  episodeIndex: number;
+}
+
 /** 视频搜索结果 */
 export interface SearchResult {
   /** 视频在数据源中的 ID */
@@ -7,7 +17,7 @@ export interface SearchResult {
   /** 封面图片 URL */
   poster: string;
   /** 剧集播放组 */
-  videoPlayGroups: Array<[string, string][]>;
+  videoPlayGroups: Episode[][];
   /** 所属数据源的 key */
   sourceId: string;
   /** 所属数据源的名称 */

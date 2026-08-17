@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { SearchResult } from '@/shared/types';
+import type { Episode, SearchResult } from '@/shared/types';
 import { usePlayRecordMutation } from '../hooks/usePlayRecordMutation';
 import { getEpisodeHref, isM3u8Url } from '../utils/video';
 import { EpisodeContextMenu } from './EpisodeContextMenu';
@@ -9,7 +9,7 @@ interface EpisodeListProps {
   sourceId: string;
   sourceVideoId: string;
   video: SearchResult;
-  currentPlayGroup: [string, string][];
+  currentPlayGroup: Episode[];
   sortDesc: boolean;
   lastWatchedIdx: number;
   isCurrentGroupM3u8: boolean;
@@ -52,31 +52,33 @@ export function EpisodeList({
 
   return (
     <div className={styles.grid}>
-      {sortedEpisodes.map((_, i) => {
-        const idx = sortDesc ? currentPlayGroup.length - 1 - i : i;
-        const isLastWatched = idx === lastWatchedIdx && lastWatchedIdx >= 0;
-        const ep = currentPlayGroup[idx];
-        const episodeLabel = ep[0];
+      {sortedEpisodes.map((ep) => {
+        const isLastWatched =
+          ep.episodeIndex === lastWatchedIdx && lastWatchedIdx >= 0;
 
-        const href = getEpisodeHref(ep[1], video.title, episodeLabel);
+        const href = getEpisodeHref(
+          ep.episodeUrl,
+          video.title,
+          ep.episodeTitle,
+        );
 
         return (
           <a
-            key={idx}
+            key={ep.episodeIndex}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => upsertMutation.mutate(idx)}
+            onClick={() => upsertMutation.mutate(ep.episodeIndex)}
             onContextMenu={(e) => {
               // 仅在当前播放组是 m3u8、且该剧集本身确实是 m3u8 时才弹出自定义菜单
-              if (!isCurrentGroupM3u8 || !isM3u8Url(ep[1])) return;
+              if (!isCurrentGroupM3u8 || !isM3u8Url(ep.episodeUrl)) return;
               e.preventDefault();
               setMenu({
                 x: e.clientX,
                 y: e.clientY,
-                episodeUrl: ep[1],
-                episodeLabel,
-                episodeIndex: idx,
+                episodeUrl: ep.episodeUrl,
+                episodeLabel: ep.episodeTitle,
+                episodeIndex: ep.episodeIndex,
               });
             }}
             className={styles.item}
@@ -84,7 +86,7 @@ export function EpisodeList({
             {isLastWatched && (
               <span className={styles.lastWatchedBadge}>上次</span>
             )}
-            {episodeLabel}
+            {ep.episodeTitle}
           </a>
         );
       })}

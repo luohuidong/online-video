@@ -1,8 +1,14 @@
+export interface Episode {
+  episodeTitle: string;
+  episodeUrl: string;
+  episodeIndex: number;
+}
+
 export interface SearchResult {
   sourceVideoId: string;
   title: string;
   poster: string;
-  videoPlayGroups: [string, string][][];
+  videoPlayGroups: Episode[][];
   sourceId: string;
   sourceName: string;
   year: string;
