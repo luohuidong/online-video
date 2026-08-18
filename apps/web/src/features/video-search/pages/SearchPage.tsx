@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
@@ -14,6 +15,10 @@ export default function SearchPage() {
 
   const { data, isLoading, isError, error, refetch } = useSearch(query);
   const activeIndex = useActiveGroupIndex(data?.length ?? 0, query);
+
+  useEffect(() => {
+    document.title = query ? `视频-搜索-${query}` : '视频-搜索';
+  }, [query]);
 
   const handleSelect = (index: number) => {
     const el = document.getElementById(`group-${index}`);

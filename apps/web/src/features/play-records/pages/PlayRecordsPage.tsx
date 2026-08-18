@@ -1,4 +1,5 @@
 import { Trash2 } from 'lucide-react';
+import { useEffect } from 'react';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import RecordList from '../components/RecordList';
@@ -15,6 +16,10 @@ export default function PlayRecordsPage() {
     deleteMutation,
     clearMutation,
   } = usePlayRecords();
+
+  useEffect(() => {
+    document.title = '视频-播放记录';
+  }, []);
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
   if (isError)

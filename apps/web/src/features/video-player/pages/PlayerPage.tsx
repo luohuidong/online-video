@@ -3,8 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { HlsPlayer } from '../components/HlsPlayer';
 import styles from './PlayerPage.module.scss';
 
-const DEFAULT_TITLE = '在线视频';
-
 export default function PlayerPage() {
   const [searchParams] = useSearchParams();
   const url = searchParams.get('url') ?? '';
@@ -12,13 +10,8 @@ export default function PlayerPage() {
   const episode = searchParams.get('episode') ?? '';
 
   useEffect(() => {
-    const previousTitle = document.title;
-    const formatted =
-      title && episode ? `${title}-${episode}` : title || DEFAULT_TITLE;
-    document.title = formatted;
-    return () => {
-      document.title = previousTitle;
-    };
+    const videoTitle = title && episode ? `${title}-${episode}` : title;
+    document.title = videoTitle ? `视频-播放-${videoTitle}` : '视频-播放';
   }, [title, episode]);
 
   if (!url) {

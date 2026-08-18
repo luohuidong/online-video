@@ -1,4 +1,5 @@
 import { RefreshCw, Trash2 } from 'lucide-react';
+import { useEffect } from 'react';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import FavoriteList from '../components/FavoriteList';
@@ -18,6 +19,10 @@ export default function HomePage() {
     batchUpdateMutation,
   } = useFavorites();
   const playRecordMap = usePlayRecordMap();
+
+  useEffect(() => {
+    document.title = '视频-首页';
+  }, []);
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
   if (isError)

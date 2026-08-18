@@ -14,8 +14,6 @@ import { useFavorite } from '../hooks/useFavorite';
 import { useVideoDetail } from '../hooks/useVideoDetail';
 import { isM3u8Group } from '../utils/video';
 
-const DEFAULT_TITLE = '在线视频';
-
 export default function DetailPage() {
   const { source = '', id = '' } = useParams<{ source: string; id: string }>();
   const [searchParams] = useSearchParams();
@@ -42,13 +40,10 @@ export default function DetailPage() {
   });
 
   useEffect(() => {
-    const previousTitle = document.title;
     // 优先使用接口返回的标题；接口未完成时，先用 URL 上的 ?title= 让新标签页
     // 打开时就能立刻显示视频名，避免出现一瞬间的默认标题。
-    document.title = video?.title ?? searchParams.get('title') ?? DEFAULT_TITLE;
-    return () => {
-      document.title = previousTitle;
-    };
+    const videoTitle = video?.title ?? searchParams.get('title');
+    document.title = videoTitle ? `视频-详情-${videoTitle}` : '视频-详情';
   }, [video?.title, searchParams]);
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
