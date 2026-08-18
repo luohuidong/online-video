@@ -7,6 +7,7 @@ import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import { getPlayRecord } from '../api';
 import { EpisodeList } from '../components/EpisodeList';
 import { EpisodeSortToggle } from '../components/EpisodeSortToggle';
+import { OperationsMenu } from '../components/OperationsMenu';
 import { PlayGroupSelector } from '../components/PlayGroupSelector';
 import { VideoInfo } from '../components/VideoInfo';
 import { useEpisodeSort } from '../hooks/useEpisodeSort';
@@ -84,6 +85,12 @@ export default function DetailPage() {
               videoPlayGroups={videoPlayGroups}
               activeLine={activeLine}
               onSelect={setActiveLine}
+            />
+            <OperationsMenu
+              currentPlayGroup={currentPlayGroup}
+              videoTitle={video.title}
+              lastWatchedIdx={lastWatchedIdx}
+              isCurrentGroupM3u8={isCurrentGroupM3u8}
             />
           </div>
           <EpisodeList

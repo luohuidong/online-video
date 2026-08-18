@@ -1,0 +1,19 @@
+.trigger {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  color: var(--fg-subtle);
+  background: transparent;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.trigger:hover {
+  border-color: var(--border-hover);
+  color: var(--fg-muted);
+}

@@ -92,8 +92,7 @@ export function EpisodeList({
       })}
       {menu && (
         <EpisodeContextMenu
-          x={menu.x}
-          y={menu.y}
+          anchor={{ x: menu.x, y: menu.y }}
           episodeUrl={menu.episodeUrl}
           episodeLabel={menu.episodeLabel}
           videoTitle={video.title}

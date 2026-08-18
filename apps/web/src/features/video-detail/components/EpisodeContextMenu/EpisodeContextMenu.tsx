@@ -1,13 +1,11 @@
+import { Menu, MenuDivider, MenuItem } from '@/shared/components/Menu';
 import { toast } from '@/shared/toast';
 import { copyTextToClipboard } from '@/shared/utils/video';
 import { buildFfmpegDownloadCommand } from '../../utils/video';
-import styles from './EpisodeContextMenu.module.scss';
-import { EpisodeMenuItem } from './EpisodeMenuItem';
-import { useEpisodeContextMenu } from './useEpisodeContextMenu';
 
 interface EpisodeContextMenuProps {
-  x: number;
-  y: number;
+  /** 鼠标右键点击的视口坐标。 */
+  anchor: { x: number; y: number };
   episodeUrl: string;
   episodeLabel: string;
   videoTitle: string;
@@ -17,16 +15,13 @@ interface EpisodeContextMenuProps {
 }
 
 export function EpisodeContextMenu({
-  x,
-  y,
+  anchor,
   episodeUrl,
   episodeLabel,
   videoTitle,
   onClose,
   onCopyFfmpegCommand,
 }: EpisodeContextMenuProps) {
-  const { menuRef } = useEpisodeContextMenu({ x, y, onClose });
-
   const copy = async (
     text: string,
     successMsg: string,
@@ -38,41 +33,31 @@ export function EpisodeContextMenu({
       onSuccess?.();
     } catch {
       toast.error('复制失败');
-    } finally {
-      onClose();
     }
   };
 
-  const handleCopyUrl = () => copy(episodeUrl, '已复制 m3u8 链接');
-
-  const handleCopyFfmpegCommand = () =>
-    copy(
-      buildFfmpegDownloadCommand(episodeUrl, videoTitle, episodeLabel),
-      '已复制 FFmpeg 下载命令',
-      onCopyFfmpegCommand,
-    );
-
   return (
-    <div
-      ref={menuRef}
-      role="menu"
-      aria-label={`第 ${episodeLabel} 集操作菜单`}
-      style={{ position: 'fixed', left: x, top: y }}
-      className={styles.menu}
+    <Menu
+      anchor={anchor}
+      open
+      onClose={onClose}
+      ariaLabel={`第 ${episodeLabel} 集操作菜单`}
     >
-      <EpisodeMenuItem
-        onClick={handleCopyUrl}
-        ariaLabel={`复制第 ${episodeLabel} 集的 m3u8 链接`}
-      >
+      <MenuItem onSelect={() => copy(episodeUrl, '已复制 m3u8 链接')}>
         复制 m3u8 链接
-      </EpisodeMenuItem>
-      <hr className={styles.divider} />
-      <EpisodeMenuItem
-        onClick={handleCopyFfmpegCommand}
-        ariaLabel={`复制第 ${episodeLabel} 集的 FFmpeg 下载命令`}
+      </MenuItem>
+      <MenuDivider />
+      <MenuItem
+        onSelect={() =>
+          copy(
+            buildFfmpegDownloadCommand(episodeUrl, videoTitle, episodeLabel),
+            '已复制 FFmpeg 下载命令',
+            onCopyFfmpegCommand,
+          )
+        }
       >
         复制 FFmpeg 下载命令
-      </EpisodeMenuItem>
-    </div>
+      </MenuItem>
+    </Menu>
   );
 }
