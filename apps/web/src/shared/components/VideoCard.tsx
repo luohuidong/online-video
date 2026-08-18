@@ -34,12 +34,7 @@ export default function VideoCard({
   const linkTarget = `${detailPath}?title=${encodeURIComponent(title)}`;
 
   const card = (
-    <Link
-      to={linkTarget}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.cardLink}
-    >
+    <Link to={linkTarget} className={styles.cardLink}>
       <div className={styles.cover}>
         {poster ? (
           <img
