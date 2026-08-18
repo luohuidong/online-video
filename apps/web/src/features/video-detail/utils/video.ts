@@ -20,9 +20,7 @@ export function isM3u8Url(url: string): boolean {
   return url.includes('.m3u8');
 }
 
-export function isM3u8Group(
-  group: readonly Episode[] | undefined,
-): boolean {
+export function isM3u8Group(group: readonly Episode[] | undefined): boolean {
   return !!group?.some((ep) => isM3u8Url(ep.episodeUrl));
 }
 
@@ -39,9 +37,12 @@ export function buildFfmpegDownloadCommand(
 }
 
 /**
- * 将字符串清理为可作为文件名的形式：替换 Windows / POSIX 下的非法字符并去除首尾空白。
+ * 将字符串清理为可作为文件名的形式：替换 Windows / POSIX 下的非法字符并去除所有空白。
  * 不限制 Unicode（CJK 仍保留）。
  */
 function sanitizeFilename(input: string): string {
-  return input.replace(/[\\/:*?"<>|]/g, '_').trim();
+  return input
+    .replace(/[/\\:*?"<>|]/g, '_')
+    .replace(/\s+/g, '')
+    .trim();
 }
