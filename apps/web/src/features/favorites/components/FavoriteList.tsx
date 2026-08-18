@@ -25,7 +25,7 @@ export default function FavoriteList({
               ? undefined
               : fav.video.totalEpisodes === 1
                 ? undefined
-                : `第${epIdx + 1}/${fav.video.totalEpisodes}集`
+                : `第${epIdx}/${fav.video.totalEpisodes}集`
             : undefined;
         return (
           <VideoCard

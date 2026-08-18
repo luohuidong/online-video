@@ -25,7 +25,7 @@ export default function RecordList({ records, onRemove }: RecordListProps) {
               ? undefined
               : record.video.totalEpisodes === 1
                 ? undefined
-                : `第${(record.episodeIndex ?? 0) + 1}/${record.video.totalEpisodes}集`
+                : `第${(record.episodeIndex ?? 0)}/${record.video.totalEpisodes}集`
           }
           onRemove={() =>
             onRemove(record.video.sourceId, record.video.sourceVideoId)
