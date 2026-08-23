@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import yaml from 'js-yaml';
+import { load } from 'js-yaml';
 import { type AppConfig, AppConfigSchema, type Source } from './config.schema';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class AppConfigService implements OnModuleInit {
       throw new Error(`Config file not found: ${configPath}`);
     }
 
-    const raw = yaml.load(fs.readFileSync(configPath, 'utf8'));
+    const raw = load(fs.readFileSync(configPath, 'utf8'));
     const result = AppConfigSchema.safeParse(raw);
 
     if (!result.success) {
