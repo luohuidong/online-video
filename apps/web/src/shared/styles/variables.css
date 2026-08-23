@@ -47,8 +47,8 @@
 
   /* 阴影 / 描边 */
   --ring: rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 :root.dark {
