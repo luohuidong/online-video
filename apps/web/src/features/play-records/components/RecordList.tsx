@@ -13,7 +13,7 @@ export default function RecordList({ records, onRemove }: RecordListProps) {
       {records.map((record) => (
         <VideoCard
           key={`${record.video.sourceId}-${record.video.sourceVideoId}`}
-          id={record.video.sourceVideoId}
+          sourceVideoId={record.video.sourceVideoId}
           sourceId={record.video.sourceId}
           title={record.video.title}
           poster={record.video.cover ?? undefined}

@@ -24,7 +24,7 @@ export default function SearchResults({ groups }: SearchResultsProps) {
             {group.items.map((video) => (
               <VideoCard
                 key={`${video.sourceId}-${video.sourceVideoId}`}
-                id={video.sourceVideoId}
+                sourceVideoId={video.sourceVideoId}
                 sourceId={video.sourceId}
                 title={video.title}
                 poster={video.poster}

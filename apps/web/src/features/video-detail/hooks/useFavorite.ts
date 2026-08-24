@@ -8,8 +8,8 @@ import type { Favorite, SearchResult } from '@/shared/types';
 import { getVideoEpisodeCount } from '@/shared/utils/video';
 
 interface UseFavoriteOptions {
-  source: string;
-  id: string;
+  sourceId: string;
+  sourceVideoId: string;
   video?: SearchResult | null;
 }
 
@@ -21,8 +21,8 @@ interface UseFavoriteResult {
 }
 
 export function useFavorite({
-  source,
-  id,
+  sourceId,
+  sourceVideoId,
   video,
 }: UseFavoriteOptions): UseFavoriteResult {
   const queryClient = useQueryClient();
@@ -33,7 +33,8 @@ export function useFavorite({
   });
 
   const favoritedItem = favorites?.find(
-    (f) => f.video.sourceId === source && f.video.sourceVideoId === id,
+    (f) =>
+      f.video.sourceId === sourceId && f.video.sourceVideoId === sourceVideoId,
   );
   const isFavorited = !!favoritedItem;
 
@@ -41,8 +42,8 @@ export function useFavorite({
     mutationFn: () =>
       addFavorite({
         video: {
-          sourceId: source,
-          sourceVideoId: id,
+          sourceId,
+          sourceVideoId,
           title: video?.title ?? '',
           sourceName: video?.sourceName ?? '',
           cover: video?.poster ?? null,

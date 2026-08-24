@@ -2,11 +2,11 @@ import { apiFetch } from '@/shared/api/client';
 import type { SearchResult } from '@/shared/types';
 
 export function getVideoDetail(
-  source: string,
-  id: string,
+  sourceId: string,
+  sourceVideoId: string,
 ): Promise<SearchResult> {
   return apiFetch<SearchResult>(
-    `/videos/${encodeURIComponent(source)}/${encodeURIComponent(id)}`,
+    `/videos/${encodeURIComponent(sourceId)}/${encodeURIComponent(sourceVideoId)}`,
     {
       timeoutMs: 90000,
     },

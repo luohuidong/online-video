@@ -16,28 +16,36 @@ import { useVideoDetail } from '../hooks/useVideoDetail';
 import { isM3u8Group } from '../utils/video';
 
 export default function DetailPage() {
-  const { source = '', id = '' } = useParams<{ source: string; id: string }>();
+  const { sourceId = '', sourceVideoId = '' } = useParams<{
+    sourceId: string;
+    sourceVideoId: string;
+  }>();
   const [searchParams] = useSearchParams();
 
   const [activeLine, setActiveLine] = useState(0);
 
-  const { data: video, isLoading, isError, error } = useVideoDetail(source, id);
-  const { sortDesc, toggleSort } = useEpisodeSort(source, id);
+  const {
+    data: video,
+    isLoading,
+    isError,
+    error,
+  } = useVideoDetail(sourceId, sourceVideoId);
+  const { sortDesc, toggleSort } = useEpisodeSort(sourceId, sourceVideoId);
 
   const {
     isFavorited,
     toggleFavorite,
     isPending: favoritePending,
   } = useFavorite({
-    source,
-    id,
+    sourceId,
+    sourceVideoId,
     video,
   });
 
   const { data: currentPlayRecord } = useQuery({
-    queryKey: ['playRecord', source, id],
-    queryFn: () => getPlayRecord(source, id),
-    enabled: Boolean(source && id),
+    queryKey: ['playRecord', sourceId, sourceVideoId],
+    queryFn: () => getPlayRecord(sourceId, sourceVideoId),
+    enabled: Boolean(sourceId && sourceVideoId),
   });
 
   useEffect(() => {
@@ -94,8 +102,8 @@ export default function DetailPage() {
             />
           </div>
           <EpisodeList
-            sourceId={source}
-            sourceVideoId={id}
+            sourceId={sourceId}
+            sourceVideoId={sourceVideoId}
             video={video}
             currentPlayGroup={currentPlayGroup}
             sortDesc={sortDesc}

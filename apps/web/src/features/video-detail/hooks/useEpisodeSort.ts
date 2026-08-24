@@ -6,10 +6,10 @@ interface UseEpisodeSortResult {
 }
 
 export function useEpisodeSort(
-  source: string,
-  id: string,
+  sourceId: string,
+  sourceVideoId: string,
 ): UseEpisodeSortResult {
-  const sortKey = `episode-sort:${source}:${id}`;
+  const sortKey = `episode-sort:${sourceId}:${sourceVideoId}`;
   const [sortDesc, setSortDesc] = useState(
     () => localStorage.getItem(sortKey) !== 'asc',
   );

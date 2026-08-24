@@ -3,8 +3,8 @@ import { proxyImageUrl } from '@/shared/utils/video';
 import styles from './VideoCard.module.scss';
 
 interface VideoCardProps {
-  id: string;
   sourceId: string;
+  sourceVideoId: string;
   title: string;
   poster?: string;
   year?: string;
@@ -17,8 +17,8 @@ interface VideoCardProps {
 }
 
 export default function VideoCard({
-  id,
   sourceId,
+  sourceVideoId,
   title,
   poster,
   year: _year,
@@ -29,7 +29,7 @@ export default function VideoCard({
   onRemove,
   removeTitle = '删除',
 }: VideoCardProps) {
-  const detailPath = `/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(id)}`;
+  const detailPath = `/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(sourceVideoId)}`;
   // 通过 ?title= 把视频名带到新标签页，让 document.title 立刻显示视频名
   const linkTarget = `${detailPath}?title=${encodeURIComponent(title)}`;
 

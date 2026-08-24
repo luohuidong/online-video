@@ -30,7 +30,7 @@ export default function FavoriteList({
         return (
           <VideoCard
             key={`${fav.video.sourceId}-${fav.video.sourceVideoId}`}
-            id={fav.video.sourceVideoId}
+            sourceVideoId={fav.video.sourceVideoId}
             sourceId={fav.video.sourceId}
             title={fav.video.title}
             poster={fav.video.cover ?? undefined}

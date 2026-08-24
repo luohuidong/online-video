@@ -4,10 +4,10 @@ import { getVideoDetail } from '../api/detailApi';
 
 export type VideoDetail = SearchResult;
 
-export function useVideoDetail(source: string, id: string) {
+export function useVideoDetail(sourceId: string, sourceVideoId: string) {
   return useQuery({
-    queryKey: ['video', source, id],
-    queryFn: () => getVideoDetail(source, id),
-    enabled: Boolean(source && id),
+    queryKey: ['video', sourceId, sourceVideoId],
+    queryFn: () => getVideoDetail(sourceId, sourceVideoId),
+    enabled: Boolean(sourceId && sourceVideoId),
   });
 }
