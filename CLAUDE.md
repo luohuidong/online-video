@@ -23,4 +23,9 @@ Per-app `dev` / `build` / `typecheck` / etc. are run from inside each app's dire
 
 ## Verification
 
-After modifying any subproject's source files (`apps/server/src/` or `apps/web/src/`), run that subproject's `typecheck` script (`pnpm typecheck` from inside the app directory) to confirm TypeScript still compiles. Don't claim the change is done until typecheck passes.
+After modifying any subproject's source files (`apps/server/src/` or `apps/web/src/`):
+
+1. Run that subproject's `typecheck` script (`pnpm typecheck` from inside the app directory) to confirm TypeScript still compiles.
+2. Run `pnpm check:write` from the repo root to apply Biome formatting, lint fixes, and organize imports across the whole monorepo.
+
+Don't claim the change is done until both steps pass.
