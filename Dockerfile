@@ -1,4 +1,4 @@
-FROM node:24-slim AS base
+FROM node:26-slim AS base
 RUN npm install -g pnpm@^11
 
 # ── Build stage: install all deps and build both apps ────────────────────────
