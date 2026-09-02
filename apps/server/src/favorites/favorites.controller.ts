@@ -4,13 +4,18 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -66,5 +71,24 @@ export class FavoritesController {
   remove(@Param('id') id: number) {
     this.favoritesService.remove(id);
     return { ok: true };
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '更新收藏的 updatedAt，使该条浮动到列表顶部' })
+  @ApiParam({ name: 'id', description: '收藏记录 ID' })
+  @ApiOkResponse({
+    schema: {
+      properties: {
+        ok: { type: 'boolean', example: true },
+        updatedAt: { type: 'integer', example: 1735689600000 },
+      },
+    },
+  })
+  @ApiNotFoundResponse({ description: '收藏记录不存在' })
+  touch(@Param('id') id: number) {
+    const result = this.favoritesService.touch(id);
+    if (!result) throw new NotFoundException(`Favorite ${id} not found`);
+    return { ok: true, updatedAt: result.updatedAt };
   }
 }

@@ -98,6 +98,16 @@ export class FavoritesService {
     return this.drizzle.db.delete(favorites).where(eq(favorites.id, id)).run();
   }
 
+  touch(id: number): { updatedAt: number } | null {
+    const now = Date.now();
+    const result = this.drizzle.db
+      .update(favorites)
+      .set({ updatedAt: now })
+      .where(eq(favorites.id, id))
+      .run();
+    return result.changes === 0 ? null : { updatedAt: now };
+  }
+
   clearAll() {
     return this.drizzle.db.delete(favorites).run();
   }

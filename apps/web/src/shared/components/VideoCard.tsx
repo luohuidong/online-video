@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { proxyImageUrl } from '@/shared/utils/video';
 import styles from './VideoCard.module.scss';
@@ -14,6 +15,7 @@ interface VideoCardProps {
   sourceName?: string;
   onRemove?: () => void;
   removeTitle?: string;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 }
 
 export default function VideoCard({
@@ -28,13 +30,14 @@ export default function VideoCard({
   sourceName,
   onRemove,
   removeTitle = '删除',
+  onClick,
 }: VideoCardProps) {
   const detailPath = `/detail/${encodeURIComponent(sourceId)}/${encodeURIComponent(sourceVideoId)}`;
   // 通过 ?title= 把视频名带到新标签页，让 document.title 立刻显示视频名
   const linkTarget = `${detailPath}?title=${encodeURIComponent(title)}`;
 
   const card = (
-    <Link to={linkTarget} className={styles.cardLink}>
+    <Link to={linkTarget} className={styles.cardLink} onClick={onClick}>
       <div className={styles.cover}>
         {poster ? (
           <img

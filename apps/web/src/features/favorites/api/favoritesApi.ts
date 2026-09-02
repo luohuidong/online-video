@@ -18,6 +18,14 @@ export function removeFavorite(id: number): Promise<void> {
   return apiFetch<void>(`/favorites/${id}`, { init: { method: 'DELETE' } });
 }
 
+export function touchFavorite(
+  id: number,
+): Promise<{ ok: true; updatedAt: number }> {
+  return apiFetch<{ ok: true; updatedAt: number }>(`/favorites/${id}`, {
+    init: { method: 'PATCH' },
+  });
+}
+
 export function clearFavorites(): Promise<void> {
   return apiFetch<void>('/favorites', { init: { method: 'DELETE' } });
 }

@@ -6,12 +6,14 @@ interface FavoriteListProps {
   favorites: Favorite[];
   playRecordMap: Map<string, number>;
   onRemove: (id: number) => void;
+  onClick?: (id: number) => void;
 }
 
 export default function FavoriteList({
   favorites,
   playRecordMap,
   onRemove,
+  onClick,
 }: FavoriteListProps) {
   return (
     <div className={styles.grid}>
@@ -40,6 +42,7 @@ export default function FavoriteList({
             watchProgress={watchProgress}
             onRemove={() => onRemove(fav.id)}
             removeTitle="取消收藏"
+            onClick={onClick ? () => onClick(fav.id) : undefined}
           />
         );
       })}

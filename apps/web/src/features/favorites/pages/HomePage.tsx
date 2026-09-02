@@ -17,6 +17,7 @@ export default function HomePage() {
     removeMutation,
     clearMutation,
     batchUpdateMutation,
+    touchMutation,
   } = useFavorites();
   const playRecordMap = usePlayRecordMap();
 
@@ -77,6 +78,7 @@ export default function HomePage() {
             favorites={favorites}
             playRecordMap={playRecordMap}
             onRemove={(id) => removeMutation.mutate(id)}
+            onClick={(id) => touchMutation.mutate(id)}
           />
         )
       )}

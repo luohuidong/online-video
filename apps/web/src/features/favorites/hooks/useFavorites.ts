@@ -5,6 +5,7 @@ import {
   clearFavorites,
   getFavorites,
   removeFavorite,
+  touchFavorite,
 } from '../api/favoritesApi';
 
 interface UseFavoritesResult {
@@ -16,6 +17,7 @@ interface UseFavoritesResult {
   removeMutation: ReturnType<typeof useMutation<unknown, Error, number>>;
   clearMutation: ReturnType<typeof useMutation<unknown, Error, void>>;
   batchUpdateMutation: ReturnType<typeof useMutation<unknown, Error, void>>;
+  touchMutation: ReturnType<typeof useMutation<unknown, Error, number>>;
 }
 
 export function useFavorites(): UseFavoritesResult {
@@ -64,6 +66,11 @@ export function useFavorites(): UseFavoritesResult {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
   });
 
+  const touchMutation = useMutation({
+    mutationFn: (id: number) => touchFavorite(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
+  });
+
   return {
     favorites: data,
     isLoading,
@@ -73,5 +80,6 @@ export function useFavorites(): UseFavoritesResult {
     removeMutation,
     clearMutation,
     batchUpdateMutation,
+    touchMutation,
   };
 }
