@@ -103,9 +103,9 @@ export class PlayRecordsService {
         ),
       )
       .get();
-    if (!video) return;
+    if (!video) return null;
     // 插入/更新播放记录
-    return this.drizzle.db
+    this.drizzle.db
       .insert(playRecords)
       .values({
         videoId: video.id,
@@ -120,6 +120,7 @@ export class PlayRecordsService {
         },
       })
       .run();
+    return this.getOne(dto.video.sourceId, dto.video.sourceVideoId);
   }
 
   remove(sourceId: string, sourceVideoId: string) {
