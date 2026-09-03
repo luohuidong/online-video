@@ -38,13 +38,16 @@ export class PlayRecordsController {
     return this.playRecordsService.getAll();
   }
 
-  @Get(':source/:videoId')
+  @Get(':sourceId/:sourceVideoId')
   @ApiOperation({ summary: '获取单条播放记录' })
-  @ApiParam({ name: 'source', description: '视频源标识' })
-  @ApiParam({ name: 'videoId', description: '视频在平台上的 ID' })
+  @ApiParam({ name: 'sourceId', description: '视频源标识' })
+  @ApiParam({ name: 'sourceVideoId', description: '视频在平台上的 ID' })
   @ApiOkResponse({ type: PlayRecordDto, description: '不存在时返回 null' })
-  getOne(@Param('source') source: string, @Param('videoId') videoId: string) {
-    return this.playRecordsService.getOne(source, videoId);
+  getOne(
+    @Param('sourceId') sourceId: string,
+    @Param('sourceVideoId') sourceVideoId: string,
+  ) {
+    return this.playRecordsService.getOne(sourceId, sourceVideoId);
   }
 
   @Put()
@@ -67,13 +70,16 @@ export class PlayRecordsController {
     return { ok: true };
   }
 
-  @Delete(':source/:videoId')
+  @Delete(':sourceId/:sourceVideoId')
   @ApiOperation({ summary: '删除单条播放记录' })
-  @ApiParam({ name: 'source', description: '视频源标识' })
-  @ApiParam({ name: 'videoId', description: '视频在平台上的 ID' })
+  @ApiParam({ name: 'sourceId', description: '视频源标识' })
+  @ApiParam({ name: 'sourceVideoId', description: '视频在平台上的 ID' })
   @ApiOkResponse(OkResponse)
-  remove(@Param('source') source: string, @Param('videoId') videoId: string) {
-    this.playRecordsService.remove(source, videoId);
+  remove(
+    @Param('sourceId') sourceId: string,
+    @Param('sourceVideoId') sourceVideoId: string,
+  ) {
+    this.playRecordsService.remove(sourceId, sourceVideoId);
     return { ok: true };
   }
 }

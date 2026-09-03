@@ -44,22 +44,25 @@ export class VideosController {
     return { groups };
   }
 
-  @Get(':source/:id')
+  @Get(':sourceId/:sourceVideoId')
   @ApiOperation({ summary: '获取指定源的视频详情' })
   @ApiParam({
-    name: 'source',
+    name: 'sourceId',
     description: '视频源标识（来自 /config 接口的 source.sourceId）',
   })
-  @ApiParam({ name: 'id', description: '视频 ID' })
+  @ApiParam({ name: 'sourceVideoId', description: '视频 ID' })
   @ApiOkResponse({
     type: SearchResultDto,
     description: '视频详情（含完整剧集列表）',
   })
   @ApiNotFoundResponse({ description: '视频源不存在' })
   @ApiBadGatewayResponse({ description: '上游视频源暂时不可用' })
-  async getDetail(@Param('source') source: string, @Param('id') id: string) {
+  async getDetail(
+    @Param('sourceId') sourceId: string,
+    @Param('sourceVideoId') sourceVideoId: string,
+  ) {
     try {
-      return await this.videosService.getDetail(source, id);
+      return await this.videosService.getDetail(sourceId, sourceVideoId);
     } catch (err) {
       const msg: string = err instanceof Error ? err.message : '获取详情失败';
       if (msg.startsWith('Source not found:')) throw new NotFoundException(msg);
