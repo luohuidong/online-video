@@ -1,5 +1,4 @@
-FROM node:26-slim AS base
-RUN npx get-pnpm next-12
+FROM ghcr.io/pnpm/pnpm:12 AS base
 
 # ── Build stage: install all deps and build both apps ────────────────────────
 FROM base AS build
