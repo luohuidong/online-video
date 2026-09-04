@@ -1,4 +1,5 @@
 FROM ghcr.io/pnpm/pnpm:12 AS base
+RUN pnpm runtime set node 26 -g
 
 # ── Build stage: install all deps and build both apps ────────────────────────
 FROM base AS build

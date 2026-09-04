@@ -1,13 +1,6 @@
 {
   "name": "online-video-workspace",
   "private": true,
-  "devEngines": {
-    "runtime": {
-      "name": "node",
-      "version": "26.x",
-      "onFail": "download"
-    }
-  },
   "scripts": {
     "format": "biome format",
     "format:write": "biome format --write",
