@@ -1,10 +1,10 @@
-# CLAUDE.md
+# AGENTS.md
 
 ## Project Overview
 
 Monorepo with two apps: a NestJS API server (SQLite + Drizzle ORM) and a React frontend (Vite + Tailwind CSS 4). Integrates with 苹果CMS V10 (Mac CMS) video provider API.
 
-Per-app details live in each app's own CLAUDE.md: see `apps/server/CLAUDE.md` and `apps/web/CLAUDE.md`.
+Per-app details live in each app's own AGENTS.md: see `apps/server/AGENTS.md` and `apps/web/AGENTS.md`.
 
 ## Commands
 
@@ -19,7 +19,7 @@ pnpm check:write    # Apply format + lint + organize imports (biome check --writ
 pnpm ci             # CI-friendly check, no --write
 ```
 
-Per-app `dev` / `build` / `typecheck` / etc. are run from inside each app's directory — see the respective CLAUDE.md.
+Per-app `dev` / `build` / `typecheck` / etc. are run from inside each app's directory — see the respective AGENTS.md.
 
 ## Verification
 

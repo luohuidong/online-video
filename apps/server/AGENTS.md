@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 Server app — NestJS API with SQLite + Drizzle ORM.
 

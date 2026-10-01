@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 Web app — React 19 SPA with Vite + Tailwind CSS 4.
 
