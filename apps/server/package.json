@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
+    "dev": "NODE_ENV=development bun --hot src/index.ts",
     "start": "bun run src/index.ts",
     "typecheck": "tsc --noEmit",
     "drizzle:generate": "bun run drizzle-kit generate",

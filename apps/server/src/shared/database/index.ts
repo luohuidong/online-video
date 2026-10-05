@@ -1,4 +1,4 @@
-export { db, schema } from './database';
+export { db } from './database';
 export {
   type FavoriteRow,
   favorites,
