@@ -6,8 +6,9 @@
     "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
     "typecheck": "tsc --noEmit",
-    "drizzle:generate": "bun drizzle-kit generate",
-    "drizzle:push": "bun drizzle-kit push"
+    "drizzle:generate": "bun run drizzle-kit generate",
+    "drizzle:push": "bun run drizzle-kit push",
+    "drizzle:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.9.1",
@@ -16,7 +17,9 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
     "@types/bun": "1.4.2",
+    "better-sqlite3": "^13.0.3",
     "drizzle-kit": "^0.31.11",
     "typescript": "^7.0.2"
   }

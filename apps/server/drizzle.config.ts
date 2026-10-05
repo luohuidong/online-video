@@ -1,12 +1,10 @@
-import type { Config } from 'drizzle-kit';
+import { defineConfig } from 'drizzle-kit';
 
-const dbPath = `${process.cwd()}/.data/data.db`;
-
-export default {
+export default defineConfig({
   schema: './src/shared/database/schema.ts',
   out: './drizzle',
   dialect: 'sqlite',
   dbCredentials: {
-    url: dbPath,
+    url: new URL('./.data/data.db', import.meta.url).pathname,
   },
-} satisfies Config;
+});
