@@ -1,29 +1,33 @@
-FROM ghcr.io/pnpm/pnpm:12 AS base
-RUN pnpm runtime set node 26 -g
+# ── Base: Bun (no separate Node runtime needed; bun is self-contained) ─────────
+FROM oven/bun:1 AS base
 
 # ── Build stage: install all deps and build both apps ────────────────────────
 FROM base AS build
 WORKDIR /app
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy workspace manifests first so bun can resolve the lockfile before source
+COPY package.json bun.lock ./
 COPY apps/server/package.json ./apps/server/package.json
 COPY apps/web/package.json ./apps/web/package.json
-RUN pnpm install --frozen-lockfile
+
+# Install with the committed bun.lock for reproducibility
+RUN bun install --frozen-lockfile
+
+# Now copy the rest of the source
 COPY . /app
 
-RUN pnpm --filter server build
-RUN pnpm --filter web build
-# Deploy server with all deps (dev included so drizzle-kit is available at runtime)
-RUN pnpm deploy --filter=server /prod/server
-# pnpm deploy does not copy build artifacts, copy dist manually
-RUN cp -r /app/apps/server/dist /prod/server/dist
+# Build the web app (server runs directly via bun, no build needed)
+RUN bun --cwd apps/web run build
 
 # ── Server image ──────────────────────────────────────────────────────────────
 FROM base AS server
-COPY --from=build /prod/server /app
 WORKDIR /app
+# Bun ships a working directory that already has /app/{package.json, src/, drizzle/}
+COPY --from=build /app/apps/server /app
 EXPOSE 3000
-# Run schema migrate on every start (idempotent), then launch the app
-CMD ["sh", "-c", "node_modules/.bin/drizzle-kit migrate && node dist/src/main"]
+# Bun's SQLite migrator is invoked at startup (see src/shared/database/database.ts).
+# Just launch the app — no separate drizzle-kit migrate step needed.
+CMD ["bun", "run", "src/index.ts"]
 
 # ── Web image (nginx serving the SPA) ────────────────────────────────────────
 FROM nginx:stable-alpine AS web

@@ -7,24 +7,8 @@
       "src/**",
       "biome.jsonc",
       "drizzle.config.ts",
-      "nest-cli.json",
       "package.json",
       "tsconfig*.json"
     ]
-  },
-  "javascript": {
-    "parser": {
-      "unsafeParameterDecoratorsEnabled": true
-    }
-  },
-  "linter": {
-    "rules": {
-      "suspicious": {
-        "noConsole": "off"
-      },
-      "style": {
-        "useImportType": "off"
-      }
-    }
   }
 }

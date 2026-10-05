@@ -29,7 +29,7 @@ docker build --target web -t online-video-web .
 
 ### Configuration
 
-Create `config.yml` in the project root to configure video sources (苹果CMS). Multiple sources can be configured:
+Create `config.yml` in `apps/server/` (for local dev) or in the repo root (for Docker; the compose file mounts it into the container). Configure your 苹果CMS video sources:
 
 ```yaml
 sources:
@@ -49,13 +49,15 @@ SQLite database file is stored in a Docker volume and will be created automatica
 
 ## Development
 
+Requires [Bun](https://bun.com) 1.1.27 or newer.
+
 ```bash
-# Install dependencies
-pnpm install
+# Install workspace dependencies
+bun install
 
-# Start backend development server
-pnpm dev:server
+# Start backend development server (Hono on Bun)
+bun --filter server dev
 
-# Start frontend development server
-pnpm dev:web
+# Start frontend development server (Vite)
+bun --filter web dev
 ```

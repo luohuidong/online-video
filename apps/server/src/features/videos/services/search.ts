@@ -1,0 +1,17 @@
+import { getSources } from '../../../shared/config';
+import type { SearchGroup } from '../types';
+import { searchSource } from './utils/scraper';
+
+export async function search(query: string): Promise<SearchGroup[]> {
+  const sources = await getSources();
+  const maxPages = 5;
+  const perSource = await Promise.all(
+    sources.map((src) => searchSource(src, query, maxPages)),
+  );
+
+  // 按 config.yml 中的源顺序分组，跳过空集合
+  return sources
+    .map((src, i) => ({ source: src, items: perSource[i] ?? [] }))
+    .filter((g) => g.items.length > 0)
+    .map((g) => ({ name: g.source.sourceName, items: g.items }));
+}

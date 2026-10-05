@@ -1,5 +1,9 @@
-.data
-.cache
-dist
+# 依赖
+node_modules/
+
+# 运行时产物
+.data/
+.cache/
+
+# 视频源配置（含 provider 密钥，不入库）
 config.yml
-*.tsbuildinfo

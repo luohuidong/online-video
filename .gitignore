@@ -1,4 +1,12 @@
+# 本文件只放「工作区级别」的忽略规则
+# 各 app 的产物/本地文件由各自的 .gitignore 负责（apps/server/.gitignore、apps/web/.gitignore）
+
+# 依赖
 node_modules/
+
+# 视频源配置：Docker 场景由 compose 挂载到仓库根目录
+# 本地开发时 apps/server/config.yml 由 apps/server/.gitignore 覆盖
 config.yml
-.cache
+
+# 工作树
 .claude/worktrees/
