@@ -1,6 +1,5 @@
 import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { proxyImageUrl } from '@/shared/utils/video';
 import styles from './VideoCard.module.scss';
 
 interface VideoCardProps {
@@ -41,7 +40,7 @@ export default function VideoCard({
       <div className={styles.cover}>
         {poster ? (
           <img
-            src={proxyImageUrl(poster)}
+            src={poster}
             alt={title}
             loading="lazy"
             decoding="async"

@@ -29,7 +29,6 @@ Hono app assembled in `src/app.ts` via `createApp()`; each feature is a self-con
 - `features/videos/` - Cross-source search + detail + batch update + daily cron
 - `features/favorites/` - Favorites CRUD
 - `features/play-records/` - Playback progress CRUD
-- `features/image-proxy/` - Image fetch/cache proxy with ETag/304 negotiation
 - `index.ts` - Process entry: imports shared (side-effect), creates app, calls `Bun.serve`
 
 Database schema (`shared/database/schema.ts`):

@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { favoritesRoutes } from './features/favorites';
-import { imageProxyRoutes } from './features/image-proxy';
 import { playRecordsRoutes } from './features/play-records';
 import { videosRoutes } from './features/videos';
 import { accessLog } from './middleware/access-log';
@@ -21,7 +20,6 @@ export function createApp(): Hono {
   app.route('/videos', videosRoutes);
   app.route('/favorites', favoritesRoutes);
   app.route('/play-records', playRecordsRoutes);
-  app.route('/image-proxy', imageProxyRoutes);
 
   app.notFound((c) => c.json({ message: 'Not Found' }, 404));
 

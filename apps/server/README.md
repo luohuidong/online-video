@@ -53,14 +53,7 @@ bun run drizzle:push         # 把 schema 直接推到数据库（开发用）
         │   ├── parsers/     # 上游 vod_play_url 解析
         │   └── services/    # search / detail / batchUpdate / refresh (Bun.cron)
         ├── favorites/       # 收藏 CRUD
-        ├── play-records/    # 播放进度 CRUD
-        └── image-proxy/     # 第三方封面图代理 + 磁盘缓存 + LRU 淘汰
-            ├── routes.ts
-            ├── service.ts   # 编排层（含 inflight 去重）
-            ├── fetcher.ts   # 上游 fetch + 大小/类型校验
-            ├── cache.ts     # Bun.file / Bun.write / Bun.Glob
-            ├── errors.ts
-            └── dto.ts
+        └── play-records/    # 播放进度 CRUD
 ```
 
 ## API 列表
@@ -80,13 +73,11 @@ bun run drizzle:push         # 把 schema 直接推到数据库（开发用）
 | PUT    | `/play-records`                          | 新增/更新播放记录（upsert）                 |
 | DELETE | `/play-records`                          | 清空播放记录（204）                         |
 | DELETE | `/play-records/:sourceId/:sourceVideoId` | 删除单条（204）                             |
-| GET    | `/image-proxy?url=...`                   | 第三方封面图代理（带 ETag / Cache-Control） |
 
 ## 数据持久化
 
 - **SQLite 文件**: `<cwd>/.data/data.db`（启动时自动建表、自动跑 migration）
-- **图片缓存**: `<cwd>/.cache/images/`，500 MiB 上限 + LRU 淘汰
-- 两者都已在 `.gitignore` 里。
+- 已在 `.gitignore` 里。
 
 ## 配置文件
 

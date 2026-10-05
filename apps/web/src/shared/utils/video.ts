@@ -4,11 +4,6 @@ export function getVideoEpisodeCount(videoPlayGroups: Episode[][]): number {
   return videoPlayGroups[0]?.length ?? 0;
 }
 
-export function proxyImageUrl(url: string | undefined): string | undefined {
-  if (!url) return undefined;
-  return `/api/image-proxy?url=${encodeURIComponent(url)}`;
-}
-
 export async function copyTextToClipboard(text: string): Promise<void> {
   if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
     try {

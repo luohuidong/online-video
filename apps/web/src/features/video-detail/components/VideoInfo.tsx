@@ -1,5 +1,5 @@
 import type { SearchResult } from '@/shared/types';
-import { getVideoEpisodeCount, proxyImageUrl } from '@/shared/utils/video';
+import { getVideoEpisodeCount } from '@/shared/utils/video';
 import { FavoriteButton } from './FavoriteButton';
 import styles from './VideoInfo.module.scss';
 
@@ -21,11 +21,7 @@ export function VideoInfo({
   return (
     <div className={styles.info}>
       {video.poster && (
-        <img
-          src={proxyImageUrl(video.poster)}
-          alt={video.title}
-          className={styles.poster}
-        />
+        <img src={video.poster} alt={video.title} className={styles.poster} />
       )}
       <div className={styles.body}>
         <h1 className={styles.title}>{video.title}</h1>
