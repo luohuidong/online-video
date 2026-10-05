@@ -294,7 +294,9 @@ flowchart LR
 
 <!-- 遍历当前播放源的集数 -->
 {maccms:foreach name="vo.urls" id="vo2"}
-<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}"> {$vo2.title} </a>
+<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">
+  {$vo2.title}
+</a>
 {/maccms:foreach} {/maccms:foreach}
 ```
 

@@ -21,6 +21,10 @@ bun run check          # Format + lint + organize imports check (biome check)
 bun run check:write    # Apply format + lint + organize imports (biome check --write)
 bun run ci             # CI-friendly check, no --write
 
+# Markdown / YAML formatting (Prettier, run from repo root)
+bun run prettier:format        # Check formatting on .md / .markdown / .yml / .yaml
+bun run prettier:format:write  # Apply formatting to those files
+
 # Dev
 bun --filter server dev   # backend (from repo root)
 bun --filter web dev      # frontend (from repo root)

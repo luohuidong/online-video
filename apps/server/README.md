@@ -65,22 +65,22 @@ bun run drizzle:push         # 把 schema 直接推到数据库（开发用）
 
 ## API 列表
 
-| 方法 | 路径 | 说明 |
-|---|---|---|
-| GET | `/videos?q=...` | 跨源聚合搜索 |
-| GET | `/videos/:sourceId/:sourceVideoId` | 视频详情（含剧集列表） |
-| POST | `/videos/batch-update` | 批量更新收藏视频的集数 |
-| GET | `/favorites` | 收藏列表（按更新时间倒序） |
-| POST | `/favorites` | 添加收藏（201） |
-| DELETE | `/favorites` | 清空收藏 |
-| DELETE | `/favorites/:id` | 删除单条收藏 |
-| PATCH | `/favorites/:id` | 触摸（更新 `updatedAt` 让其浮到顶部） |
-| GET | `/play-records` | 播放记录列表 |
-| GET | `/play-records/:sourceId/:sourceVideoId` | 单条记录（不存在 → 404） |
-| PUT | `/play-records` | 新增/更新播放记录（upsert） |
-| DELETE | `/play-records` | 清空播放记录（204） |
-| DELETE | `/play-records/:sourceId/:sourceVideoId` | 删除单条（204） |
-| GET | `/image-proxy?url=...` | 第三方封面图代理（带 ETag / Cache-Control） |
+| 方法   | 路径                                     | 说明                                        |
+| ------ | ---------------------------------------- | ------------------------------------------- |
+| GET    | `/videos?q=...`                          | 跨源聚合搜索                                |
+| GET    | `/videos/:sourceId/:sourceVideoId`       | 视频详情（含剧集列表）                      |
+| POST   | `/videos/batch-update`                   | 批量更新收藏视频的集数                      |
+| GET    | `/favorites`                             | 收藏列表（按更新时间倒序）                  |
+| POST   | `/favorites`                             | 添加收藏（201）                             |
+| DELETE | `/favorites`                             | 清空收藏                                    |
+| DELETE | `/favorites/:id`                         | 删除单条收藏                                |
+| PATCH  | `/favorites/:id`                         | 触摸（更新 `updatedAt` 让其浮到顶部）       |
+| GET    | `/play-records`                          | 播放记录列表                                |
+| GET    | `/play-records/:sourceId/:sourceVideoId` | 单条记录（不存在 → 404）                    |
+| PUT    | `/play-records`                          | 新增/更新播放记录（upsert）                 |
+| DELETE | `/play-records`                          | 清空播放记录（204）                         |
+| DELETE | `/play-records/:sourceId/:sourceVideoId` | 删除单条（204）                             |
+| GET    | `/image-proxy?url=...`                   | 第三方封面图代理（带 ETag / Cache-Control） |
 
 ## 数据持久化
 

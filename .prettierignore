@@ -1,0 +1,16 @@
+# Ignore artifacts (covers everything from .gitignore, plus local-only entries)
+node_modules/
+build/
+dist/
+.cache/
+.data/
+
+# Local-only server config (gitignored, contains provider secrets)
+apps/server/config.yml
+config.yml
+
+# Worktrees
+.claude/worktrees/
+
+# Lockfile / vendored
+bun.lock

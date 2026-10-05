@@ -11,10 +11,14 @@
     "lint:write": "biome lint --write",
     "check": "biome check",
     "check:write": "biome check --write",
-    "ci": "biome ci"
+    "ci": "biome ci",
+    "prettier:format": "prettier --check \"**/*.{md,markdown,yml,yaml}\" --no-error-on-unmatched-pattern",
+    "prettier:format:write": "prettier --write \"**/*.{md,markdown,yml,yaml}\" --no-error-on-unmatched-pattern"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.10",
-    "@types/bun": "1.4.2"
-  }
+    "@types/bun": "1.4.2",
+    "prettier": "3.9.9"
+  },
+  "dependencies": {}
 }

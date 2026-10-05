@@ -66,15 +66,15 @@ All endpoints MUST be implemented as RESTful APIs. No exceptions.
 
 ## Differences from the previous NestJS implementation
 
-| NestJS (removed) | Hono + Bun (current) |
-|---|---|
-| `NestFactory.create()` + Express | `Bun.serve({ fetch: app.fetch })` |
-| `js-yaml` | `Bun.YAML.parse` |
-| `fs.readFile / writeFile` | `Bun.file().text() / Bun.write()` |
-| `node:crypto.createHash('sha256')` | `new Bun.CryptoHasher('sha256')` |
-| `better-sqlite3` + `drizzle-orm/better-sqlite3` | `Bun.SQLite` + `drizzle-orm/bun-sqlite` |
-| `@nestjs/schedule` `@Cron('0 12 * * *')` | `Bun.cron('0 12 * * *', ...)` |
-| `fs.readdir` for cache | `new Bun.Glob('*').scan({ cwd })` |
-| `@nestjs/swagger` annotations | Not bundled — schemas live in zod; see `src/features/*/dto.ts` |
-| Nest DI (`@Injectable()` + `Module`) | Plain `import` / module-level singletons |
-| `NotFoundException` etc. + global filter | Custom error classes + `try/catch` + `app.onError` |
+| NestJS (removed)                                | Hono + Bun (current)                                           |
+| ----------------------------------------------- | -------------------------------------------------------------- |
+| `NestFactory.create()` + Express                | `Bun.serve({ fetch: app.fetch })`                              |
+| `js-yaml`                                       | `Bun.YAML.parse`                                               |
+| `fs.readFile / writeFile`                       | `Bun.file().text() / Bun.write()`                              |
+| `node:crypto.createHash('sha256')`              | `new Bun.CryptoHasher('sha256')`                               |
+| `better-sqlite3` + `drizzle-orm/better-sqlite3` | `Bun.SQLite` + `drizzle-orm/bun-sqlite`                        |
+| `@nestjs/schedule` `@Cron('0 12 * * *')`        | `Bun.cron('0 12 * * *', ...)`                                  |
+| `fs.readdir` for cache                          | `new Bun.Glob('*').scan({ cwd })`                              |
+| `@nestjs/swagger` annotations                   | Not bundled — schemas live in zod; see `src/features/*/dto.ts` |
+| Nest DI (`@Injectable()` + `Module`)            | Plain `import` / module-level singletons                       |
+| `NotFoundException` etc. + global filter        | Custom error classes + `try/catch` + `app.onError`             |
