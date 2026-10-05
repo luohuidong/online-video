@@ -1,0 +1,11 @@
+session_name: 4-pane-split
+windows:
+  - window_name: dev window
+    layout: tiled
+    panes:
+      - shell_command: # pane no. 1
+          - cd apps/server
+          - bun run dev
+      - shell_command:
+          - cd apps/web
+          - bun run dev
