@@ -31,6 +31,10 @@ Hono app assembled in `src/app.ts` via `createApp()`; each feature is a self-con
 - `features/play-records/` - Playback progress CRUD
 - `index.ts` - Process entry: imports shared (side-effect), creates app, calls `Bun.serve`
 
+## Conventions
+
+- **Export discipline** — Only `export` symbols that are demonstrably consumed by code outside the defining file. Re-exporting from `index.ts` barrels is allowed only when at least one external module already imports that symbol. Avoid speculative / forward-looking exports; TS will tell you the moment a new consumer appears, and adding the export at that point costs seconds. Do not re-export purely for IDE autocomplete or "public API surface" cosmetics.
+
 Database schema (`shared/database/schema.ts`):
 
 - `videos` - Video metadata (sourceId, sourceVideoId, title, cover, year, totalEpisodes)

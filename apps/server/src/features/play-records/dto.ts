@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const VideoInfoInputSchema = z.object({
+const VideoInfoInputSchema = z.object({
   sourceId: z.string().min(1),
   sourceVideoId: z.string().min(1),
   title: z.string().min(1),
@@ -17,7 +17,7 @@ export const UpsertPlayRecordSchema = z.object({
 
 export type UpsertPlayRecordInput = z.infer<typeof UpsertPlayRecordSchema>;
 
-export interface VideoInfo {
+interface VideoInfo {
   id: number;
   title: string;
   sourceId: string;

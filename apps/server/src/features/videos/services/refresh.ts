@@ -1,10 +1,10 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../../../shared/database';
 import { favorites, videos } from '../../../shared/database/schema';
-import { batchUpdate } from '.';
+import { batchUpdate } from './batch-update';
 
-/** 每天中午 12:00 刷新所有收藏视频的集数。由 cron.ts 通过 Bun.cron 调用。 */
-export async function refreshFavoritedEpisodes(): Promise<void> {
+/** 每天中午 12:00 刷新所有收藏视频的集数。由本文件模块加载时的 Bun.cron 调用。 */
+async function refreshFavoritedEpisodes(): Promise<void> {
   const startedAt = Date.now();
   console.log(
     '[videos] starting scheduled refresh of favorited video episodes',

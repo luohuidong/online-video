@@ -1,6 +1,6 @@
 import { type AppConfig, AppConfigSchema, type Source } from './schema';
 
-export class ConfigService {
+class ConfigService {
   private config: AppConfig | null = null;
 
   async getSources(): Promise<Source[]> {
@@ -29,4 +29,6 @@ export class ConfigService {
   }
 }
 
-export const config = new ConfigService();
+const config = new ConfigService();
+
+export { config };

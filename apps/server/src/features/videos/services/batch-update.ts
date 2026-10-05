@@ -5,7 +5,7 @@ import { videos } from '../../../shared/database/schema';
 import { getTotalEpisodeCount } from '../parsers/episodes';
 import { getDetailFromSource } from './utils/scraper';
 
-export interface BatchUpdateItem {
+interface BatchUpdateItem {
   sourceId: string;
   sourceVideoId: string;
   totalEpisodes: number | null;

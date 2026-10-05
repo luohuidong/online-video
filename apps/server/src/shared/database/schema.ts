@@ -49,7 +49,3 @@ export const playRecords = sqliteTable(
   },
   (t) => [uniqueIndex('play_records_video_idx').on(t.videoId)],
 );
-
-export type VideoRow = typeof videos.$inferSelect;
-export type FavoriteRow = typeof favorites.$inferSelect;
-export type PlayRecordRow = typeof playRecords.$inferSelect;

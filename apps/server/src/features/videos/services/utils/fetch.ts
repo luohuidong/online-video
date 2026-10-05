@@ -5,7 +5,7 @@ const UPSTREAM_HEADERS = {
 };
 
 /** 带超时控制的 fetch，超时或网络错误都会抛出异常。 */
-export async function timedFetch(url: string, ms: number): Promise<Response> {
+async function timedFetch(url: string, ms: number): Promise<Response> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), ms);
   try {
