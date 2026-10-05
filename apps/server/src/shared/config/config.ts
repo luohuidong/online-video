@@ -1,43 +1,32 @@
 import { type AppConfig, AppConfigSchema, type Source } from './schema';
 
-let cached: AppConfig | null = null;
-// Collapse concurrent first calls into a single load.
-let pending: Promise<AppConfig> | null = null;
+export class ConfigService {
+  private config: AppConfig | null = null;
 
-async function loadConfig(): Promise<AppConfig> {
-  if (cached) return cached;
-  if (pending) return pending;
+  async getSources(): Promise<Source[]> {
+    const config = await this.load();
+    return config.sources;
+  }
 
-  pending = (async () => {
+  private async load(): Promise<AppConfig> {
+    if (this.config) return this.config;
+
     const configPath = `${process.cwd()}/config.yml`;
     const file = Bun.file(configPath);
     if (!(await file.exists())) {
       throw new Error(`Config file not found: ${configPath}`);
     }
-
     const raw = Bun.YAML.parse(await file.text());
-    const result = AppConfigSchema.safeParse(raw);
-    if (!result.success) {
-      throw new Error(`Invalid config: ${result.error.message}`);
+    const parsed = AppConfigSchema.safeParse(raw);
+    if (!parsed.success) {
+      throw new Error(`Invalid config: ${parsed.error.message}`);
     }
-
-    cached = result.data;
     console.log(
-      `[config] loaded ${cached.sources.length} source(s) from ${configPath}`,
+      `[config] loaded ${parsed.data.sources.length} source(s) from ${configPath}`,
     );
-    return cached;
-  })();
-
-  return pending;
+    this.config = parsed.data;
+    return this.config;
+  }
 }
 
-/**
- * Returns the configured video sources. Loads and caches the YAML on first
- * call — keeps the module body fully synchronous so module evaluation
- * order is deterministic (no async top-level work racing with sibling
- * imports' setup side effects).
- */
-export async function getSources(): Promise<Source[]> {
-  const c = await loadConfig();
-  return c.sources;
-}
+export const config = new ConfigService();

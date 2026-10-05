@@ -1,4 +1,4 @@
-export { getSources } from './config';
+export { config } from './config';
 export {
   type AppConfig,
   AppConfigSchema,

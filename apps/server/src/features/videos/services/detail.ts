@@ -1,4 +1,4 @@
-import { getSources } from '../../../shared/config';
+import { config } from '../../../shared/config';
 import {
   type SearchResult,
   SourceNotFoundError,
@@ -14,7 +14,7 @@ export async function getDetail(
   sourceId: string,
   sourceVideoId: string,
 ): Promise<SearchResult> {
-  const sources = await getSources();
+  const sources = await config.getSources();
   const source = sources.find((s) => s.sourceId === sourceId);
   if (!source) throw new SourceNotFoundError(sourceId);
   try {

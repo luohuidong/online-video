@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { getSources } from '../../../shared/config';
+import { config } from '../../../shared/config';
 import { db } from '../../../shared/database';
 import { videos } from '../../../shared/database/schema';
 import { getTotalEpisodeCount } from '../parsers/episodes';
@@ -19,7 +19,7 @@ export async function batchUpdate(
   sourceGroups: Array<{ sourceId: string; sourceVideoIds: string[] }>,
 ): Promise<BatchUpdateItem[]> {
   const updates: BatchUpdateItem[] = [];
-  const sources = await getSources();
+  const sources = await config.getSources();
 
   for (const group of sourceGroups) {
     const source = sources.find((s) => s.sourceId === group.sourceId);

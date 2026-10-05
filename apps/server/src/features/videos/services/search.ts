@@ -1,9 +1,9 @@
-import { getSources } from '../../../shared/config';
+import { config } from '../../../shared/config';
 import type { SearchGroup } from '../types';
 import { searchSource } from './utils/scraper';
 
 export async function search(query: string): Promise<SearchGroup[]> {
-  const sources = await getSources();
+  const sources = await config.getSources();
   const maxPages = 5;
   const perSource = await Promise.all(
     sources.map((src) => searchSource(src, query, maxPages)),
