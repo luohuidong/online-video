@@ -2,7 +2,7 @@ services:
   server:
     build:
       context: .
-      target: server
+      dockerfile: apps/server/Dockerfile
     volumes:
       # SQLite data persistence
       - online-video-data:/app/.data
@@ -13,7 +13,7 @@ services:
   web:
     build:
       context: .
-      target: web
+      dockerfile: apps/web/Dockerfile
     ports:
       - "9000:80"
     depends_on:
