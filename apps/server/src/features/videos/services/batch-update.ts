@@ -39,11 +39,12 @@ export async function batchUpdate(
 
   if (updates.length === 0) return [];
 
-  // 并行更新数据库：Promise.all 将 N 次顺序等待合并为 1 次并发等待
-  await Promise.all(
-    updates.map((u) =>
-      db
-        .update(videos)
+  // 把 N 条 UPDATE 包在一个事务里：SQLite 默认 synchronous=FULL，
+  // 每条独立 UPDATE 都会触发一次 fsync，包事务后只 fsync 一次，
+  // 相比 Promise.all + N 次自动 commit 通常快 10x～100x。
+  db.transaction((tx) => {
+    for (const u of updates) {
+      tx.update(videos)
         .set({ totalEpisodes: u.totalEpisodes })
         .where(
           and(
@@ -51,9 +52,9 @@ export async function batchUpdate(
             eq(videos.sourceVideoId, u.sourceVideoId),
           ),
         )
-        .run(),
-    ),
-  );
+        .run();
+    }
+  });
 
   return updates;
 }
