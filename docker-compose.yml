@@ -5,7 +5,7 @@ services:
       dockerfile: apps/server/Dockerfile
     volumes:
       # SQLite data persistence
-      - online-video-data:/app/.data
+      - online-video-data:/app/apps/server/.data
       # Mount config file (edit config.yml to configure sources)
       - ./config.yml:/app/config.yml:ro
     restart: unless-stopped
