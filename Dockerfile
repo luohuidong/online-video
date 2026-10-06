@@ -29,7 +29,10 @@ COPY package.json bun.lock ./
 COPY apps/web/package.json ./apps/web/package.json
 RUN bun install --frozen-lockfile --filter './apps/web'
 COPY . /app
-RUN bun --cwd apps/web run build
+# Note: bun's --cwd must use the equals form (=) — `--cwd path` is parsed as
+# `bun --cwd path` followed by positional args, which silently prints help and
+# exits 0 without running the script.
+RUN bun --cwd=apps/web run build
 
 # ── Web image (nginx serving the SPA) ────────────────────────────────────────
 FROM nginx:stable-alpine AS web
