@@ -17,11 +17,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "rootDir": "./src",
+    "rootDir": ".",
 
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "drizzle.config.ts"]
 }
