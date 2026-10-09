@@ -13,7 +13,7 @@ interface BatchUpdateItem {
 
 /**
  * 批量抓取一组视频的最新集数并写回数据库。
- * 用于刷新收藏视频的 totalEpisodes（每天中午 12:00 由 cron 调用）。
+ * 用于刷新收藏视频的 totalEpisodes（由 POST /videos/batch-update 触发）。
  */
 export async function batchUpdate(
   sourceGroups: Array<{ sourceId: string; sourceVideoIds: string[] }>,

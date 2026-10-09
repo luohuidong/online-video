@@ -1,7 +1,5 @@
 // Side-effect imports first so config + database are initialized before any
-// feature modules evaluate. The videos feature's cron (registered at the
-// bottom of services/refresh.ts) is wired in transitively when createApp()
-// pulls in videosRoutes.
+// feature modules evaluate.
 import './shared/config/index.ts';
 import './shared/database/index.ts';
 import { serve } from '@hono/node-server';

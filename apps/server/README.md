@@ -10,7 +10,6 @@
 - **ORM**: [drizzle-orm](https://orm.drizzle.team) + `drizzle-orm/mysql2` 驱动
 - **数据库**: [MySQL](https://www.mysql.com/) 8.4（`mysql2` 连接池）
 - **数据库迁移**: `drizzle-kit`
-- **定时任务**: [croner](https://github.com/almarklein/croner)
 - **CORS**: `hono/cors`
 
 ## 命令
@@ -36,7 +35,7 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
 ├── config.yml               # 视频源配置（gitignored）
 ├── .env.example             # 数据库连接的环境变量模板（.env 本身 gitignored）
 └── src/
-    ├── index.ts             # 入口：@hono/node-server serve + 副作用导入（config + db + cron）
+    ├── index.ts             # 入口：@hono/node-server serve + 副作用导入（config + db）
     ├── app.ts               # createApp() Hono 工厂：注册路由、中间件、错误处理
     ├── middleware/
     │   └── access-log.ts    # 访问日志
@@ -50,11 +49,11 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
     │       ├── database.ts  # mysql2 连接池 + 单连接 auto-migrate
     │       └── index.ts
     └── features/            # 每个 feature 自包含
-        ├── videos/          # 跨源搜索 + 详情 + 批量更新 + cron 入口
+        ├── videos/          # 跨源搜索 + 详情 + 批量更新
         │   ├── routes.ts
         │   ├── types.ts
         │   ├── parsers/     # 上游 vod_play_url 解析
-        │   └── services/    # search / detail / batchUpdate / refresh (croner)
+        │   └── services/    # search / detail / batchUpdate
         ├── favorites/       # 收藏 CRUD
         └── play-records/    # 播放进度 CRUD
 ```

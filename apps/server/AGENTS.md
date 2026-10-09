@@ -48,7 +48,7 @@ Hono app 在 `src/app.ts` 里由 `createApp()` 组装；每个 feature 是 `src/
 - `shared/config/` - 对 `config.yml` 做 `yaml.parse` + zod schema（只含视频源）
 - `shared/database/` - `mysql2` 连接池 + drizzle + 启动时自动 migration；从环境变量读 `DATABASE_URL` / `DATABASE_CONNECTION_LIMIT`
 - `middleware/access-log.ts` - 请求访问日志
-- `features/videos/` - 跨源搜索 + 详情 + 批量更新 + 每日 cron
+- `features/videos/` - 跨源搜索 + 详情 + 批量更新
 - `features/favorites/` - 收藏 CRUD
 - `features/play-records/` - 播放进度 CRUD
 - `index.ts` - 进程入口：副作用导入 shared、创建 app、调用 `@hono/node-server` 的 `serve()`
@@ -93,15 +93,15 @@ Hono app 在 `src/app.ts` 里由 `createApp()` 组装；每个 feature 是 `src/
 
 ## 与旧 NestJS 实现的差异
 
-| NestJS（已移除）                            | Hono + Node（当前）                                        |
-| ------------------------------------------- | ---------------------------------------------------------- |
-| `NestFactory.create()` + Express            | `@hono/node-server` 的 `serve({ fetch: app.fetch })`       |
-| `js-yaml`                                   | `yaml.parse`                                               |
-| `fs.readFile / writeFile`                   | `node:fs/promises` 的 `readFile` / `mkdirSync`             |
-| `node:crypto.createHash('sha256')`          | `node:crypto` 的 `createHash`                              |
-| `mysql2` + `drizzle-orm/mysql2`             | `mysql2` + `drizzle-orm/mysql2`                            |
-| `@nestjs/schedule` 的 `@Cron('0 12 * * *')` | `croner` 的 `new Cron('0 12 * * *', ...)`                  |
-| 缓存用 `fs.readdir`                         | `node:fs/promises` 的 `readdir` / `opendir`                |
-| `@nestjs/swagger` 注解                      | 不再引入 —— schema 写在 zod 里，见 `src/features/*/dto.ts` |
-| Nest DI（`@Injectable()` + `Module`）       | 普通 `import` / 模块级单例                                 |
-| `NotFoundException` 等 + 全局 filter        | 自定义错误类 + `try/catch` + `app.onError`                 |
+| NestJS（已移除）                            | Hono + Node（当前）                                                   |
+| ------------------------------------------- | --------------------------------------------------------------------- |
+| `NestFactory.create()` + Express            | `@hono/node-server` 的 `serve({ fetch: app.fetch })`                  |
+| `js-yaml`                                   | `yaml.parse`                                                          |
+| `fs.readFile / writeFile`                   | `node:fs/promises` 的 `readFile` / `mkdirSync`                        |
+| `node:crypto.createHash('sha256')`          | `node:crypto` 的 `createHash`                                         |
+| `mysql2` + `drizzle-orm/mysql2`             | `mysql2` + `drizzle-orm/mysql2`                                       |
+| `@nestjs/schedule` 的 `@Cron('0 12 * * *')` | 已移除 —— 无定时任务，集数刷新由 `POST /videos/batch-update` 按需触发 |
+| 缓存用 `fs.readdir`                         | `node:fs/promises` 的 `readdir` / `opendir`                           |
+| `@nestjs/swagger` 注解                      | 不再引入 —— schema 写在 zod 里，见 `src/features/*/dto.ts`            |
+| Nest DI（`@Injectable()` + `Module`）       | 普通 `import` / 模块级单例                                            |
+| `NotFoundException` 等 + 全局 filter        | 自定义错误类 + `try/catch` + `app.onError`                            |
