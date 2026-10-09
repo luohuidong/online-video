@@ -7,8 +7,6 @@ import { createApp } from './app.ts';
 
 const app = createApp();
 
-const server = serve({ fetch: app.fetch, port: 3000 });
-
-const address = server.address();
-const port = typeof address === 'object' && address ? address.port : 3000;
-console.log(`Server running on http://localhost:${port}`);
+// 容器内固定 3000（见 apps/server/Dockerfile 的 EXPOSE），不需要动态分配。
+serve({ fetch: app.fetch, port: 3000 });
+console.log('Server running on http://localhost:3000');
