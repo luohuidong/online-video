@@ -1,26 +1,26 @@
-import { Database } from 'bun:sqlite';
-import { drizzle } from 'drizzle-orm/bun-sqlite';
-import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
-import * as schema from './schema';
+import { mkdirSync } from 'node:fs';
+import { dirname } from 'node:path';
+import Database from 'better-sqlite3';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+import * as schema from './schema.ts';
 
-// Dev runs (`bun run dev`) set NODE_ENV=development in the npm script and
+// Dev runs (`pnpm run dev`) set NODE_ENV=development in the npm script and
 // get an in-memory DB — no disk writes, no stale data across restarts.
-// Production / `bun run start` stays on the on-disk file.
-const isDev = Bun.env.NODE_ENV === 'development';
+// Production / `pnpm run start` stays on the on-disk file.
+const isDev = process.env.NODE_ENV === 'development';
 
-let sqlite: Database;
+let sqlite: Database.Database;
 if (isDev) {
-  // WAL is meaningless for `:memory:` — and SQLite < 3.45 errors when set.
   sqlite = new Database(':memory:');
 } else {
   const dbPath = `${process.cwd()}/.data/data.db`;
-  // Ensure the parent directory exists before opening the SQLite file.
-  // Bun.write with createPath creates the full directory chain if missing.
-  await Bun.write(dbPath, '', { createPath: true });
-  sqlite = new Database(dbPath, { create: true });
-  sqlite.run('PRAGMA journal_mode = WAL;');
+  // better-sqlite3 creates the file on open; the parent dir must exist first.
+  mkdirSync(dirname(dbPath), { recursive: true });
+  sqlite = new Database(dbPath);
+  sqlite.pragma('journal_mode = WAL');
 }
-sqlite.run('PRAGMA foreign_keys = ON;');
+sqlite.pragma('foreign_keys = ON');
 
 export const db = drizzle(sqlite, { schema });
 

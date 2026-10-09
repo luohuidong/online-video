@@ -1,9 +1,9 @@
 import { and, eq } from 'drizzle-orm';
-import { config } from '../../../shared/config';
-import { db } from '../../../shared/database';
-import { videos } from '../../../shared/database/schema';
-import { getTotalEpisodeCount } from '../parsers/episodes';
-import { getDetailFromSource } from './utils/scraper';
+import { config } from '../../../shared/config/index.ts';
+import { db } from '../../../shared/database/index.ts';
+import { videos } from '../../../shared/database/schema.ts';
+import { getTotalEpisodeCount } from '../parsers/episodes.ts';
+import { getDetailFromSource } from './utils/scraper.ts';
 
 interface BatchUpdateItem {
   sourceId: string;

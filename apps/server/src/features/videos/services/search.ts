@@ -1,6 +1,6 @@
-import { config } from '../../../shared/config';
-import type { SearchGroup } from '../types';
-import { searchSource } from './utils/scraper';
+import { config } from '../../../shared/config/index.ts';
+import type { SearchGroup } from '../types.ts';
+import { searchSource } from './utils/scraper.ts';
 
 export async function search(query: string): Promise<SearchGroup[]> {
   const sources = await config.getSources();

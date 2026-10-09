@@ -49,18 +49,23 @@ export interface SourceConfig {
 }
 
 export class SourceNotFoundError extends Error {
-  constructor(public readonly sourceId: string) {
+  // 注意：Node 的 type stripping 不支持构造函数参数属性（`constructor(public …)`），
+  // 所以字段必须显式声明并赋值。
+  readonly sourceId: string;
+
+  constructor(sourceId: string) {
     super(`Source not found: ${sourceId}`);
     this.name = 'SourceNotFoundError';
+    this.sourceId = sourceId;
   }
 }
 
 export class UpstreamError extends Error {
-  constructor(
-    message: string,
-    public override readonly cause?: unknown,
-  ) {
+  override readonly cause?: unknown;
+
+  constructor(message: string, cause?: unknown) {
     super(message);
     this.name = 'UpstreamError';
+    this.cause = cause;
   }
 }

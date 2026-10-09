@@ -1,4 +1,4 @@
-import type { Episode } from '../types';
+import type { Episode } from '../types.ts';
 
 /**
  * 从详情接口的 vod_play_url 中提取所有播放地址。

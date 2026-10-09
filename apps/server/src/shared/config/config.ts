@@ -1,4 +1,6 @@
-import { type AppConfig, AppConfigSchema, type Source } from './schema';
+import { readFile } from 'node:fs/promises';
+import { parse } from 'yaml';
+import { type AppConfig, AppConfigSchema, type Source } from './schema.ts';
 
 class ConfigService {
   private config: AppConfig | null = null;
@@ -12,11 +14,16 @@ class ConfigService {
     if (this.config) return this.config;
 
     const configPath = `${process.cwd()}/config.yml`;
-    const file = Bun.file(configPath);
-    if (!(await file.exists())) {
-      throw new Error(`Config file not found: ${configPath}`);
+    let text: string;
+    try {
+      text = await readFile(configPath, 'utf-8');
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+        throw new Error(`Config file not found: ${configPath}`);
+      }
+      throw err;
     }
-    const raw = Bun.YAML.parse(await file.text());
+    const raw = parse(text);
     const parsed = AppConfigSchema.safeParse(raw);
     if (!parsed.success) {
       throw new Error(`Invalid config: ${parsed.error.message}`);

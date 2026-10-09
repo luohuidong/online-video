@@ -1,1 +1,1 @@
-export { default as favoritesRoutes } from './routes';
+export { default as favoritesRoutes } from './routes.ts';

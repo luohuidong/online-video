@@ -7,10 +7,10 @@ Web app — React 19 SPA with Vite + Tailwind CSS 4.
 Run from this directory (`apps/web`):
 
 ```bash
-bun run dev       # vite
-bun run build      # tsc -b && vite build
-bun run preview    # vite preview
-bun run typecheck  # tsc --noEmit
+pnpm run dev       # vite
+pnpm run build      # tsc -b && vite build
+pnpm run preview    # vite preview
+pnpm run typecheck  # tsc --noEmit
 ```
 
 ## Architecture

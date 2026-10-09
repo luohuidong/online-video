@@ -1,7 +1,7 @@
 import { and, desc, eq } from 'drizzle-orm';
-import { db } from '../../shared/database';
-import { playRecords, videos } from '../../shared/database/schema';
-import type { PlayRecord, UpsertPlayRecordInput } from './dto';
+import { db } from '../../shared/database/index.ts';
+import { playRecords, videos } from '../../shared/database/schema.ts';
+import type { PlayRecord, UpsertPlayRecordInput } from './dto.ts';
 
 const videoSelectShape = {
   id: playRecords.videoId,

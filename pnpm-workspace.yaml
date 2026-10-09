@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+
+# pnpm 11+ 不再默认执行依赖的 install/postinstall 脚本，需显式放行：
+# - esbuild / @parcel/watcher（drizzle-kit）需要安装脚本来准备各自的原生二进制
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true

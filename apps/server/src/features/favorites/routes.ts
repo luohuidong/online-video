@@ -1,8 +1,8 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { AddFavoriteSchema } from './dto';
-import { favoritesService } from './service';
+import { AddFavoriteSchema } from './dto.ts';
+import { favoritesService } from './service.ts';
 
 const favoritesRoutes = new Hono();
 

@@ -1,1 +1,1 @@
-export { default as playRecordsRoutes } from './routes';
+export { default as playRecordsRoutes } from './routes.ts';

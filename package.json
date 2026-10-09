@@ -1,9 +1,6 @@
 {
   "name": "online-video-workspace",
   "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "format": "biome format",
     "format:write": "biome format --write",
@@ -17,7 +14,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.10",
-    "@types/bun": "1.4.2",
     "prettier": "3.9.9"
   },
   "dependencies": {}

@@ -1,8 +1,8 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { batchUpdate, getDetail, search } from './services';
-import { SourceNotFoundError, UpstreamError } from './types';
+import { batchUpdate, getDetail, search } from './services/index.ts';
+import { SourceNotFoundError, UpstreamError } from './types.ts';
 
 const videosRoutes = new Hono();
 

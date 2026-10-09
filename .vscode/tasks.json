@@ -10,7 +10,7 @@
     {
       "label": "dev:web",
       "type": "shell",
-      "command": "bun run dev",
+      "command": "pnpm run dev",
       "options": {
         "cwd": "${workspaceFolder}/apps/web"
       },
@@ -20,7 +20,7 @@
     {
       "label": "dev:server",
       "type": "shell",
-      "command": "bun run dev",
+      "command": "pnpm run dev",
       "options": {
         "cwd": "${workspaceFolder}/apps/server"
       },

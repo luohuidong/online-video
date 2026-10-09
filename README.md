@@ -49,15 +49,15 @@ SQLite database file is stored in a Docker volume and will be created automatica
 
 ## Development
 
-Requires [Bun](https://bun.com) 1.1.27 or newer.
+Requires [Node.js](https://nodejs.org) 26 (native TypeScript execution — no build step) and [pnpm](https://pnpm.io) (12.x).
 
 ```bash
 # Install workspace dependencies
-bun install
+pnpm install
 
-# Start backend development server (Hono on Bun)
-bun --filter server dev
+# Start backend development server (Hono on Node)
+pnpm --filter server dev
 
 # Start frontend development server (Vite)
-bun --filter web dev
+pnpm --filter web dev
 ```

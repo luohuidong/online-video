@@ -1,35 +1,40 @@
 # AGENTS.md
 
-Server app — Hono HTTP API on Bun + Drizzle ORM + SQLite.
+Server app — Hono HTTP API on Node + Drizzle ORM + SQLite.
 
 ## Commands
 
 Run from this directory (`apps/server`):
 
 ```bash
-bun install            # install deps (run from repo root for workspaces)
-bun run dev            # bun --hot src/index.ts (hot reload)
-bun run start          # bun src/index.ts (production)
-bun run typecheck      # tsc --noEmit
-bun run drizzle:generate  # drizzle-kit generate
-bun run drizzle:push      # drizzle-kit push
+pnpm run dev            # NODE_ENV=development node --watch src/index.ts (hot reload)
+pnpm run start          # node src/index.ts (production)
+pnpm run typecheck      # tsc --noEmit
+pnpm run drizzle:generate  # drizzle-kit generate
+pnpm run drizzle:push      # drizzle-kit push
 ```
+
+Dependencies are installed with pnpm from the repo root (`pnpm install`). The server runs on Node 26 and executes the TypeScript sources directly via native type stripping — there is no build step, which means:
+
+- relative imports must carry an explicit `.ts` (directory barrels use `/index.ts`); `tsconfig.json` uses `module`/`moduleResolution: nodenext`, so `tsc` fails with TS2835 if one is missing
+- only erasable TypeScript syntax is allowed — no enums, namespaces, parameter properties (`constructor(public x: T)`), or `import x = require()`
 
 The server loads `config.yml` from its current working directory.
 For Docker that's `/app/config.yml` (mounted from the repo root);
 for local dev, place your `config.yml` at `apps/server/config.yml`.
+The SQLite database lives at `<cwd>/.data/data.db`, i.e. `/app/.data` in Docker.
 
 ## Architecture
 
 Hono app assembled in `src/app.ts` via `createApp()`; each feature is a self-contained folder under `src/features/`:
 
-- `shared/config/` - `Bun.YAML.parse` of `config.yml` + zod schema
-- `shared/database/` - `Bun.SQLite` + drizzle + auto-migrate on boot
+- `shared/config/` - `yaml.parse` of `config.yml` + zod schema
+- `shared/database/` - `better-sqlite3` + drizzle + auto-migrate on boot
 - `middleware/access-log.ts` - Request access log
 - `features/videos/` - Cross-source search + detail + batch update + daily cron
 - `features/favorites/` - Favorites CRUD
 - `features/play-records/` - Playback progress CRUD
-- `index.ts` - Process entry: imports shared (side-effect), creates app, calls `Bun.serve`
+- `index.ts` - Process entry: imports shared (side-effect), creates app, calls `serve()` from `@hono/node-server`
 
 ## Conventions
 
@@ -69,15 +74,15 @@ All endpoints MUST be implemented as RESTful APIs. No exceptions.
 
 ## Differences from the previous NestJS implementation
 
-| NestJS (removed)                                | Hono + Bun (current)                                           |
+| NestJS (removed)                                | Hono + Node (current)                                          |
 | ----------------------------------------------- | -------------------------------------------------------------- |
-| `NestFactory.create()` + Express                | `Bun.serve({ fetch: app.fetch })`                              |
-| `js-yaml`                                       | `Bun.YAML.parse`                                               |
-| `fs.readFile / writeFile`                       | `Bun.file().text() / Bun.write()`                              |
-| `node:crypto.createHash('sha256')`              | `new Bun.CryptoHasher('sha256')`                               |
-| `better-sqlite3` + `drizzle-orm/better-sqlite3` | `Bun.SQLite` + `drizzle-orm/bun-sqlite`                        |
-| `@nestjs/schedule` `@Cron('0 12 * * *')`        | `Bun.cron('0 12 * * *', ...)`                                  |
-| `fs.readdir` for cache                          | `new Bun.Glob('*').scan({ cwd })`                              |
+| `NestFactory.create()` + Express                | `serve({ fetch: app.fetch })` from `@hono/node-server`         |
+| `js-yaml`                                       | `yaml.parse`                                                   |
+| `fs.readFile / writeFile`                       | `node:fs/promises` `readFile` / `mkdirSync`                    |
+| `node:crypto.createHash('sha256')`              | `node:crypto` `createHash`                                     |
+| `better-sqlite3` + `drizzle-orm/better-sqlite3` | `better-sqlite3` + `drizzle-orm/better-sqlite3`                |
+| `@nestjs/schedule` `@Cron('0 12 * * *')`        | `new Cron('0 12 * * *', ...)` from `croner`                    |
+| `fs.readdir` for cache                          | `node:fs/promises` `readdir` / `opendir`                       |
 | `@nestjs/swagger` annotations                   | Not bundled — schemas live in zod; see `src/features/*/dto.ts` |
 | Nest DI (`@Injectable()` + `Module`)            | Plain `import` / module-level singletons                       |
 | `NotFoundException` etc. + global filter        | Custom error classes + `try/catch` + `app.onError`             |

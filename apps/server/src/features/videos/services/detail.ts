@@ -1,10 +1,10 @@
-import { config } from '../../../shared/config';
+import { config } from '../../../shared/config/index.ts';
 import {
   type SearchResult,
   SourceNotFoundError,
   UpstreamError,
-} from '../types';
-import { getDetailFromSource } from './utils/scraper';
+} from '../types.ts';
+import { getDetailFromSource } from './utils/scraper.ts';
 
 /**
  * 获取指定源/视频的详情。Source 不存在时抛 SourceNotFoundError（HTTP 404），

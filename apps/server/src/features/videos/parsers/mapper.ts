@@ -1,5 +1,5 @@
-import type { ApiVideoItem, SearchResult } from '../types';
-import { extractVideoPlayGroups } from './episodes';
+import type { ApiVideoItem, SearchResult } from '../types.ts';
+import { extractVideoPlayGroups } from './episodes.ts';
 
 /** 将上游 API 返回的原始视频条目映射为统一的 SearchResult 格式。 */
 export function mapItem(

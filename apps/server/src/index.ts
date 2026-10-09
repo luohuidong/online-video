@@ -1,16 +1,16 @@
 // Side-effect imports first so config + database are initialized before any
-// feature modules evaluate. The videos feature's cron (Bun.cron registered
-// at the bottom of services/refresh.ts) is wired in transitively when
-// createApp() pulls in videosRoutes.
-import './shared/config';
-import './shared/database';
-import { createApp } from './app';
+// feature modules evaluate. The videos feature's cron (registered at the
+// bottom of services/refresh.ts) is wired in transitively when createApp()
+// pulls in videosRoutes.
+import './shared/config/index.ts';
+import './shared/database/index.ts';
+import { serve } from '@hono/node-server';
+import { createApp } from './app.ts';
 
 const app = createApp();
 
-const server = Bun.serve({
-  port: 3000,
-  fetch: app.fetch,
-});
+const server = serve({ fetch: app.fetch, port: 3000 });
 
-console.log(`Server running on http://localhost:${server.port}`);
+const address = server.address();
+const port = typeof address === 'object' && address ? address.port : 3000;
+console.log(`Server running on http://localhost:${port}`);

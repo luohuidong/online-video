@@ -1,7 +1,7 @@
 import { and, desc, eq } from 'drizzle-orm';
-import { db } from '../../shared/database';
-import { favorites, videos } from '../../shared/database/schema';
-import type { AddFavoriteInput, FavoriteRecord } from './dto';
+import { db } from '../../shared/database/index.ts';
+import { favorites, videos } from '../../shared/database/schema.ts';
+import type { AddFavoriteInput, FavoriteRecord } from './dto.ts';
 
 function getAll(): FavoriteRecord[] {
   return db
@@ -96,7 +96,7 @@ function touch(id: number): { updatedAt: number } | null {
     .set({ updatedAt: now })
     .where(eq(favorites.id, id))
     .run();
-  // bun-sqlite's run() returns void, so check existence via a follow-up read.
+  // drizzle's run() gives back no row info here, so check existence via a follow-up read.
   const exists = db
     .select({ id: favorites.id })
     .from(favorites)

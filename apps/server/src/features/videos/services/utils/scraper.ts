@@ -1,12 +1,12 @@
-import { extractVideoPlayGroups } from '../../parsers/episodes';
-import { mapItem } from '../../parsers/mapper';
+import { extractVideoPlayGroups } from '../../parsers/episodes.ts';
+import { mapItem } from '../../parsers/mapper.ts';
 import type {
   ApiListResponse,
   ApiVideoItem,
   SearchResult,
   SourceConfig,
-} from '../../types';
-import { fetchJson, fetchJsonOrThrow } from './fetch';
+} from '../../types.ts';
+import { fetchJson, fetchJsonOrThrow } from './fetch.ts';
 
 /** 在单个视频源上执行关键词搜索，支持分页抓取。 */
 export async function searchSource(

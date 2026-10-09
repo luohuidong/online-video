@@ -1,8 +1,8 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { UpsertPlayRecordSchema } from './dto';
-import { playRecordsService } from './service';
+import { UpsertPlayRecordSchema } from './dto.ts';
+import { playRecordsService } from './service.ts';
 
 const playRecordsRoutes = new Hono();
 

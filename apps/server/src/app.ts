@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { favoritesRoutes } from './features/favorites';
-import { playRecordsRoutes } from './features/play-records';
-import { videosRoutes } from './features/videos';
-import { accessLog } from './middleware/access-log';
+import { favoritesRoutes } from './features/favorites/index.ts';
+import { playRecordsRoutes } from './features/play-records/index.ts';
+import { videosRoutes } from './features/videos/index.ts';
+import { accessLog } from './middleware/access-log.ts';
 
 export function createApp(): Hono {
   const app = new Hono();

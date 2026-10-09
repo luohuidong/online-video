@@ -5,7 +5,7 @@ windows:
     panes:
       - shell_command: # pane no. 1
           - cd apps/server
-          - bun run dev
+          - pnpm run dev
       - shell_command:
           - cd apps/web
-          - bun run dev
+          - pnpm run dev
