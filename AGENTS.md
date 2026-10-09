@@ -1,44 +1,44 @@
 # AGENTS.md
 
-## Project Overview
+## 项目概览
 
-Monorepo with two apps: a Hono + Node API server (SQLite + Drizzle ORM) and a React frontend (Vite + Tailwind CSS 4). Integrates with 苹果CMS V10 (Mac CMS) video provider API. Managed with [pnpm](https://pnpm.io) workspaces (`pnpm-workspace.yaml`).
+单仓库（monorepo）包含两个 app：一个 Hono + Node 的 API 服务端（MySQL + Drizzle ORM），一个 React 前端（Vite + Tailwind CSS 4）。对接苹果CMS V10（Mac CMS）视频源 API。用 [pnpm](https://pnpm.io) workspace（`pnpm-workspace.yaml`）管理。
 
-Per-app details live in each app's own AGENTS.md: see `apps/server/AGENTS.md` and `apps/web/AGENTS.md`.
+各 app 的细节写在各自的 AGENTS.md 里：`apps/server/AGENTS.md` 和 `apps/web/AGENTS.md`。
 
-## Commands
+## 命令
 
 ```bash
-# Install workspace deps
-pnpm install                   # one-time, from repo root
+# 安装 workspace 依赖（仓库根目录执行，只需一次）
+pnpm install
 
-# Code quality (Biome, run from repo root)
-pnpm run format         # Format check (biome format)
-pnpm run format:write   # Apply formatting (biome format --write)
-pnpm run lint           # Lint check (biome lint)
-pnpm run lint:write     # Lint + apply safe fixes (biome lint --write)
-pnpm run check          # Format + lint + organize imports check (biome check)
-pnpm run check:write    # Apply format + lint + organize imports (biome check --write)
-pnpm run ci             # CI-friendly check, no --write
+# 代码质量（Biome，仓库根目录执行）
+pnpm run format         # 格式检查（biome format）
+pnpm run format:write   # 应用格式化（biome format --write）
+pnpm run lint           # lint 检查（biome lint）
+pnpm run lint:write     # lint 检查并应用安全修复（biome lint --write）
+pnpm run check          # 格式 + lint + import 排序检查（biome check）
+pnpm run check:write    # 应用格式 + lint + import 排序（biome check --write）
+pnpm run ci             # 面向 CI 的检查，不带 --write
 
-# Markdown / YAML formatting (Prettier, run from repo root)
-pnpm run prettier:format        # Check formatting on .md / .markdown / .yml / .yaml
-pnpm run prettier:format:write  # Apply formatting to those files
+# Markdown / YAML 格式化（Prettier，仓库根目录执行）
+pnpm run prettier:format        # 检查 .md / .markdown / .yml / .yaml 格式
+pnpm run prettier:format:write  # 对上述文件应用格式化
 
-# Dev
-pnpm --filter server dev   # backend (from repo root)
-pnpm --filter web dev      # frontend (from repo root)
+# 开发
+pnpm --filter server dev   # 后端（仓库根目录执行）
+pnpm --filter web dev      # 前端（仓库根目录执行）
 ```
 
-Requires Node 26 — the Docker images provision it via `pnpm runtime set node 26 -g`. Node runs the TypeScript sources directly (native type stripping), so there is no build step for the server.
+需要 Node 26 —— Docker 镜像通过 `pnpm runtime set node 26 -g` 装好。Node 直接运行 TypeScript 源码（原生类型擦除），所以服务端没有构建步骤。
 
-Per-app `build` / `typecheck` / `drizzle:*` etc. are run from inside each app's directory — see the respective AGENTS.md.
+各 app 的 `build` / `typecheck` / `drizzle:*` 等脚本在对应 app 目录内执行 —— 见各自的 AGENTS.md。
 
-## Verification
+## 验证
 
-After modifying any subproject's source files (`apps/server/src/` or `apps/web/src/`):
+修改任一子项目的源码（`apps/server/src/` 或 `apps/web/src/`）后：
 
-1. Run that subproject's `typecheck` script (`pnpm run typecheck` from inside the app directory) to confirm TypeScript still compiles.
-2. Run `pnpm run check:write` from the repo root to apply Biome formatting, lint fixes, and organize imports across the whole monorepo.
+1. 在该 app 目录内跑它的 `typecheck`（`pnpm run typecheck`），确认 TypeScript 仍能编译通过。
+2. 在仓库根目录跑 `pnpm run check:write`，对整个 monorepo 应用 Biome 格式化、lint 修复和 import 排序。
 
-Don't claim the change is done until both steps pass.
+两步都通过之前，不要宣称改动已完成。

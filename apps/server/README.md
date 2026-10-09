@@ -1,13 +1,14 @@
 # server
 
-在线视频后端 API — Hono + Node + Drizzle ORM + SQLite。
+在线视频后端 API — Hono + Node + Drizzle ORM + MySQL。
 
 ## 技术栈
 
 - **运行时**: [Node.js](https://nodejs.org) 26+（原生 type stripping 直接跑 .ts，无需构建）
 - **HTTP 框架**: [Hono](https://hono.dev) 4.x（用 `@hono/node-server` 承载）
 - **校验**: [zod](https://zod.dev) 4.x + [`@hono/zod-validator`](https://github.com/honojs/middleware/tree/main/packages/zod-validator)
-- **ORM**: [drizzle-orm](https://orm.drizzle.team) + `drizzle-orm/better-sqlite3` 驱动
+- **ORM**: [drizzle-orm](https://orm.drizzle.team) + `drizzle-orm/mysql2` 驱动
+- **数据库**: [MySQL](https://www.mysql.com/) 8.4（`mysql2` 连接池）
 - **数据库迁移**: `drizzle-kit`
 - **定时任务**: [croner](https://github.com/almarklein/croner)
 - **CORS**: `hono/cors`
@@ -33,6 +34,7 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
 ├── drizzle.config.ts        # drizzle-kit 配置
 ├── drizzle/                 # SQL migration 文件
 ├── config.yml               # 视频源配置（gitignored）
+├── .env.example             # 数据库连接的环境变量模板（.env 本身 gitignored）
 └── src/
     ├── index.ts             # 入口：@hono/node-server serve + 副作用导入（config + db + cron）
     ├── app.ts               # createApp() Hono 工厂：注册路由、中间件、错误处理
@@ -45,7 +47,7 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
     │   │   └── index.ts
     │   └── database/        # drizzle 连接 + schema
     │       ├── schema.ts    # videos / favorites / play_records 三张表
-    │       ├── database.ts  # better-sqlite3 + WAL/foreign_keys + auto-migrate
+    │       ├── database.ts  # mysql2 连接池 + 单连接 auto-migrate
     │       └── index.ts
     └── features/            # 每个 feature 自包含
         ├── videos/          # 跨源搜索 + 详情 + 批量更新 + cron 入口
@@ -77,8 +79,11 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
 
 ## 数据持久化
 
-- **SQLite 文件**: `<cwd>/.data/data.db`（启动时自动建表、自动跑 migration）
-- 已在 `.gitignore` 里。
+- **MySQL**: 由 `docker-compose.yml` 的 `mysql` 服务提供，端口映射到宿主机的
+  `3306`，数据存在 named volume `online-video-mysql` 里
+- 启动时自动跑 `./drizzle/` 下的 migration，无需手动建表
+- 连接串来自环境变量而非 `config.yml`：本地开发把 `.env.example` 复制成
+  `.env`（`.env` 不入库）；Docker 由 compose 的 `environment` 直接注入
 
 ## 配置文件
 
@@ -93,3 +98,38 @@ sources:
 
 本地开发时放在 `apps/server/config.yml`；Docker 中由 `docker-compose.yml`
 挂载到容器内的 `/app/config.yml`。
+
+数据库连接不走 `config.yml`，而是读环境变量：
+
+| 变量                        | 必填 | 默认值 | 说明                                   |
+| --------------------------- | ---- | ------ | -------------------------------------- |
+| `DATABASE_URL`              | 是   | ——     | `mysql://用户名:密码@主机:端口/数据库` |
+| `DATABASE_CONNECTION_LIMIT` | 否   | `10`   | 连接池大小                             |
+
+本地开发把 `.env.example` 复制成 `.env` 并填写；Docker 环境由
+`docker-compose.yml` 的 `environment` 注入，无需 `.env` 文件。
+
+`.env` 由 Node 26 原生加载（**无 `dotenv` 依赖**）：`pnpm run dev` /
+`pnpm run start` 和 Dockerfile 的 CMD 都带 `--env-file-if-exists=.env`。
+直接跑 `node src/index.ts` 不会加载 `.env`，请用 npm 脚本。
+`.env` 已被 `.dockerignore` 排除，不会进镜像层。
+
+## 本地开发
+
+dev 不再有「内存库 / 每次重启清空」这层特殊待遇：`NODE_ENV=development`
+不再影响任何东西，`pnpm run dev` 直连与生产同一个 MySQL，启动时建表，
+**数据在重启后依然保留**。
+
+```bash
+# 1. 先把数据库拉起来
+docker compose up -d mysql
+
+# 2. 再起服务
+pnpm run dev
+```
+
+清空本地数据：
+
+```bash
+docker compose down -v # 删掉 volume，下次启动由 migration 重建
+```

@@ -12,15 +12,17 @@ const sourceIdParam = z.object({
 });
 
 // GET /play-records — 获取全部播放记录（按保存时间倒序）
-playRecordsRoutes.get('/', (c) => c.json(playRecordsService.getAll()));
+playRecordsRoutes.get('/', async (c) =>
+  c.json(await playRecordsService.getAll()),
+);
 
 // GET /play-records/:sourceId/:sourceVideoId — 获取单条播放记录
 playRecordsRoutes.get(
   '/:sourceId/:sourceVideoId',
   zValidator('param', sourceIdParam),
-  (c) => {
+  async (c) => {
     const { sourceId, sourceVideoId } = c.req.valid('param');
-    const record = playRecordsService.getOne(sourceId, sourceVideoId);
+    const record = await playRecordsService.getOne(sourceId, sourceVideoId);
     if (!record) {
       return c.json(
         { message: `Play record not found for ${sourceId}/${sourceVideoId}` },
@@ -32,15 +34,18 @@ playRecordsRoutes.get(
 );
 
 // PUT /play-records — 新增/更新播放记录（upsert）
-playRecordsRoutes.put('/', zValidator('json', UpsertPlayRecordSchema), (c) => {
-  const input = c.req.valid('json');
-  const record = playRecordsService.upsert(input);
-  return c.json(record);
-});
+playRecordsRoutes.put(
+  '/',
+  zValidator('json', UpsertPlayRecordSchema),
+  async (c) => {
+    const input = c.req.valid('json');
+    return c.json(await playRecordsService.upsert(input));
+  },
+);
 
 // DELETE /play-records — 清空所有播放记录
-playRecordsRoutes.delete('/', (c) => {
-  playRecordsService.clearAll();
+playRecordsRoutes.delete('/', async (c) => {
+  await playRecordsService.clearAll();
   return c.body(null, 204);
 });
 
@@ -48,9 +53,9 @@ playRecordsRoutes.delete('/', (c) => {
 playRecordsRoutes.delete(
   '/:sourceId/:sourceVideoId',
   zValidator('param', sourceIdParam),
-  (c) => {
+  async (c) => {
     const { sourceId, sourceVideoId } = c.req.valid('param');
-    playRecordsService.remove(sourceId, sourceVideoId);
+    await playRecordsService.remove(sourceId, sourceVideoId);
     return c.body(null, 204);
   },
 );

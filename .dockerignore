@@ -13,6 +13,8 @@ apps/server/.cache
 apps/server/.data
 apps/server/dist
 apps/server/node_modules
+# 含数据库凭据，绝不能进镜像层（Docker 里由 compose 的 environment 注入）
+apps/server/.env
 
 # web app
 apps/web/dist

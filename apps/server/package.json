@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development node --watch src/index.ts",
-    "start": "node src/index.ts",
+    "dev": "NODE_ENV=development node --env-file-if-exists=.env --watch src/index.ts",
+    "start": "node --env-file-if-exists=.env src/index.ts",
     "typecheck": "tsc --noEmit",
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:push": "drizzle-kit push",
@@ -13,15 +13,14 @@
   "dependencies": {
     "@hono/node-server": "^1.19.9",
     "@hono/zod-validator": "^0.9.1",
-    "better-sqlite3": "^13.0.3",
     "croner": "^9.1.0",
     "drizzle-orm": "^0.45.3",
     "hono": "^4.13.12",
+    "mysql2": "^3.24.5",
     "yaml": "^2.8.2",
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.0.1",
     "drizzle-kit": "^0.31.11",
     "typescript": "^7.0.2"

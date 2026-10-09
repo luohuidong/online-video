@@ -12,14 +12,13 @@ async function refreshFavoritedEpisodes(): Promise<void> {
   );
 
   // 取出所有收藏视频的 (sourceId, sourceVideoId) 去重
-  const rows = db
+  const rows = await db
     .selectDistinct({
       sourceId: videos.sourceId,
       sourceVideoId: videos.sourceVideoId,
     })
     .from(favorites)
-    .innerJoin(videos, eq(favorites.videoId, videos.id))
-    .all();
+    .innerJoin(videos, eq(favorites.videoId, videos.id));
 
   if (rows.length === 0) {
     console.log('[videos] no favorited videos — nothing to refresh');

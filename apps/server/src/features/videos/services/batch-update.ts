@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { config } from '../../../shared/config/index.ts';
 import { db } from '../../../shared/database/index.ts';
 import { videos } from '../../../shared/database/schema.ts';
@@ -39,20 +39,40 @@ export async function batchUpdate(
 
   if (updates.length === 0) return [];
 
-  // 把 N 条 UPDATE 包在一个事务里：SQLite 默认 synchronous=FULL，
-  // 每条独立 UPDATE 都会触发一次 fsync，包事务后只 fsync 一次，
-  // 相比 Promise.all + N 次自动 commit 通常快 10x～100x。
-  db.transaction((tx) => {
-    for (const u of updates) {
-      tx.update(videos)
-        .set({ totalEpisodes: u.totalEpisodes })
+  // MySQL 里每条语句都是一次网络往返，N 条串行 UPDATE 的开销几乎全在这里
+  // （事务只省提交开销，不省往返）。所以按 sourceId 分组，每组用一条
+  // `set total_episodes = case source_video_id when ? then ? ... end` 合成写入。
+  // 同一个 (sourceId, sourceVideoId) 重复出现时保留最后一次，
+  // 与旧的「串行 UPDATE、后者覆盖前者」语义一致。
+  const grouped = new Map<string, Map<string, number | null>>();
+  for (const u of updates) {
+    let group = grouped.get(u.sourceId);
+    if (!group) {
+      group = new Map();
+      grouped.set(u.sourceId, group);
+    }
+    group.set(u.sourceVideoId, u.totalEpisodes);
+  }
+
+  await db.transaction(async (tx) => {
+    for (const [sourceId, items] of grouped) {
+      const caseExpr = sql`case ${videos.sourceVideoId} ${sql.join(
+        [...items].map(
+          ([sourceVideoId, totalEpisodes]) =>
+            sql`when ${sourceVideoId} then ${totalEpisodes}`,
+        ),
+        sql` `,
+      )} else ${videos.totalEpisodes} end`;
+
+      await tx
+        .update(videos)
+        .set({ totalEpisodes: caseExpr })
         .where(
           and(
-            eq(videos.sourceId, u.sourceId),
-            eq(videos.sourceVideoId, u.sourceVideoId),
+            eq(videos.sourceId, sourceId),
+            inArray(videos.sourceVideoId, [...items.keys()]),
           ),
-        )
-        .run();
+        );
     }
   });
 
