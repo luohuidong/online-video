@@ -22,7 +22,7 @@ pnpm run drizzle:push      # drizzle-kit push
 
 服务端从当前工作目录加载 `config.yml`。Docker 里是 `/app/config.yml`（从仓库根目录挂载进来）；本地开发把 `config.yml` 放在 `apps/server/config.yml`。`config.yml` 里**只有**视频源。
 
-数据库连接来自环境变量而非 `config.yml` —— 见 `.env.example`。`.env` 由 **Node 原生能力加载，不引入 `dotenv` 依赖**：`dev` / `start` 脚本和 Dockerfile 的 CMD 都带 `--env-file-if-exists=.env`。直接跑 `node src/index.ts` **不会**加载 `.env`，请用 npm 脚本。Docker 里由 compose 文件直接注入 `DATABASE_URL`（指向 `mysql` 服务），所以没有该文件也无妨。`.env` 已被 gitignore，入库的只有 `.env.example`。
+数据库连接来自环境变量而非 `config.yml` —— 见 `.env.example`，由 `src/shared/env.ts` 统一加载校验。`.env` 由 **Node 原生能力加载，不引入 `dotenv` 依赖**：`dev` / `start` 脚本和 Dockerfile 的 CMD 都带 `--env-file-if-exists=.env`。直接跑 `node src/index.ts` **不会**加载 `.env`，请用 npm 脚本。Docker 里由 compose 文件直接注入 `DATABASE_URL`（指向 `mysql` 服务），所以没有该文件也无妨。`.env` 已被 gitignore，入库的只有 `.env.example`。
 
 `drizzle.config.ts` 用不了 CLI 的 flag（drizzle-kit 会自己 fork 一个 node 进程），所以它对同一个文件编程式调用 `process.loadEnvFile()`。路径是 `new URL('./.env', import.meta.url)` —— `drizzle.config.ts` 位于 `apps/server/`，而相对 URL 是相对文件自身所在目录解析的，写成 `'../.env'` 会指向 `apps/.env`。`generate` / `check` 只把 schema 和快照做 diff、根本不连库，所以 `drizzle.config.ts` 只对真正需要数据库的命令（`push`、`studio`）才因缺少 `DATABASE_URL` 而硬失败。
 
@@ -45,8 +45,9 @@ pnpm run drizzle:push      # drizzle-kit push
 
 Hono app 在 `src/app.ts` 里由 `createApp()` 组装；每个 feature 是 `src/features/` 下一个自包含的目录：
 
+- `shared/env.ts` - 环境变量的加载 / 校验 / 读取：`DATABASE_URL`、`DATABASE_CONNECTION_LIMIT`，import 时校验，缺失即启动失败
 - `shared/config/` - 对 `config.yml` 做 `yaml.parse` + zod schema（只含视频源）
-- `shared/database/` - `mysql2` 连接池 + drizzle + 启动时自动 migration；从环境变量读 `DATABASE_URL` / `DATABASE_CONNECTION_LIMIT`
+- `shared/database/` - `mysql2` 连接池 + drizzle + 启动时自动 migration；连接参数取自 `shared/env.ts`
 - `middleware/access-log.ts` - 请求访问日志
 - `features/videos/` - 跨源搜索 + 详情 + 批量更新
 - `features/favorites/` - 收藏 CRUD

@@ -40,6 +40,7 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
     ├── middleware/
     │   └── access-log.ts    # 访问日志
     ├── shared/              # 跨 feature 复用的基础设施
+    │   ├── env.ts           # 环境变量加载 + zod 校验（启动时）
     │   ├── config/          # config.yml 加载 (yaml.parse)
     │   │   ├── schema.ts    # Source / AppConfig 的 zod schema
     │   │   ├── config.ts    # 启动时同步加载 + 缓存
