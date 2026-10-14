@@ -2,61 +2,15 @@
 
 在线视频后端 API — Hono + Node + Drizzle ORM + MySQL。
 
-## 技术栈
-
-- **运行时**: [Node.js](https://nodejs.org) 26+（原生 type stripping 直接跑 .ts，无需构建）
-- **HTTP 框架**: [Hono](https://hono.dev) 4.x（用 `@hono/node-server` 承载）
-- **校验**: [zod](https://zod.dev) 4.x + [`@hono/zod-validator`](https://github.com/honojs/middleware/tree/main/packages/zod-validator)
-- **ORM**: [drizzle-orm](https://orm.drizzle.team) + `drizzle-orm/mysql2` 驱动
-- **数据库**: [MySQL](https://www.mysql.com/) 8.4（`mysql2` 连接池）
-- **数据库迁移**: `drizzle-kit`
-- **CORS**: `hono/cors`
-
 ## 命令
 
 ```bash
 pnpm install                  # 在 monorepo 根目录执行，安装 workspace 依赖
-pnpm run dev                  # 开发（热重载，从 apps/server 启动）
-pnpm run start                # 生产
+pnpm run dev                  # 开发（热重载，先建软链再启动）
+pnpm run start                # 生产（只在 Docker 里跑，.env / config.yml 由 compose 挂载）
 pnpm run typecheck            # TypeScript 类型检查
 pnpm run drizzle:generate     # 根据 schema 生成新的 migration
 pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
-```
-
-## 目录结构
-
-```
-.
-├── biome.jsonc              # 继承根 biome 配置
-├── tsconfig.json
-├── package.json
-├── drizzle.config.ts        # drizzle-kit 配置
-├── drizzle/                 # SQL migration 文件
-├── config.yml               # 视频源配置（gitignored）
-├── .env.example             # 数据库连接的环境变量模板（.env 本身 gitignored）
-└── src/
-    ├── index.ts             # 入口：@hono/node-server serve + 副作用导入（config + db）
-    ├── app.ts               # createApp() Hono 工厂：注册路由、中间件、错误处理
-    ├── middleware/
-    │   └── access-log.ts    # 访问日志
-    ├── shared/              # 跨 feature 复用的基础设施
-    │   ├── env.ts           # 环境变量加载 + zod 校验（启动时）
-    │   ├── config/          # config.yml 加载 (yaml.parse)
-    │   │   ├── schema.ts    # Source / AppConfig 的 zod schema
-    │   │   ├── config.ts    # 启动时同步加载 + 缓存
-    │   │   └── index.ts
-    │   └── database/        # drizzle 连接 + schema
-    │       ├── schema.ts    # videos / favorites / play_records 三张表
-    │       ├── database.ts  # mysql2 连接池 + 单连接 auto-migrate
-    │       └── index.ts
-    └── features/            # 每个 feature 自包含
-        ├── videos/          # 跨源搜索 + 详情 + 批量更新
-        │   ├── routes.ts
-        │   ├── types.ts
-        │   ├── parsers/     # 上游 vod_play_url 解析
-        │   └── services/    # search / detail / batchUpdate
-        ├── favorites/       # 收藏 CRUD
-        └── play-records/    # 播放进度 CRUD
 ```
 
 ## API 列表
@@ -83,7 +37,8 @@ pnpm run drizzle:push         # 把 schema 直接推到数据库（开发用）
   `3306`，数据存在 named volume `online-video-mysql` 里
 - 启动时自动跑 `./drizzle/` 下的 migration，无需手动建表
 - 连接串来自环境变量而非 `config.yml`：本地开发把 `.env.example` 复制成
-  `.env`（`.env` 不入库）；Docker 由 compose 的 `environment` 直接注入
+  `.env`（`.env` 不入库）；Docker 部署把仓库根目录的 `.env` bind mount 到
+  容器内的 `/app/.env`
 
 ## 配置文件
 
@@ -96,8 +51,9 @@ sources:
     api: 'https://cj.rycjapi.com/api.php/provide/vod'
 ```
 
-本地开发时放在 `apps/server/config.yml`；Docker 中由 `docker-compose.yml`
-挂载到容器内的 `/app/config.yml`。
+真实内容只在仓库根目录存一份 —— Docker 由 compose bind mount 进 `/app`，
+本地开发则由 `scripts/link-root-files.ts`（`dev` 的第一步）
+在本目录建软链，所以本目录里不要手写这两个文件。
 
 数据库连接不走 `config.yml`，而是读环境变量：
 
@@ -106,13 +62,24 @@ sources:
 | `DATABASE_URL`              | 是   | ——     | `mysql://用户名:密码@主机:端口/数据库` |
 | `DATABASE_CONNECTION_LIMIT` | 否   | `10`   | 连接池大小                             |
 
-本地开发把 `.env.example` 复制成 `.env` 并填写；Docker 环境由
-`docker-compose.yml` 的 `environment` 注入，无需 `.env` 文件。
+`.env` 和 `config.yml` 一样：真实内容在仓库根目录（模板见根目录 `.env.example`），
+本地开发靠软链落到 `apps/server/.env`；Docker 部署则由 compose bind mount 到
+容器内的 `/app/.env`。两者主机名不同 —— 本地走 `127.0.0.1:3306`，容器内走
+compose 网络里的服务名 `mysql:3306`。
 
-`.env` 由 Node 26 原生加载（**无 `dotenv` 依赖**）：`pnpm run dev` /
-`pnpm run start` 和 Dockerfile 的 CMD 都带 `--env-file-if-exists=.env`。
-直接跑 `node src/index.ts` 不会加载 `.env`，请用 npm 脚本。
+`.env` 由 Node 26 原生加载（**无 `dotenv` 依赖**）：`pnpm run dev` / `pnpm run start`
+都用 `--env-file=.env`，也就是缺 `.env` 就不启动 —— 这是刻意的。本地缺失时，`dev`
+第一步的软链脚本会先给出「从 `.env.example` 复制一份」的提示并以非零码退出；
+Docker 侧 `.env` 由 compose bind mount 进容器，Dockerfile 的 CMD 用
+`--env-file-if-exists=.env`（不经 compose 手动 `docker run` 时先启动，再由
+`shared/env.ts` 报错）。直接跑 `node src/index.ts` 不会加载 `.env`，请用 npm 脚本。
 `.env` 已被 `.dockerignore` 排除，不会进镜像层。
+
+`link-root-files.ts` 只在本地 `dev` 里跑（`start` 不需要软链：`.env`、`config.yml`
+由 compose bind mount 到 `/app`）。它只维护 `apps/server/` 下的这两个软链：已就绪的
+跳过，死链或指向别处的重建，同名**真实文件**直接删除重建（这个目录里只应该出现
+软链），同名**目录**、以及仓库根目录缺文件则报错退出。软链本身也别提交：两个路径
+都在 `.gitignore` / `.dockerignore` 里。
 
 ## 本地开发
 

@@ -8,5 +8,8 @@ node_modules/
 # 本地开发时 apps/server/config.yml 由 apps/server/.gitignore 覆盖
 config.yml
 
+# 数据库凭据（Docker 部署时由 compose bind mount 到容器 /app/.env）
+.env
+
 # 工作树
 .claude/worktrees/

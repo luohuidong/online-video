@@ -7,8 +7,8 @@ Server app —— 基于 Node 的 Hono HTTP API，配合 Drizzle ORM + MySQL。
 在本目录（`apps/server`）下执行：
 
 ```bash
-pnpm run dev            # NODE_ENV=development node --watch src/index.ts（热重载）
-pnpm run start          # node src/index.ts（生产）
+pnpm run dev            # 先建软链，再 node --env-file=.env --watch src/index.ts（热重载）
+pnpm run start          # node --env-file=.env src/index.ts（生产，只在 Docker 里跑，不建软链）
 pnpm run typecheck      # tsc --noEmit
 pnpm run drizzle:generate  # drizzle-kit generate
 pnpm run drizzle:push      # drizzle-kit push
@@ -18,41 +18,22 @@ pnpm run drizzle:push      # drizzle-kit push
 
 - 相对导入必须带显式 `.ts`（目录 barrel 用 `/index.ts`）；`tsconfig.json` 用的是 `module`/`moduleResolution: nodenext`，漏掉会直接报 TS2835
 - 只允许可擦除（erasable）的 TypeScript 语法 —— 不允许 enum、namespace、参数属性（`constructor(public x: T)`）、`import x = require()`
-- 顶层 `await` **是**允许的（属于标准 ES2022 JS，不是 TS 语法）—— `shared/database/database.ts` 依赖了它
 
-服务端从当前工作目录加载 `config.yml`。Docker 里是 `/app/config.yml`（从仓库根目录挂载进来）；本地开发把 `config.yml` 放在 `apps/server/config.yml`。`config.yml` 里**只有**视频源。
+服务端从当前工作目录加载 `config.yml`。Docker 里是 `/app/config.yml`（从仓库根目录挂载进来）；本地开发则由 `scripts/link-root-files.ts`（`dev` 的第一步）在 `apps/server/config.yml` 建软链指向仓库根目录那份。`config.yml` 里**只有**视频源。
 
-数据库连接来自环境变量而非 `config.yml` —— 见 `.env.example`，由 `src/shared/env.ts` 统一加载校验。`.env` 由 **Node 原生能力加载，不引入 `dotenv` 依赖**：`dev` / `start` 脚本和 Dockerfile 的 CMD 都带 `--env-file-if-exists=.env`。直接跑 `node src/index.ts` **不会**加载 `.env`，请用 npm 脚本。Docker 里由 compose 文件直接注入 `DATABASE_URL`（指向 `mysql` 服务），所以没有该文件也无妨。`.env` 已被 gitignore，入库的只有 `.env.example`。
+**`.env` 和 `config.yml` 的真实内容只在仓库根目录存一份。** 两者的加载点全在以 `apps/server/` 为基准的位置：`--env-file=.env` 相对 cwd、`shared/config/config.ts` 的 `${process.cwd()}/config.yml`、`drizzle.config.ts` 的 `new URL('./.env', import.meta.url)`。所以本地 `dev` 的第一步跑 `node scripts/link-root-files.ts`，把仓库根目录那两份软链进 app 目录 —— 用软链而不是拷贝，避免本地出现两份悄悄漂移的副本；`start` 只在 Docker 里跑，`.env` / `config.yml` 由 compose bind mount 到 `/app`，Dockerfile 的 CMD 直接读挂载进来的文件，没有软链这一环。脚本是幂等的：软链已指向正确目标时跳过；死链或指向别处时重建；同名**真实文件**会被删除重建（本地 `apps/server/` 里只应该有软链；Docker 里那个路径是只读挂载，也不会在容器内跑这个脚本）；同名**目录**、以及仓库根目录缺文件则报错退出。软链已 gitignore，也必须留在 `.dockerignore` 里 —— 否则 `COPY` 会把软链拷进镜像，而 compose 再往这个路径 bind mount 时 Docker 会顺着软链把文件挂到 `/config.yml`（文件系统根目录）而不是 `/app/config.yml`。
 
-`drizzle.config.ts` 用不了 CLI 的 flag（drizzle-kit 会自己 fork 一个 node 进程），所以它对同一个文件编程式调用 `process.loadEnvFile()`。路径是 `new URL('./.env', import.meta.url)` —— `drizzle.config.ts` 位于 `apps/server/`，而相对 URL 是相对文件自身所在目录解析的，写成 `'../.env'` 会指向 `apps/.env`。`generate` / `check` 只把 schema 和快照做 diff、根本不连库，所以 `drizzle.config.ts` 只对真正需要数据库的命令（`push`、`studio`）才因缺少 `DATABASE_URL` 而硬失败。
+`.env` 由 **Node 原生能力加载，不引入 `dotenv` 依赖**：`dev` / `start` 脚本都用 `--env-file=.env` —— 这是刻意的硬要求，缺 `.env` 就不启动。本地缺 `.env` 时，`dev` 第一步的软链脚本会先给出「从 `.env.example` 复制一份」的提示并以非零码退出，用户不会只看到 Node 那句 `not found`。直接跑 `node src/index.ts` **不会**加载 `.env`，请用 npm 脚本。Docker 侧 `.env` 由 compose bind mount 到 `/app/.env`，所以 Dockerfile 的 CMD 用 `--env-file-if-exists=.env`：不经 compose 直接 `docker run` 时先让进程起来，再由 `shared/env.ts` 报出缺 `DATABASE_URL`。
+
+`drizzle.config.ts` 用不了 CLI 的 flag（drizzle-kit 会自己 fork 一个 node 进程），所以它对同一个文件编程式调用 `process.loadEnvFile()`。路径是 `new URL('./.env', import.meta.url)` —— `drizzle.config.ts` 位于 `apps/server/`，而相对 URL 是相对文件自身所在目录解析的，写成 `'../.env'` 会指向 `apps/.env`。`generate` / `check` 只把 schema 和快照做 diff、根本不连库，所以 `drizzle.config.ts` 只对真正需要数据库的命令（`push`、`studio`）才因缺少 `DATABASE_URL` 而硬失败。drizzle 脚本自己不跑软链脚本，但软链建过一次就长期存在；真要在一台新机器上直接 `drizzle:push`，先跑一次 `pnpm run dev` 把软链建好。
 
 ## 本地开发
 
-已经没有内存库 / 一次性数据库了。`NODE_ENV=development` 不再有任何特殊行为：`pnpm run dev` 连的是和 production 同一个 MySQL，启动时建表，并且**数据在重启后依然保留**。先把数据库拉起来（`docker compose up -d mysql`），并把 `DATABASE_URL` 写进 `apps/server/.env`。要清空本地数据，删掉数据库（`docker compose down -v`），下次启动时 migration 会重建。
-
-## MySQL 注意事项
-
-- **所有查询都是异步的。** `better-sqlite3` 的 `.run()` / `.get()` / `.all()` 在 `mysql2` 驱动上不存在 —— 直接 `await` 查询构造器，取单行用 `const [row] = await db.select()...`。
-- **upsert 用 `onDuplicateKeyUpdate({ set })`，**而不是 `onConflictDoUpdate({ target, set })`。MySQL 的 `ON DUPLICATE KEY UPDATE` 没有冲突目标（target），任意唯一索引都能触发它。哪个索引在扮演这个角色见下方「数据库 schema」。
-- **从 upsert 里拿回 id。** MySQL 没有 `INSERT ... RETURNING`，drizzle 的 MySQL builder 也不支持 `.returning()`。service 层在 `onDuplicateKeyUpdate` 里加 `id: sql\`LAST_INSERT_ID(id)\``，再从结果头里读 `insertId`（`const [result] = await db.insert(...)`）—— 唯一键冲突时它是已有行的 id，否则是新分配的 id，于是不需要再补一次 `SELECT`。
-- **`drizzle({ client, schema })` 必须配 `mode: 'default'`。** 不传会抛 `DrizzleError`。注意 `schema` 和 `mode` 必须一起传：drizzle 0.45.4 的 `isConfig()` 里 `mode` 分支写坏了（它的条件 `mode !== 'default' || mode !== 'planetscale' || mode !== undefined` 恒为真），所以**不带** `schema` 的 `drizzle({ client, mode })` 会被误判成 `(client, config)` 这套重载，之后每条查询都会以 `client.query is not a function` 收场。正因为 `schema` 分支先被检查，应用才是好的。
-- **`migrate()` 需要单条连接，不能用连接池**，而且 `mysql.createConnection()` 返回的是 `Promise`，必须 await。
-- **DML 的返回值带着 SQLite 当年内联返回的行信息。** `update` / `delete` 解析出来是 `[ResultSetHeader, fields]`，所以 `const [result] = await db.update(...)` 再判 `result.affectedRows === 0`，同一次往返就能回答「这行存在吗」。`affectedRows` 统计的是**实际变更**的行数，只有语句真的改动了什么，它才等于**命中**的行数。
-- **瓶颈是网络往返，不是提交。** 每条语句都是一次网络跳转，所以相关写操作用 `db.transaction()` 包起来拿原子性，但别指望它减少往返次数。要减少往返请把 N 次写合成一条语句 —— 参考 `batchUpdate()`：它把同一个数据源的所有视频折叠成单条 `set total_episodes = case source_video_id when ... then ... end`。
-- `updated_at` 用 `bigint({ mode: 'number' })`（epoch 毫秒），这样 JSON 契约保持 `number` —— 前端类型就是这么定义的。
+先把数据库拉起来（`docker compose up -d mysql`），并把 `DATABASE_URL` 写进**仓库根目录**的 `.env`（从 `.env.example` 复制）。要清空本地数据，删掉数据库（`docker compose down -v`），下次启动时 migration 会重建。
 
 ## 架构
 
-Hono app 在 `src/app.ts` 里由 `createApp()` 组装；每个 feature 是 `src/features/` 下一个自包含的目录：
-
-- `shared/env.ts` - 环境变量的加载 / 校验 / 读取：`DATABASE_URL`、`DATABASE_CONNECTION_LIMIT`，import 时校验，缺失即启动失败
-- `shared/config/` - 对 `config.yml` 做 `yaml.parse` + zod schema（只含视频源）
-- `shared/database/` - `mysql2` 连接池 + drizzle + 启动时自动 migration；连接参数取自 `shared/env.ts`
-- `middleware/access-log.ts` - 请求访问日志
-- `features/videos/` - 跨源搜索 + 详情 + 批量更新
-- `features/favorites/` - 收藏 CRUD
-- `features/play-records/` - 播放进度 CRUD
-- `index.ts` - 进程入口：副作用导入 shared、创建 app、调用 `@hono/node-server` 的 `serve()`
+架构遵循 feature-based architecture
 
 ## 约定
 

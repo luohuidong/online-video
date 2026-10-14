@@ -5,6 +5,7 @@
   "files": {
     "includes": [
       "src/**",
+      "scripts/**",
       "biome.jsonc",
       "drizzle.config.ts",
       "package.json",

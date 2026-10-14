@@ -29,7 +29,9 @@ docker build --target web -t online-video-web .
 
 ### Configuration
 
-Create `config.yml` in `apps/server/` (for local dev) or in the repo root (for Docker; the compose file mounts it into the container). Configure your 苹果CMS video sources:
+Create `config.yml` in the repo root — Docker bind mounts it into the
+container, and `pnpm --filter server dev` symlinks it into `apps/server/`
+(`scripts/link-root-files.ts`). Configure your 苹果CMS video sources:
 
 ```yaml
 sources:
@@ -46,15 +48,18 @@ sources:
 - `api`: 苹果CMS API address
 
 The MySQL connection is configured separately via environment variables —
-`config.yml` only holds video sources. Copy `apps/server/.env.example` to
-`apps/server/.env` for local development:
+`config.yml` only holds video sources. Copy `.env.example` to `.env` in the
+repo root for local development:
 
 ```bash
 DATABASE_URL=mysql://user:password@127.0.0.1:3306/online_video
 ```
 
-`.env` is gitignored; `.env.example` is committed. In Docker the compose file
-injects `DATABASE_URL` directly, so no `.env` file is needed there.
+`.env` is gitignored; `.env.example` is committed. Both files live in the repo
+root only: Docker bind mounts them into the container, and the server's `dev`
+script symlinks them into `apps/server/` before Node boots, since the loaders
+resolve against the app directory. Docker's `start` command needs no symlink —
+the bind mounts land directly in `/app`.
 
 The MySQL database runs in its own container with a Docker volume, and is
 reachable at `127.0.0.1:3306` from the host. Schema migrations from

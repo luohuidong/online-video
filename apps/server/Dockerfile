@@ -22,5 +22,5 @@ WORKDIR /app
 COPY --from=build /prod/server .
 
 EXPOSE 3000
-# .env 文件不存在时静默跳过——compose 会用 environment 注入 DATABASE_URL
-CMD ["node", "--env-file-if-exists=.env", "src/index.ts"]
+# .env 由 compose bind mount 到 /app/.env。
+CMD ["node", "--env-file=.env", "src/index.ts"]

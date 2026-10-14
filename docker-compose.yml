@@ -31,13 +31,24 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    environment:
-      # config.yml 里的 url 指向 127.0.0.1，是给本地开发用的；
-      # 容器内要走 compose 网络的服务名，所以用环境变量覆盖。
-      DATABASE_URL: mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-app_dev_pw}@mysql:3306/${MYSQL_DATABASE:-online_video}
     volumes:
-      # Mount config file (edit config.yml to configure sources)
-      - ./config.yml:/app/config.yml:ro
+      # 视频源配置。长语法 + create_host_path: false 的理由同 .env：
+      # 短语法在源路径缺失时会静默创建同名目录，容器里读配置就会得到
+      # EISDIR（曾经就踩过：仓库根的 config.yml 是个 root 拥有的空目录，
+      # /videos 搜索直接 500，而应用启动一切正常）。
+      - type: bind
+        source: ./config.yml
+        target: /app/config.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      # 数据库凭据，同样 bind mount。
+      - type: bind
+        source: ./.env
+        target: /app/.env
+        read_only: true
+        bind:
+          create_host_path: false
     depends_on:
       mysql:
         condition: service_healthy
